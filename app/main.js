@@ -22,7 +22,10 @@ async function init() {
     const preview = await createCardController(elements.previewFrame);
 
     const themes = await loadThemes();
-    if (!themes.length) throw new Error('No themes loaded.');
+    if (!themes.length) {
+      elements.exportStatus.textContent = 'No themes could be loaded. Check console errors for failing URLs.';
+      return;
+    }
 
     const initialTheme = themes[0];
 

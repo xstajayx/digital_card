@@ -12,13 +12,23 @@ export async function loadThemes() {
 
   const themes = await Promise.all(
     ids.map(async (id) => {
-      const themeRes = await fetch(`./themes/${id}/theme.json`, { cache: 'no-store' });
-      if (!themeRes.ok) throw new Error(`Failed to load ./themes/${id}/theme.json (${themeRes.status})`);
-      return await themeRes.json();
+      const themeUrl = `./themes/${id}/theme.json`;
+      try {
+        const themeRes = await fetch(themeUrl, { cache: 'no-store' });
+        if (!themeRes.ok) {
+          throw new Error(`HTTP ${themeRes.status}`);
+        }
+        const theme = await themeRes.json();
+        if (!theme.id) theme.id = id;
+        return theme;
+      } catch (error) {
+        console.error(`Theme load failed for ${themeUrl}`, error);
+        return null;
+      }
     })
   );
 
-  return themes;
+  return themes.filter(Boolean);
 }
 
 
