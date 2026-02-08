@@ -169,12 +169,18 @@ downloadButton.addEventListener('click', async () => {
 });
 
 
-  state.subscribe((current) => {
-    renderThemes(current);
-    toInput.value = current.to;
-    messageInput.value = current.message;
-    fromInput.value = current.from;
+ state.subscribe((current) => {
+  renderThemes(current);
+
+  if (toInput.value !== current.to) toInput.value = current.to;
+  if (messageInput.value !== current.message) messageInput.value = current.message;
+  if (fromInput.value !== current.from) fromInput.value = current.from;
+
+  if (watermarkToggle.checked !== current.watermark) {
     watermarkToggle.checked = current.watermark;
-    updatePreview(current);
-  });
+  }
+
+  updatePreview(current);
+});
+
 }
