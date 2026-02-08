@@ -17,21 +17,30 @@ async function init() {
   };
 
   const state = createState();
-  const preview = await createCardController(elements.previewFrame);
 
-  const themes = await loadThemes();
-  const initialTheme = themes[0];
+  try {
+    const preview = await createCardController(elements.previewFrame);
 
-  state.set({
-    themes,
-    theme: initialTheme,
-    to: initialTheme.defaults.to,
-    message: initialTheme.defaults.message,
-    from: initialTheme.defaults.from,
-    watermark: true
-  });
+    const themes = await loadThemes();
+    if (!themes.length) throw new Error('No themes loaded.');
 
-  createUI({ state, preview, elements });
+    const initialTheme = themes[0];
+
+    state.set({
+      themes,
+      theme: initialTheme,
+      to: initialTheme?.defaults?.to || '',
+      message: initialTheme?.defaults?.message || '',
+      from: initialTheme?.defaults?.from || '',
+      watermark: true
+    });
+
+    createUI({ state, preview, elements });
+    elements.exportStatus.textContent = '';
+  } catch (err) {
+    console.error(err);
+    elements.exportStatus.textContent = `Error: ${err.message || err}`;
+  }
 }
 
 init();
