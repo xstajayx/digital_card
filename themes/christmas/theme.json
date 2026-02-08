@@ -1,0 +1,31 @@
+{
+  "id": "christmas",
+  "name": "Christmas",
+  "occasion": "Christmas",
+  "defaults": {
+    "to": "Noah",
+    "message": "Warm wishes, cozy lights, and a heart full of joy this holiday season.",
+    "from": "Season's greetings 🎄"
+  },
+  "palette": {
+    "paper": "#f5f8f2",
+    "ink": "#1f2b20",
+    "accent": "#c0392b",
+    "accent2": "#2ecc71",
+    "gold": "#f1c40f"
+  },
+  "timing": {
+    "balloonsMs": 3200,
+    "insideDelayMs": 2100,
+    "headlineDelayMs": 2400,
+    "subDelayMs": 2800,
+    "fromDelayMs": 3000,
+    "fxStartMs": 2500,
+    "fxStopMs": 8500
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": false,
+    "sparkles": true
+  }
+}

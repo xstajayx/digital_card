@@ -1,0 +1,31 @@
+{
+  "id": "birthday-balloons",
+  "name": "Birthday Balloons",
+  "occasion": "Birthday",
+  "defaults": {
+    "to": "Zoe",
+    "message": "Hope your day is filled with giggles, sweet surprises, and magical moments!",
+    "from": "With love 💛"
+  },
+  "palette": {
+    "paper": "#f7e8d4",
+    "ink": "#2b2622",
+    "accent": "#e85aa3",
+    "accent2": "#65a9ff",
+    "gold": "#f2c14e"
+  },
+  "timing": {
+    "balloonsMs": 3000,
+    "insideDelayMs": 2000,
+    "headlineDelayMs": 2200,
+    "subDelayMs": 2550,
+    "fromDelayMs": 2750,
+    "fxStartMs": 2400,
+    "fxStopMs": 8200
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": true,
+    "sparkles": true
+  }
+}

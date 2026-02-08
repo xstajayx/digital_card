@@ -1,0 +1,31 @@
+{
+  "id": "congrats",
+  "name": "Congrats",
+  "occasion": "Congratulations",
+  "defaults": {
+    "to": "Sky",
+    "message": "You did it! Celebrate this big win and soak in every proud moment.",
+    "from": "Cheering for you 🏆"
+  },
+  "palette": {
+    "paper": "#fff8e8",
+    "ink": "#2d241a",
+    "accent": "#ff9f1c",
+    "accent2": "#2ec4b6",
+    "gold": "#ffbf69"
+  },
+  "timing": {
+    "balloonsMs": 2500,
+    "insideDelayMs": 1700,
+    "headlineDelayMs": 2050,
+    "subDelayMs": 2350,
+    "fromDelayMs": 2550,
+    "fxStartMs": 2100,
+    "fxStopMs": 7800
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": true,
+    "sparkles": true
+  }
+}

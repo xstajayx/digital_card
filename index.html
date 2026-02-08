@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JWorldCreations Digital Card Studio</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">🎉</div>
+      <div>
+        <p class="brand-title">JWorldCreations</p>
+        <p class="brand-subtitle">Animated Digital Card Studio</p>
+      </div>
+    </div>
+    <nav class="header-actions">
+      <button id="replayButton" class="button ghost">Replay</button>
+      <button id="downloadButton" class="button primary">Download GIF</button>
+    </nav>
+  </header>
 
+  <main class="layout">
+    <section class="controls">
+      <div class="panel">
+        <h2>Personalize your card</h2>
+        <label class="field">
+          <span>To</span>
+          <input id="toInput" type="text" placeholder="Name" maxlength="36" />
+        </label>
+        <label class="field">
+          <span>Message</span>
+          <textarea id="messageInput" rows="4" placeholder="Write a warm message" maxlength="280"></textarea>
+        </label>
+        <label class="field">
+          <span>From</span>
+          <input id="fromInput" type="text" placeholder="Your name" maxlength="36" />
+        </label>
+        <label class="field">
+          <span>Photo</span>
+          <input id="photoInput" type="file" accept="image/*" />
+        </label>
+        <label class="toggle">
+          <input id="watermarkToggle" type="checkbox" checked />
+          <span>Show watermark</span>
+        </label>
+      </div>
+
+      <div class="panel">
+        <h2>Choose a theme</h2>
+        <div id="themeGallery" class="theme-grid" role="list"></div>
+      </div>
+    </section>
+
+    <section class="preview">
+      <div class="preview-header">
+        <h2>Live preview</h2>
+        <p>Watch the animation and customize in real time.</p>
+      </div>
+      <div class="preview-frame">
+        <iframe id="cardPreview" title="Digital card preview" aria-label="Digital card preview"></iframe>
+      </div>
+      <div id="exportStatus" class="export-status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Made with love for all ages. Export &amp; share instantly.</p>
+  </footer>
+
+  <script src="/vendor/html2canvas.min.js"></script>
+  <script src="/vendor/gif.min.js"></script>
+  <script type="module" src="/app/main.js"></script>
+</body>
+</html>

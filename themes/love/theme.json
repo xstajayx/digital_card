@@ -1,0 +1,31 @@
+{
+  "id": "love",
+  "name": "Love",
+  "occasion": "Love",
+  "defaults": {
+    "to": "Jamie",
+    "message": "Every day with you feels like a warm hug. Sending love and sunshine your way.",
+    "from": "All my heart 💖"
+  },
+  "palette": {
+    "paper": "#fff1f6",
+    "ink": "#3d1c2a",
+    "accent": "#ff7aa2",
+    "accent2": "#ffb3c1",
+    "gold": "#f7c59f"
+  },
+  "timing": {
+    "balloonsMs": 2800,
+    "insideDelayMs": 1900,
+    "headlineDelayMs": 2150,
+    "subDelayMs": 2500,
+    "fromDelayMs": 2700,
+    "fxStartMs": 2300,
+    "fxStopMs": 8100
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": true,
+    "sparkles": true
+  }
+}
