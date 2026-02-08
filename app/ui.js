@@ -1,15 +1,26 @@
 import { exportGif } from '../engine/export.js';
 
 export async function loadThemes() {
-  const ids = await fetch('/themes/themes.json').then((res) => res.json());
+  // ✅ Use relative paths for GitHub Pages repos
+  const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
+  if (!idsRes.ok) throw new Error(`Failed to load ./themes/themes.json (${idsRes.status})`);
+  const ids = await idsRes.json();
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error('themes/themes.json must be an array of theme folder names.');
+  }
+
   const themes = await Promise.all(
     ids.map(async (id) => {
-      const theme = await fetch(`/themes/${id}/theme.json`).then((res) => res.json());
-      return theme;
+      const themeRes = await fetch(`./themes/${id}/theme.json`, { cache: 'no-store' });
+      if (!themeRes.ok) throw new Error(`Failed to load ./themes/${id}/theme.json (${themeRes.status})`);
+      return await themeRes.json();
     })
   );
+
   return themes;
 }
+
 
 function greetingFor(theme, name) {
   const safeName = name || 'Friend';
