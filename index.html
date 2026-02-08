@@ -1,84 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JWorldCreations Digital Card Studio</title>
+:root{
+  --bg:#0b1022;
+  --panel: rgba(255,255,255,.06);
+  --stroke: rgba(255,255,255,.12);
+  --txt: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.72);
+  --primary: #ff5db1;
+  --primary2:#60a5fa;
+  --radius: 16px;
+}
 
-  <!-- ✅ relative path for GitHub Pages repo -->
-  <link rel="stylesheet" href="./assets/app.css" />
-</head>
-<body>
-  <header class="site-header">
-    <div class="brand">
-      <div class="brand-mark">🎉</div>
-      <div>
-        <p class="brand-title">JWorldCreations</p>
-        <p class="brand-subtitle">Animated Digital Card Studio</p>
-      </div>
-    </div>
-    <nav class="header-actions">
-      <button id="replayButton" class="button ghost">Replay</button>
-      <button id="downloadButton" class="button primary">Download GIF</button>
-    </nav>
-  </header>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(900px 600px at 15% 15%, rgba(255,93,177,.20), transparent 60%),
+              radial-gradient(900px 600px at 85% 25%, rgba(96,165,250,.18), transparent 60%),
+              linear-gradient(180deg, #070b14, #0b1022);
+  color: var(--txt);
+}
 
-  <main class="layout">
-    <section class="controls">
-      <div class="panel">
-        <h2>Personalize your card</h2>
+.site-header{
+  padding:14px 14px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-        <label class="field">
-          <span>To</span>
-          <input id="toInput" type="text" placeholder="Name" maxlength="36" />
-        </label>
+.brand{display:flex; align-items:center; gap:10px}
+.brand-mark{font-size:22px}
+.brand-title{margin:0; font-weight:900}
+.brand-subtitle{margin:0; color:var(--muted); font-size:12px}
 
-        <label class="field">
-          <span>Message</span>
-          <textarea id="messageInput" rows="4" placeholder="Write a warm message" maxlength="280"></textarea>
-        </label>
+.header-actions{display:flex; gap:10px}
 
-        <label class="field">
-          <span>From</span>
-          <input id="fromInput" type="text" placeholder="Your name" maxlength="36" />
-        </label>
+.button{
+  border-radius: 14px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color: var(--txt);
+  font-weight:900;
+}
+.button.primary{
+  background: rgba(255,93,177,.18);
+  border-color: rgba(255,93,177,.35);
+}
+.button.ghost{
+  background: rgba(255,255,255,.06);
+}
 
-        <label class="field">
-          <span>Photo</span>
-          <input id="photoInput" type="file" accept="image/*" />
-        </label>
+.layout{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 14px 20px;
+  display:grid;
+  grid-template-columns: 380px 1fr;
+  gap:12px;
+}
 
-        <label class="toggle">
-          <input id="watermarkToggle" type="checkbox" checked />
-          <span>Show watermark</span>
-        </label>
-      </div>
+.controls .panel, .preview{
+  background: linear-gradient(180deg, var(--panel), transparent);
+  border:1px solid var(--stroke);
+  border-radius: var(--radius);
+  overflow:hidden;
+}
 
-      <div class="panel">
-        <h2>Choose a theme</h2>
-        <div id="themeGallery" class="theme-grid" role="list"></div>
-      </div>
-    </section>
+.panel{padding:14px; margin-bottom:12px}
+.panel h2{margin:0 0 10px; font-size:14px; color:var(--muted); letter-spacing:.02em}
 
-    <section class="preview">
-      <div class="preview-header">
-        <h2>Live preview</h2>
-        <p>Watch the animation and customize in real time.</p>
-      </div>
-      <div class="preview-frame">
-        <iframe id="cardPreview" title="Digital card preview" aria-label="Digital card preview"></iframe>
-      </div>
-      <div id="exportStatus" class="export-status" aria-live="polite"></div>
-    </section>
-  </main>
+.field{display:block; margin:10px 0}
+.field span{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+.field input, .field textarea{
+  width:100%;
+  border-radius: 14px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color: var(--txt);
+  outline:none;
+}
 
-  <footer class="site-footer">
-    <p>Made with love for all ages. Export &amp; share instantly.</p>
-  </footer>
+.toggle{display:flex; gap:10px; align-items:center; margin-top:10px; color:var(--muted); font-weight:700}
 
-  <!-- ✅ relative paths -->
-  <script src="./vendor/html2canvas.min.js"></script>
-  <script src="./vendor/gif.min.js"></script>
-  <script type="module" src="./app/main.js"></script>
-</body>
-</html>
+.theme-grid{display:grid; grid-template-columns: 1fr; gap:10px}
+.theme-tile{
+  text-align:left;
+  width:100%;
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color: var(--txt);
+}
+.theme-tile.selected{
+  outline: 2px solid rgba(255,93,177,.55);
+}
+.theme-swatch{
+  width:54px; height:54px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+}
+.theme-name{font-weight:900}
+.theme-occasion{font-size:12px; color:var(--muted)}
+
+.preview{padding:14px}
+.preview-header h2{margin:0; font-size:14px; color:var(--muted)}
+.preview-header p{margin:6px 0 12px; color:var(--muted); font-size:12px}
+
+.preview-frame{
+  border-radius: 16px;
+  overflow:hidden;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.04);
+}
+#cardPreview{
+  width:100%;
+  height: min(72vh, 720px);
+  border:0;
+  background: #fff;
+}
+
+.export-status{margin-top:10px; font-size:12px; color: var(--muted)}
+
+.site-footer{
+  padding: 10px 14px 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 980px){
+  .layout{grid-template-columns: 1fr;}
+  #cardPreview{height: 70vh;}
+}
