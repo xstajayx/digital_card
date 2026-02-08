@@ -1,0 +1,31 @@
+{
+  "id": "thank-you",
+  "name": "Thank You",
+  "occasion": "Thank You",
+  "defaults": {
+    "to": "Avery",
+    "message": "Your kindness meant the world. Thank you for being amazing and always showing up.",
+    "from": "Gratefully 💙"
+  },
+  "palette": {
+    "paper": "#f4f8f6",
+    "ink": "#1f2a2a",
+    "accent": "#5ab8a1",
+    "accent2": "#7ea9ff",
+    "gold": "#f0c674"
+  },
+  "timing": {
+    "balloonsMs": 3200,
+    "insideDelayMs": 2100,
+    "headlineDelayMs": 2400,
+    "subDelayMs": 2800,
+    "fromDelayMs": 3000,
+    "fxStartMs": 2600,
+    "fxStopMs": 8400
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": false,
+    "sparkles": true
+  }
+}

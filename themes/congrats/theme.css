@@ -1,0 +1,11 @@
+.card-root {
+  background: linear-gradient(160deg, rgba(255, 248, 232, 0.95), rgba(255, 245, 214, 0.95));
+}
+
+.right {
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(255, 236, 200, 0.4));
+}
+
+.confetti span {
+  transform: rotate(15deg);
+}

@@ -1,0 +1,15 @@
+.card-root {
+  background: linear-gradient(160deg, rgba(243, 255, 242, 0.95), rgba(255, 245, 246, 0.95));
+}
+
+.right {
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(211, 239, 216, 0.5));
+}
+
+.sparkles span {
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.95);
+}
+
+.confetti {
+  display: none;
+}

@@ -1,0 +1,12 @@
+.card-root {
+  background: linear-gradient(160deg, rgba(255, 240, 245, 0.95), rgba(255, 220, 233, 0.95));
+}
+
+.left {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+}
+
+.confetti span {
+  opacity: 0.65;
+}

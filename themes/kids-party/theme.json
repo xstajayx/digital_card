@@ -1,0 +1,31 @@
+{
+  "id": "kids-party",
+  "name": "Kids Party",
+  "occasion": "Kids Party",
+  "defaults": {
+    "to": "Leo",
+    "message": "Let the fun begin! Wishing you a day packed with games, snacks, and laughter!",
+    "from": "Your party crew 🎈"
+  },
+  "palette": {
+    "paper": "#eef7ff",
+    "ink": "#1b2340",
+    "accent": "#ff6f61",
+    "accent2": "#4ac7ff",
+    "gold": "#ffd166"
+  },
+  "timing": {
+    "balloonsMs": 2600,
+    "insideDelayMs": 1800,
+    "headlineDelayMs": 2100,
+    "subDelayMs": 2450,
+    "fromDelayMs": 2650,
+    "fxStartMs": 2200,
+    "fxStopMs": 8000
+  },
+  "features": {
+    "balloonCurtain": true,
+    "confetti": true,
+    "sparkles": true
+  }
+}

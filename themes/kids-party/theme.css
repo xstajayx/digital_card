@@ -1,0 +1,17 @@
+.card-root {
+  background: linear-gradient(160deg, rgba(220, 245, 255, 0.95), rgba(255, 250, 229, 0.95));
+}
+
+.left {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+}
+
+.confetti span {
+  animation: kidConfetti 1.2s ease-in-out infinite;
+}
+
+@keyframes kidConfetti {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(25deg) scale(1.2); }
+}

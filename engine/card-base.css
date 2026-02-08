@@ -1,0 +1,378 @@
+:root {
+  --paper: #fff7f2;
+  --ink: #2b2622;
+  --accent: #e85aa3;
+  --accent2: #65a9ff;
+  --gold: #f2c14e;
+  --balloons-duration: 3000ms;
+  --inside-delay: 2000ms;
+  --headline-delay: 2200ms;
+  --sub-delay: 2550ms;
+  --from-delay: 2750ms;
+  --fx-start: 2400ms;
+  --fx-stop: 8200ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  background: transparent;
+}
+
+.card-root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: 24px;
+  border: 6px solid rgba(255, 255, 255, 0.6);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 100%;
+}
+
+.panel {
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--ink);
+}
+
+.headline {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.headline .name {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.message {
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(12px);
+  white-space: pre-wrap;
+}
+
+.from {
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+}
+
+.photo-slot {
+  position: relative;
+  width: min(70%, 220px);
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.placeholder {
+  text-align: center;
+  color: rgba(43, 38, 34, 0.55);
+  font-size: 0.9rem;
+}
+
+.float-balloons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.float-balloon {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  border-radius: 50% 50% 45% 45%;
+  background: var(--accent);
+  opacity: 0.9;
+  animation: float 4s ease-in-out infinite;
+}
+
+.float-balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  width: 2px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.float-balloon.b1 {
+  top: 10%;
+  left: 10%;
+  background: var(--accent);
+}
+
+.float-balloon.b2 {
+  top: 20%;
+  right: 12%;
+  background: var(--accent2);
+  animation-delay: -1s;
+}
+
+.float-balloon.b3 {
+  bottom: 12%;
+  right: 25%;
+  background: var(--gold);
+  animation-delay: -2s;
+}
+
+.balloon-curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  transform: translateY(0);
+}
+
+.curtain-layer {
+  width: 110%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+}
+
+.curtain-balloon {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 50% 50% 45% 45%;
+  background: color-mix(in srgb, var(--accent) 60%, var(--accent2));
+  position: relative;
+  opacity: 0.95;
+}
+
+.curtain-balloon:nth-child(odd) {
+  background: color-mix(in srgb, var(--accent2) 65%, var(--gold));
+}
+
+.curtain-balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.confetti,
+.sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+
+.confetti span {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  background: var(--accent2);
+  transform-origin: center;
+  border-radius: 3px;
+}
+
+.confetti span:nth-child(even) {
+  background: var(--accent);
+}
+
+.confetti span:nth-child(3n) {
+  background: var(--gold);
+}
+
+.confetti span:nth-child(1) { bottom: 12%; left: 8%; }
+.confetti span:nth-child(2) { bottom: 18%; left: 15%; }
+.confetti span:nth-child(3) { bottom: 10%; left: 22%; }
+.confetti span:nth-child(4) { bottom: 20%; left: 78%; }
+.confetti span:nth-child(5) { bottom: 12%; left: 85%; }
+.confetti span:nth-child(6) { bottom: 16%; left: 70%; }
+.confetti span:nth-child(7) { bottom: 25%; left: 12%; }
+.confetti span:nth-child(8) { bottom: 24%; left: 82%; }
+.confetti span:nth-child(9) { bottom: 15%; left: 60%; }
+.confetti span:nth-child(10) { bottom: 22%; left: 38%; }
+
+.sparkles span {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gold) 70%, white);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+}
+
+.sparkles span:nth-child(1) { top: 18%; left: 18%; }
+.sparkles span:nth-child(2) { top: 12%; left: 55%; }
+.sparkles span:nth-child(3) { top: 22%; left: 75%; }
+.sparkles span:nth-child(4) { top: 28%; left: 40%; }
+
+.watermark {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.6rem;
+  font-size: 0.65rem;
+  color: rgba(43, 38, 34, 0.55);
+  z-index: 5;
+}
+
+.card-root.play .balloon-curtain {
+  animation: curtainUp var(--balloons-duration) ease-in forwards;
+}
+
+.card-root.play .headline {
+  animation: popIn 0.6s ease-out forwards;
+  animation-delay: var(--headline-delay);
+}
+
+.card-root.play .headline .name {
+  animation: shimmer 2s ease-in-out infinite;
+  animation-delay: var(--headline-delay);
+}
+
+.card-root.play .message {
+  animation: fadeUp 0.7s ease-out forwards;
+  animation-delay: var(--sub-delay);
+}
+
+.card-root.play .from {
+  animation: fadeUp 0.6s ease-out forwards;
+  animation-delay: var(--from-delay);
+}
+
+.card-root.play .photo-slot {
+  animation: popIn 0.6s ease-out forwards;
+  animation-delay: var(--inside-delay);
+}
+
+.card-root.play .confetti {
+  animation: confettiPop 4s ease-in-out forwards;
+  animation-delay: var(--fx-start);
+}
+
+.card-root.play .sparkles {
+  animation: sparkleGlow 4s ease-in-out forwards;
+  animation-delay: var(--fx-start);
+}
+
+@keyframes curtainUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-110%);
+  }
+}
+
+@keyframes popIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes confettiPop {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sparkleGlow {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 720px) {
+  .card {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
