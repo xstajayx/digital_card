@@ -1,74 +1,88 @@
-<link id="themeStyles" rel="stylesheet" href="" />
-<script>
-  function setVar(k,v){ document.documentElement.style.setProperty(k, v); }
+// digital_card/engine/preview.js
+// Loads the preview as a real page (iframe.src), then calls window.setCardData inside it.
+// This avoids srcdoc path issues and works on GitHub Pages subpaths.
 
-  function replay(){
-    const root = document.getElementById('cardRoot');
-    if(!root) return;
-    root.classList.remove('play');
-    void root.offsetWidth;
-    root.classList.add('play');
+export async function createCardController(iframe) {
+  if (!iframe) throw new Error('Preview iframe not found.');
+
+  // ✅ GitHub Pages repo-safe relative path
+  const TEMPLATE_URL = './engine/card-template.html';
+
+  // Load template into iframe
+  await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('Preview iframe load timeout.')), 8000);
+
+    iframe.addEventListener(
+      'load',
+      () => {
+        clearTimeout(timeout);
+        resolve();
+      },
+      { once: true }
+    );
+
+    iframe.src = TEMPLATE_URL;
+  });
+
+  // Wait until template exposes API
+  async function waitForSetCardData() {
+    const start = Date.now();
+    while (Date.now() - start < 5000) {
+      const w = iframe.contentWindow;
+      if (w && typeof w.setCardData === 'function') return;
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    throw new Error('card-template.html did not expose window.setCardData(data).');
   }
 
-  window.setCardData = (data) => {
-    // Theme CSS
-    const themeStyles = document.getElementById('themeStyles');
-    if (themeStyles && data.themeCssHref) themeStyles.href = data.themeCssHref;
+  await waitForSetCardData();
 
-    // Vars
-    const p = data.palette || {};
-    const t = data.timing || {};
-    if (p.paper) setVar('--paper', p.paper);
-    if (p.ink) setVar('--ink', p.ink);
-    if (p.accent) setVar('--accent', p.accent);
-    if (p.accent2) setVar('--accent2', p.accent2);
-    if (p.gold) setVar('--gold', p.gold);
+  let theme = null;
+  let content = { headline: '', message: '', from: '', photo: '' };
+  let watermark = true;
 
-    if (t.balloonsMs != null) setVar('--balloons-duration', `${t.balloonsMs}ms`);
-    if (t.insideDelayMs != null) setVar('--inside-delay', `${t.insideDelayMs}ms`);
-    if (t.headlineDelayMs != null) setVar('--headline-delay', `${t.headlineDelayMs}ms`);
-    if (t.subDelayMs != null) setVar('--sub-delay', `${t.subDelayMs}ms`);
-    if (t.fromDelayMs != null) setVar('--from-delay', `${t.fromDelayMs}ms`);
-    if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
-    if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
+  function push() {
+    const w = iframe.contentWindow;
+    if (!w || typeof w.setCardData !== 'function') return;
 
-    // Content
-    const headlineEl = document.getElementById('headline');
-    const messageEl  = document.getElementById('message');
-    const fromEl     = document.getElementById('from');
-    const photoEl    = document.getElementById('photo');
-    const placeholderEl = document.getElementById('placeholder');
+    w.setCardData({
+      theme,
+      palette: theme?.palette || null,
+      timing: theme?.timing || null,
+      features: theme?.features || null,
 
-    if (headlineEl) headlineEl.innerHTML = data.headline || '';
-    if (messageEl) messageEl.textContent = data.message || '';
-    if (fromEl) fromEl.textContent = data.from || '';
+      // These come from your UI.js
+      headline: content.headline || '',
+      message: content.message || '',
+      from: content.from || '',
+      photoDataUrl: content.photo || '',
 
-    if (photoEl && placeholderEl) {
-      if (data.photoDataUrl) {
-        photoEl.src = data.photoDataUrl;
-        photoEl.style.display = 'block';
-        placeholderEl.style.display = 'none';
-      } else {
-        photoEl.removeAttribute('src');
-        photoEl.style.display = 'none';
-        placeholderEl.style.display = 'flex';
-      }
+      watermark: !!watermark,
+
+      // Make theme css resolvable from within the iframe page
+      themeCssHref: theme?.id ? `./themes/${theme.id}/theme.css` : ''
+    });
+  }
+
+  return {
+    setTheme(nextTheme) {
+      theme = nextTheme;
+      push();
+    },
+    setContent(nextContent) {
+      content = { ...content, ...nextContent };
+      push();
+    },
+    setWatermark(enabled) {
+      watermark = !!enabled;
+      push();
+    },
+    play() {
+      // The template should restart animations when setCardData runs.
+      // If it also exposes window.play(), we call it.
+      push();
+      const w = iframe.contentWindow;
+      if (w && typeof w.play === 'function') w.play();
     }
-
-    // Features / watermark
-    const wm = document.getElementById('watermark');
-    if (wm) wm.style.display = data.watermark ? 'block' : 'none';
-
-    const f = data.features || {};
-    const curtain = document.getElementById('balloonCurtain');
-    const confetti = document.getElementById('confetti');
-    const sparkles = document.getElementById('sparkles');
-    if (curtain) curtain.style.display = f.balloonCurtain ? 'flex' : 'none';
-    if (confetti) confetti.style.display = f.confetti ? 'block' : 'none';
-    if (sparkles) sparkles.style.display = f.sparkles ? 'block' : 'none';
-
-    replay();
   };
-
-  window.play = replay;
-</script>
+}
