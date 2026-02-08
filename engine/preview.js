@@ -1,66 +1,51 @@
-const templateCache = { html: null };
+<link id="themeStyles" rel="stylesheet" href="" />
+<script>
+  function setVar(k,v){ document.documentElement.style.setProperty(k, v); }
 
-async function loadTemplate() {
-  if (templateCache.html) return templateCache.html;
-  const response = await fetch('/engine/card-template.html');
-  templateCache.html = await response.text();
-  return templateCache.html;
-}
+  function replay(){
+    const root = document.getElementById('cardRoot');
+    if(!root) return;
+    root.classList.remove('play');
+    void root.offsetWidth;
+    root.classList.add('play');
+  }
 
-function applyThemeVars(doc, theme) {
-  const root = doc.documentElement;
-  const { palette, timing } = theme;
-  root.style.setProperty('--paper', palette.paper);
-  root.style.setProperty('--ink', palette.ink);
-  root.style.setProperty('--accent', palette.accent);
-  root.style.setProperty('--accent2', palette.accent2);
-  root.style.setProperty('--gold', palette.gold);
-  root.style.setProperty('--balloons-duration', `${timing.balloonsMs}ms`);
-  root.style.setProperty('--inside-delay', `${timing.insideDelayMs}ms`);
-  root.style.setProperty('--headline-delay', `${timing.headlineDelayMs}ms`);
-  root.style.setProperty('--sub-delay', `${timing.subDelayMs}ms`);
-  root.style.setProperty('--from-delay', `${timing.fromDelayMs}ms`);
-  root.style.setProperty('--fx-start', `${timing.fxStartMs}ms`);
-  root.style.setProperty('--fx-stop', `${timing.fxStopMs}ms`);
-}
+  window.setCardData = (data) => {
+    // Theme CSS
+    const themeStyles = document.getElementById('themeStyles');
+    if (themeStyles && data.themeCssHref) themeStyles.href = data.themeCssHref;
 
-export async function createCardController(iframe) {
-  const html = await loadTemplate();
+    // Vars
+    const p = data.palette || {};
+    const t = data.timing || {};
+    if (p.paper) setVar('--paper', p.paper);
+    if (p.ink) setVar('--ink', p.ink);
+    if (p.accent) setVar('--accent', p.accent);
+    if (p.accent2) setVar('--accent2', p.accent2);
+    if (p.gold) setVar('--gold', p.gold);
 
-  await new Promise((resolve) => {
-    iframe.addEventListener('load', () => resolve(), { once: true });
-    iframe.srcdoc = html;
-  });
+    if (t.balloonsMs != null) setVar('--balloons-duration', `${t.balloonsMs}ms`);
+    if (t.insideDelayMs != null) setVar('--inside-delay', `${t.insideDelayMs}ms`);
+    if (t.headlineDelayMs != null) setVar('--headline-delay', `${t.headlineDelayMs}ms`);
+    if (t.subDelayMs != null) setVar('--sub-delay', `${t.subDelayMs}ms`);
+    if (t.fromDelayMs != null) setVar('--from-delay', `${t.fromDelayMs}ms`);
+    if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
+    if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
 
-  const doc = iframe.contentDocument;
-  const root = doc.getElementById('cardRoot');
-  const headlineEl = doc.getElementById('headline');
-  const messageEl = doc.getElementById('message');
-  const fromEl = doc.getElementById('from');
-  const photoEl = doc.getElementById('photo');
-  const placeholderEl = doc.getElementById('placeholder');
-  const watermarkEl = doc.getElementById('watermark');
-  const confettiEl = doc.getElementById('confetti');
-  const sparklesEl = doc.getElementById('sparkles');
-  const curtainEl = doc.getElementById('balloonCurtain');
-  const themeStyles = doc.getElementById('themeStyles');
+    // Content
+    const headlineEl = document.getElementById('headline');
+    const messageEl  = document.getElementById('message');
+    const fromEl     = document.getElementById('from');
+    const photoEl    = document.getElementById('photo');
+    const placeholderEl = document.getElementById('placeholder');
 
-  return {
-    doc,
-    root,
-    setTheme(theme) {
-      applyThemeVars(doc, theme);
-      themeStyles.setAttribute('href', `/themes/${theme.id}/theme.css`);
-      curtainEl.style.display = theme.features.balloonCurtain ? 'flex' : 'none';
-      confettiEl.style.display = theme.features.confetti ? 'block' : 'none';
-      sparklesEl.style.display = theme.features.sparkles ? 'block' : 'none';
-    },
-    setContent({ headline, message, from, photo }) {
-      headlineEl.innerHTML = headline;
-      messageEl.textContent = message;
-      fromEl.textContent = from;
-      if (photo) {
-        photoEl.src = photo;
+    if (headlineEl) headlineEl.innerHTML = data.headline || '';
+    if (messageEl) messageEl.textContent = data.message || '';
+    if (fromEl) fromEl.textContent = data.from || '';
+
+    if (photoEl && placeholderEl) {
+      if (data.photoDataUrl) {
+        photoEl.src = data.photoDataUrl;
         photoEl.style.display = 'block';
         placeholderEl.style.display = 'none';
       } else {
@@ -68,14 +53,22 @@ export async function createCardController(iframe) {
         photoEl.style.display = 'none';
         placeholderEl.style.display = 'flex';
       }
-    },
-    setWatermark(enabled) {
-      watermarkEl.style.display = enabled ? 'block' : 'none';
-    },
-    play() {
-      root.classList.remove('play');
-      void root.offsetWidth;
-      root.classList.add('play');
     }
+
+    // Features / watermark
+    const wm = document.getElementById('watermark');
+    if (wm) wm.style.display = data.watermark ? 'block' : 'none';
+
+    const f = data.features || {};
+    const curtain = document.getElementById('balloonCurtain');
+    const confetti = document.getElementById('confetti');
+    const sparkles = document.getElementById('sparkles');
+    if (curtain) curtain.style.display = f.balloonCurtain ? 'flex' : 'none';
+    if (confetti) confetti.style.display = f.confetti ? 'block' : 'none';
+    if (sparkles) sparkles.style.display = f.sparkles ? 'block' : 'none';
+
+    replay();
   };
-}
+
+  window.play = replay;
+</script>
