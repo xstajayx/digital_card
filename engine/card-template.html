@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <!-- ✅ GitHub Pages safe: use relative path -->
-  <link rel="stylesheet" href="./engine/card-base.css" />
+  <link rel="stylesheet" href="./card-base.css" />
   <link id="themeStyles" rel="stylesheet" href="" />
 
   <title>Card Preview</title>
@@ -80,13 +80,11 @@
 
     // Called by engine/preview.js
     window.setCardData = (data) => {
-      // Theme CSS
       const themeStyles = document.getElementById('themeStyles');
       if (themeStyles) {
         themeStyles.href = data.themeCssHref || '';
       }
 
-      // Vars
       const p = data.palette || {};
       const t = data.timing || {};
 
@@ -104,7 +102,6 @@
       if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
       if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
 
-      // Content
       const headlineEl = document.getElementById('headline');
       const messageEl = document.getElementById('message');
       const fromEl = document.getElementById('from');
@@ -127,11 +124,9 @@
         }
       }
 
-      // Watermark
       const wm = document.getElementById('watermark');
       if (wm) wm.style.display = data.watermark ? 'block' : 'none';
 
-      // Features
       const f = data.features || {};
       const curtain = document.getElementById('balloonCurtain');
       const confetti = document.getElementById('confetti');
@@ -145,8 +140,6 @@
     };
 
     window.play = replay;
-
-    // Optional: start with a basic animation if opened directly
     replay();
   </script>
 </body>

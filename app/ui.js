@@ -1,36 +1,50 @@
 import { exportGif } from '../engine/export.js';
 
 export async function loadThemes() {
-  // ✅ Use relative paths for GitHub Pages repos
-  const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
-  if (!idsRes.ok) throw new Error(`Failed to load ./themes/themes.json (${idsRes.status})`);
-  const ids = await idsRes.json();
+  const exportStatus = document.getElementById('exportStatus');
+  let ids = [];
 
-  if (!Array.isArray(ids) || ids.length === 0) {
-    throw new Error('themes/themes.json must be an array of theme folder names.');
+  try {
+    const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
+    if (!idsRes.ok) throw new Error(`Failed to load ./themes/themes.json (${idsRes.status})`);
+    ids = await idsRes.json();
+  } catch (error) {
+    console.error('Theme list load failed for ./themes/themes.json', error);
+    if (exportStatus) {
+      exportStatus.textContent = 'Unable to load theme list. Check console for details.';
+    }
+    return [];
   }
 
-  const themes = await Promise.all(
-    ids.map(async (id) => {
-      const themeUrl = `./themes/${id}/theme.json`;
-      try {
-        const themeRes = await fetch(themeUrl, { cache: 'no-store' });
-        if (!themeRes.ok) {
-          throw new Error(`HTTP ${themeRes.status}`);
-        }
-        const theme = await themeRes.json();
-        if (!theme.id) theme.id = id;
-        return theme;
-      } catch (error) {
-        console.error(`Theme load failed for ${themeUrl}`, error);
-        return null;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    const message = 'themes/themes.json must be an array of theme folder names.';
+    console.error(message);
+    if (exportStatus) exportStatus.textContent = message;
+    return [];
+  }
+
+  const themes = [];
+  for (const id of ids) {
+    const themeUrl = `./themes/${id}/theme.json`;
+    try {
+      const themeRes = await fetch(themeUrl, { cache: 'no-store' });
+      if (!themeRes.ok) {
+        throw new Error(`HTTP ${themeRes.status}`);
       }
-    })
-  );
+      const theme = await themeRes.json();
+      if (!theme.id) theme.id = id;
+      themes.push(theme);
+    } catch (error) {
+      console.error(`Theme load failed for ${themeUrl}`, error);
+    }
+  }
 
-  return themes.filter(Boolean);
+  if (!themes.length && exportStatus) {
+    exportStatus.textContent = 'No themes could be loaded. Check console errors for failing URLs.';
+  }
+
+  return themes;
 }
-
 
 function greetingFor(theme, name) {
   const safeName = name || 'Friend';
@@ -127,70 +141,68 @@ export function createUI({ state, preview, elements }) {
 
   replayButton.addEventListener('click', () => preview.play());
 
-downloadButton.addEventListener('click', async () => {
-  const current = state.get();
-  if (!current.theme) return;
+  downloadButton.addEventListener('click', async () => {
+    const current = state.get();
+    if (!current.theme) return;
 
-  downloadButton.disabled = true;
-  exportStatus.textContent = 'Preparing export...';
+    downloadButton.disabled = true;
+    exportStatus.textContent = 'Preparing export...';
 
-  const headline = greetingFor(current.theme, current.to);
+    const headline = greetingFor(current.theme, current.to);
 
-  // ✅ Reliable export size
-  const doc = previewFrame.contentDocument;
-  const cardEl = doc && doc.querySelector('.card');
-  const rect = cardEl ? cardEl.getBoundingClientRect() : previewFrame.getBoundingClientRect();
-  const width = Math.max(320, Math.round(rect.width));
-  const height = Math.max(480, Math.round(rect.height));
+    const doc = previewFrame.contentDocument;
+    const cardEl = doc && doc.querySelector('.card');
+    const rect = cardEl ? cardEl.getBoundingClientRect() : previewFrame.getBoundingClientRect();
+    const width = Math.max(320, Math.round(rect.width));
+    const height = Math.max(480, Math.round(rect.height));
 
-  try {
-    const blob = await exportGif({
-      theme: current.theme,
-      content: {
-        headline,
-        message: current.message,
-        from: current.from,
-        photo: current.photo
-      },
-      watermark: current.watermark,
-      width,
-      height,
-      fps: 10,
-      durationMs: Math.max(7000, current.theme.timing.fxStopMs || 8000),
-      onProgress: (message) => {
-        exportStatus.textContent = message;
-      }
-    });
+    try {
+      const blob = await exportGif({
+        iframe: previewFrame,
+        theme: current.theme,
+        content: {
+          headline,
+          message: current.message,
+          from: current.from,
+          photo: current.photo
+        },
+        watermark: current.watermark,
+        width,
+        height,
+        fps: 10,
+        durationMs: Math.max(7000, current.theme.timing.fxStopMs || 8000),
+        onProgress: (message) => {
+          exportStatus.textContent = message;
+        }
+      });
 
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${current.theme.id}-card.gif`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${current.theme.id}-card.gif`;
+      anchor.click();
+      URL.revokeObjectURL(url);
 
-    exportStatus.textContent = 'Your GIF is ready!';
-  } catch (error) {
-    console.error(error);
-    exportStatus.textContent = `Export failed: ${error.message || error}`;
-  } finally {
-    downloadButton.disabled = false;
-  }
-});
+      exportStatus.textContent = 'Your GIF is ready!';
+    } catch (error) {
+      console.error(error);
+      exportStatus.textContent = `Export failed: ${error.message || error}`;
+    } finally {
+      downloadButton.disabled = false;
+    }
+  });
 
+  state.subscribe((current) => {
+    renderThemes(current);
 
- state.subscribe((current) => {
-  renderThemes(current);
+    if (toInput.value !== current.to) toInput.value = current.to;
+    if (messageInput.value !== current.message) messageInput.value = current.message;
+    if (fromInput.value !== current.from) fromInput.value = current.from;
 
-  if (toInput.value !== current.to) toInput.value = current.to;
-  if (messageInput.value !== current.message) messageInput.value = current.message;
-  if (fromInput.value !== current.from) fromInput.value = current.from;
+    if (watermarkToggle.checked !== current.watermark) {
+      watermarkToggle.checked = current.watermark;
+    }
 
-  if (watermarkToggle.checked !== current.watermark) {
-    watermarkToggle.checked = current.watermark;
-  }
-
-  updatePreview(current);
-});
-
+    updatePreview(current);
+  });
 }
