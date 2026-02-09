@@ -1,8 +1,21 @@
-import { createCardController } from './preview.js';
-
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const waitForSetCardData = (iframe, timeoutMs = 5000) =>
+  new Promise((resolve, reject) => {
+    const start = Date.now();
+    const tick = () => {
+      const w = iframe.contentWindow;
+      if (w && typeof w.setCardData === 'function') return resolve(w.setCardData);
+      if (Date.now() - start > timeoutMs) {
+        return reject(new Error('Preview iframe is not ready for export.'));
+      }
+      return setTimeout(tick, 50);
+    };
+    tick();
+  });
+
 export async function exportGif({
+  iframe,
   theme,
   content,
   watermark,
@@ -12,36 +25,41 @@ export async function exportGif({
   durationMs,
   onProgress
 }) {
-  const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.left = '-9999px';
-  container.style.top = '0';
-  container.style.width = `${width}px`;
-  container.style.height = `${height}px`;
-  document.body.appendChild(container);
+  if (!iframe) {
+    throw new Error('Export failed: preview iframe is required.');
+  }
 
-  const iframe = document.createElement('iframe');
-  iframe.style.width = `${width}px`;
-  iframe.style.height = `${height}px`;
-  iframe.style.border = 'none';
-  container.appendChild(iframe);
+  const doc = iframe.contentDocument;
+  if (!doc || !doc.body) {
+    throw new Error('Export failed: preview iframe document is not available.');
+  }
 
-  const controller = await createCardController(iframe);
-  controller.setTheme(theme);
-  controller.setContent(content);
-  controller.setWatermark(watermark);
-  controller.play();
+  const setCardData = await waitForSetCardData(iframe);
+  setCardData({
+    palette: theme?.palette || null,
+    timing: theme?.timing || null,
+    features: theme?.features || null,
+    headline: content?.headline || '',
+    message: content?.message || '',
+    from: content?.from || '',
+    photoDataUrl: content?.photo || '',
+    watermark: !!watermark,
+    themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
+  });
 
-  const totalDuration = durationMs ?? Math.max(7000, theme.timing.fxStopMs || 8000);
+  const w = iframe.contentWindow;
+  if (w && typeof w.play === 'function') w.play();
+
+  const totalDuration = durationMs ?? Math.max(7000, theme?.timing?.fxStopMs || 8000);
   const frameDelay = 1000 / fps;
-  const frames = Math.floor(totalDuration / frameDelay);
+  const frames = Math.max(1, Math.floor(totalDuration / frameDelay));
 
   const gif = new GIF({
     workers: 2,
     quality: 10,
     width,
     height,
-    workerScript: '/vendor/gif.worker.min.js'
+    workerScript: './vendor/gif.worker.js'
   });
 
   const start = performance.now();
@@ -57,12 +75,14 @@ export async function exportGif({
       await wait(waitMs);
     }
 
-    const canvas = await window.html2canvas(controller.doc.body, {
+    const canvas = await window.html2canvas(doc.body, {
       backgroundColor: null,
+      useCORS: true,
+      scale: 1,
       width,
-      height,
-      scale: 1
+      height
     });
+
     gif.addFrame(canvas, { delay: frameDelay });
   }
 
@@ -74,6 +94,5 @@ export async function exportGif({
     gif.render();
   });
 
-  container.remove();
   return blob;
 }
