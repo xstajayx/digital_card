@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Zoe",
     "message": "Hope your day is filled with giggles, sweet surprises, and magical moments!",
-    "from": "With love 💛"
+    "from": "With love \ud83d\udc9b"
   },
   "palette": {
     "paper": "#f7e8d4",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": true,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "balloons",
+    "frameDecor": "balloons",
+    "overlayIntensity": 0.8
   }
 }

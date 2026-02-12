@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Leo",
     "message": "Let the fun begin! Wishing you a day packed with games, snacks, and laughter!",
-    "from": "Your party crew 🎈"
+    "from": "Your party crew \ud83c\udf88"
   },
   "palette": {
     "paper": "#eef7ff",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": true,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "confetti",
+    "frameDecor": "balloons",
+    "overlayIntensity": 0.9
   }
 }

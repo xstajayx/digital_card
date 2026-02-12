@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Avery",
     "message": "Your kindness meant the world. Thank you for being amazing and always showing up.",
-    "from": "Gratefully 💙"
+    "from": "Gratefully \ud83d\udc99"
   },
   "palette": {
     "paper": "#f4f8f6",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": false,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "stars",
+    "frameDecor": "stars",
+    "overlayIntensity": 0.55
   }
 }

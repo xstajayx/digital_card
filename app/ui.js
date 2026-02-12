@@ -150,12 +150,6 @@ export function createUI({ state, preview, elements }) {
 
     const headline = greetingFor(current.theme, current.to);
 
-    const doc = previewFrame.contentDocument;
-    const cardEl = doc && doc.querySelector('.card');
-    const rect = cardEl ? cardEl.getBoundingClientRect() : previewFrame.getBoundingClientRect();
-    const width = Math.max(320, Math.round(rect.width));
-    const height = Math.max(480, Math.round(rect.height));
-
     try {
       const blob = await exportGif({
         iframe: previewFrame,
@@ -167,9 +161,7 @@ export function createUI({ state, preview, elements }) {
           photo: current.photo
         },
         watermark: current.watermark,
-        width,
-        height,
-        fps: 10,
+        fps: 14,
         durationMs: Math.max(7000, current.theme.timing.fxStopMs || 8000),
         onProgress: (message) => {
           exportStatus.textContent = message;

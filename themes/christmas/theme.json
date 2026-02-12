@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Noah",
     "message": "Warm wishes, cozy lights, and a heart full of joy this holiday season.",
-    "from": "Season's greetings 🎄"
+    "from": "Season's greetings \ud83c\udf84"
   },
   "palette": {
     "paper": "#f5f8f2",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": false,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "snow",
+    "frameDecor": "snow",
+    "overlayIntensity": 0.85
   }
 }

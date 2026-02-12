@@ -3,56 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <!-- ✅ GitHub Pages safe: use relative path -->
   <link rel="stylesheet" href="./card-base.css" />
   <link id="themeStyles" rel="stylesheet" href="" />
-
   <title>Card Preview</title>
 </head>
-
 <body>
   <div class="card-root" id="cardRoot">
     <div class="balloon-curtain" id="balloonCurtain">
-      <div class="curtain-layer">
-        <div class="curtain-balloon" style="--b:1"></div>
-        <div class="curtain-balloon" style="--b:2"></div>
-        <div class="curtain-balloon" style="--b:3"></div>
-        <div class="curtain-balloon" style="--b:4"></div>
-        <div class="curtain-balloon" style="--b:5"></div>
-        <div class="curtain-balloon" style="--b:6"></div>
-        <div class="curtain-balloon" style="--b:7"></div>
-        <div class="curtain-balloon" style="--b:8"></div>
-        <div class="curtain-balloon" style="--b:9"></div>
-        <div class="curtain-balloon" style="--b:10"></div>
-        <div class="curtain-balloon" style="--b:11"></div>
-        <div class="curtain-balloon" style="--b:12"></div>
+      <div class="curtain-layer"></div>
+    </div>
+
+    <div class="card">
+      <div class="panel top">
+        <div class="headline" id="headline">Happy Day</div>
+        <div class="message" id="message"></div>
+        <div class="from" id="from"></div>
+      </div>
+
+      <div class="panel bottom">
+        <div class="photo-wrap" id="photoWrap">
+          <div class="photo-slot" id="photoSlot">
+            <img id="photo" alt="Uploaded" style="display:none;" />
+            <div class="placeholder" id="placeholder">
+              <span>Upload a photo</span>
+            </div>
+          </div>
+          <div class="frame-decor" id="frameDecor" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
-
-   <div class="card">
-  <div class="panel top">
-    <div class="headline" id="headline">Happy Day</div>
-    <div class="message" id="message"></div>
-    <div class="from" id="from"></div>
-  </div>
-
-  <div class="panel bottom">
-    <div class="photo-slot" id="photoSlot">
-      <img id="photo" alt="Uploaded" style="display:none;" />
-      <div class="placeholder" id="placeholder">
-        <span>Upload a photo</span>
-      </div>
-    </div>
-
-    <div class="float-balloons" aria-hidden="true">
-      <div class="float-balloon b1"></div>
-      <div class="float-balloon b2"></div>
-      <div class="float-balloon b3"></div>
-    </div>
-  </div>
-</div>
-
 
     <div class="confetti" id="confetti">
       <span></span><span></span><span></span><span></span><span></span>
@@ -67,6 +46,25 @@
   </div>
 
   <script>
+    const REVEAL_COUNTS = {
+      balloons: 12,
+      hearts: 16,
+      stars: 16,
+      snow: 24,
+      confetti: 20
+    };
+
+    const FRAME_DECOR_POSITIONS = [
+      { x: -6, y: -6 },
+      { x: 50, y: -8 },
+      { x: 106, y: -6 },
+      { x: -8, y: 50 },
+      { x: 108, y: 50 },
+      { x: -6, y: 106 },
+      { x: 50, y: 108 },
+      { x: 106, y: 106 }
+    ];
+
     function setVar(k, v) {
       document.documentElement.style.setProperty(k, v);
     }
@@ -79,7 +77,50 @@
       root.classList.add('play');
     }
 
-    // Called by engine/preview.js
+    function buildCurtainItems(type = 'balloons', intensity = 0.75) {
+      const curtain = document.getElementById('balloonCurtain');
+      if (!curtain) return;
+      const layer = curtain.querySelector('.curtain-layer');
+      if (!layer) return;
+
+      layer.innerHTML = '';
+      const count = Math.max(6, Math.round((REVEAL_COUNTS[type] || REVEAL_COUNTS.balloons) * (0.5 + intensity)));
+      const normalized = ['balloons', 'hearts', 'stars', 'snow', 'confetti'].includes(type) ? type : 'balloons';
+
+      curtain.dataset.revealType = normalized;
+      setVar('--overlay-intensity', String(Math.max(0, Math.min(1, intensity))));
+
+      for (let i = 0; i < count; i += 1) {
+        const item = document.createElement('span');
+        item.className = `curtain-item ${normalized}`;
+        item.style.setProperty('--i', i + 1);
+        item.style.setProperty('--x', `${(i * 37) % 100}%`);
+        item.style.setProperty('--drift', `${((i % 5) - 2) * 6}px`);
+        item.style.setProperty('--delay', `${(i % 7) * -0.2}s`);
+        layer.appendChild(item);
+      }
+    }
+
+    function buildFrameDecor(type = 'balloons', intensity = 0.65) {
+      const frameDecor = document.getElementById('frameDecor');
+      if (!frameDecor) return;
+
+      frameDecor.innerHTML = '';
+      const normalized = ['balloons', 'hearts', 'stars', 'snow', 'confetti'].includes(type) ? type : 'balloons';
+      frameDecor.dataset.decorType = normalized;
+
+      const count = Math.max(4, Math.round(FRAME_DECOR_POSITIONS.length * (0.45 + intensity * 0.55)));
+      for (let i = 0; i < count; i += 1) {
+        const p = FRAME_DECOR_POSITIONS[i % FRAME_DECOR_POSITIONS.length];
+        const item = document.createElement('span');
+        item.className = `frame-item ${normalized}`;
+        item.style.left = `${p.x}%`;
+        item.style.top = `${p.y}%`;
+        item.style.setProperty('--delay', `${(i % 4) * -0.35}s`);
+        frameDecor.appendChild(item);
+      }
+    }
+
     window.setCardData = (data) => {
       const themeStyles = document.getElementById('themeStyles');
       if (themeStyles) {
@@ -102,6 +143,14 @@
       if (t.fromDelayMs != null) setVar('--from-delay', `${t.fromDelayMs}ms`);
       if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
       if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
+
+      const f = data.features || {};
+      const revealType = f.revealType || (f.balloonCurtain ? 'balloons' : 'balloons');
+      const frameDecor = f.frameDecor || revealType;
+      const overlayIntensity = typeof f.overlayIntensity === 'number' ? f.overlayIntensity : 0.7;
+
+      buildCurtainItems(revealType, overlayIntensity);
+      buildFrameDecor(frameDecor, overlayIntensity);
 
       const headlineEl = document.getElementById('headline');
       const messageEl = document.getElementById('message');
@@ -128,12 +177,12 @@
       const wm = document.getElementById('watermark');
       if (wm) wm.style.display = data.watermark ? 'block' : 'none';
 
-      const f = data.features || {};
       const curtain = document.getElementById('balloonCurtain');
       const confetti = document.getElementById('confetti');
       const sparkles = document.getElementById('sparkles');
 
-      if (curtain) curtain.style.display = f.balloonCurtain ? 'flex' : 'none';
+      const showCurtain = f.balloonCurtain !== false;
+      if (curtain) curtain.style.display = showCurtain ? 'flex' : 'none';
       if (confetti) confetti.style.display = f.confetti ? 'block' : 'none';
       if (sparkles) sparkles.style.display = f.sparkles ? 'block' : 'none';
 
