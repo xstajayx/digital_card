@@ -15,15 +15,8 @@ const waitForSetCardData = (iframe, timeoutMs = 5000) =>
   });
 
 function getCardElement(iframe) {
-  const doc = iframe?.contentDocument;
-  if (!doc) {
-    throw new Error('Export failed: preview iframe document is not available.');
-  }
-
-  const cardRoot = doc.querySelector('#cardRoot');
-  if (!cardRoot) {
-    throw new Error('Export failed: #cardRoot was not found in preview iframe.');
-  }
+  const cardRoot = iframe?.contentDocument?.getElementById('cardRoot');
+  if (!cardRoot) throw new Error('Card root not found for export');
 
   const rect = cardRoot.getBoundingClientRect();
   if (!rect.width || !rect.height) {
@@ -31,10 +24,9 @@ function getCardElement(iframe) {
   }
 
   return {
-    doc,
     cardRoot,
-    width: Math.round(rect.width),
-    height: Math.round(rect.height)
+    width: rect.width,
+    height: rect.height
   };
 }
 
@@ -68,8 +60,13 @@ export async function exportGif({
   if (w && typeof w.play === 'function') w.play();
 
   const { cardRoot, width, height } = getCardElement(iframe);
-  const scale = Math.max(2, Math.ceil(window.devicePixelRatio || 1));
-  const totalDuration = durationMs ?? Math.max(7000, theme?.timing?.fxStopMs || 8000);
+  const duration = durationMs || 5000;
+  const revealDuration =
+    parseFloat(iframe.contentDocument.documentElement.style.getPropertyValue('--balloons-duration')) ||
+    3000;
+  await wait(revealDuration + 150);
+
+  const totalDuration = Math.min(duration, 5000);
   const frameDelay = 1000 / fps;
   const frames = Math.max(1, Math.floor(totalDuration / frameDelay));
 
@@ -94,12 +91,12 @@ export async function exportGif({
       await wait(waitMs);
     }
 
-    const canvas = await window.html2canvas(cardRoot, {
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    const canvas = await html2canvas(cardRoot, {
       backgroundColor: null,
       useCORS: true,
-      scale,
-      width,
-      height
+      scale: window.devicePixelRatio || 2
     });
 
     gif.addFrame(canvas, { delay: frameDelay, copy: true });
