@@ -9,8 +9,8 @@
 </head>
 <body>
   <div class="card-root" id="cardRoot">
-    <div class="balloon-curtain" id="balloonCurtain">
-      <div class="curtain-layer" id="curtainLayer"></div>
+    <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons">
+      <div class="dissolve-layer" id="dissolveLayer"></div>
     </div>
 
     <div class="card">
@@ -60,25 +60,6 @@
       root.classList.remove('play');
       void root.offsetWidth;
       root.classList.add('play');
-    }
-
-    function buildCurtain(revealType) {
-      const layer = document.getElementById('curtainLayer');
-      if (!layer) return;
-
-      const type = normalizeType(revealType);
-      const count = Math.floor(Math.random() * 11) + 18;
-      layer.innerHTML = '';
-
-      for (let i = 0; i < count; i += 1) {
-        const el = document.createElement('div');
-        el.className = `curtain-item ${type}`;
-        el.style.setProperty('--x', `${Math.round(Math.random() * 100)}%`);
-        el.style.setProperty('--i', i);
-        el.style.setProperty('--delay', `${(Math.random() * 0.6).toFixed(2)}s`);
-        el.style.setProperty('--drift', `${Math.round((Math.random() * 16) - 8)}px`);
-        layer.appendChild(el);
-      }
     }
 
     function buildFrameDecor(frameDecorType) {
@@ -145,10 +126,13 @@
       if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
 
       const f = data.features || {};
-      const revealType = (f.revealType || 'balloons');
+      const revealType = normalizeType(f.revealType || 'balloons');
       const frameDecor = (f.frameDecor || revealType);
 
-      buildCurtain(revealType);
+      if (f.overlayIntensity != null) {
+        setVar('--overlay-intensity', f.overlayIntensity);
+      }
+
       buildFrameDecor(frameDecor);
 
       const headlineEl = document.getElementById('headline');
@@ -181,7 +165,10 @@
       const sparkles = document.getElementById('sparkles');
 
       const showCurtain = f.balloonCurtain !== false;
-      if (curtain) curtain.style.display = showCurtain ? 'flex' : 'none';
+      if (curtain) {
+        curtain.style.display = showCurtain ? 'block' : 'none';
+        curtain.setAttribute('data-reveal', revealType);
+      }
       if (confetti) confetti.style.display = f.confetti ? 'block' : 'none';
       if (sparkles) sparkles.style.display = f.sparkles ? 'block' : 'none';
 
