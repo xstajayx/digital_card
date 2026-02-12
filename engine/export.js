@@ -40,7 +40,7 @@ export async function exportGif({
   theme,
   content,
   watermark,
-  fps = 14,
+  fps = 6,
   durationMs,
   onProgress
 }) {
@@ -71,7 +71,7 @@ export async function exportGif({
     3000;
   await wait(revealDuration + 150);
 
-  const totalDuration = Math.min(duration, 5000);
+  const totalDuration = Math.min(duration, 2500);
   const frameDelay = 1000 / fps;
   const frames = Math.max(1, Math.floor(totalDuration / frameDelay));
 
