@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Sky",
     "message": "You did it! Celebrate this big win and soak in every proud moment.",
-    "from": "Cheering for you 🏆"
+    "from": "Cheering for you \ud83c\udfc6"
   },
   "palette": {
     "paper": "#fff8e8",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": true,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "stars",
+    "frameDecor": "stars",
+    "overlayIntensity": 0.8
   }
 }

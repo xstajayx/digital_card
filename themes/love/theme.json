@@ -5,7 +5,7 @@
   "defaults": {
     "to": "Jamie",
     "message": "Every day with you feels like a warm hug. Sending love and sunshine your way.",
-    "from": "All my heart 💖"
+    "from": "All my heart \ud83d\udc96"
   },
   "palette": {
     "paper": "#fff1f6",
@@ -26,6 +26,9 @@
   "features": {
     "balloonCurtain": true,
     "confetti": true,
-    "sparkles": true
+    "sparkles": true,
+    "revealType": "hearts",
+    "frameDecor": "hearts",
+    "overlayIntensity": 0.9
   }
 }
