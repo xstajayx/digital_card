@@ -42,11 +42,15 @@ export async function exportVideo({
     throw new Error('Could not get 2D context for export canvas');
   }
 
-  const stream = out.captureStream(0);
+  if (durationMs < 800) durationMs = 800;
+
+  const stream = out.captureStream(30);
   const track = stream.getVideoTracks()[0];
 
   const mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
   const mimeType = mimeTypes.find((type) => MediaRecorder.isTypeSupported(type)) || 'video/webm';
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const chunks = [];
   const recorder = new MediaRecorder(stream, { mimeType });
@@ -58,11 +62,11 @@ export async function exportVideo({
     recorder.onstop = () => resolve(new Blob(chunks, { type: mimeType }));
   });
 
-  recorder.start(100);
+  recorder.start(250);
 
   try {
     const frameDelay = 1000 / fps;
-    const totalFrames = Math.max(1, Math.round((durationMs / 1000) * fps));
+    const totalFrames = Math.max(15, Math.round((durationMs / 1000) * fps));
 
     for (let i = 0; i < totalFrames; i += 1) {
       if (onProgress) onProgress(`Recording frame ${i + 1}/${totalFrames}`);
@@ -83,18 +87,27 @@ export async function exportVideo({
       ctx.fillStyle = 'rgba(0,0,0,.35)';
       ctx.fillText(`frame ${i + 1}/${totalFrames}`, 10, 22);
 
-      if (track && typeof track.requestFrame === 'function') track.requestFrame();
+      if (track?.requestFrame) track.requestFrame();
 
-      await new Promise((r) => setTimeout(r, frameDelay));
+      await wait(frameDelay);
     }
   } finally {
     if (recorder.state === 'recording') {
       recorder.requestData();
+      await wait(200);
       recorder.stop();
     }
   }
 
   const blob = await stopped;
+  const totalSize = chunks.reduce((sum, chunk) => sum + chunk.size, 0);
+
+  stream.getTracks().forEach((mediaTrack) => mediaTrack.stop());
   out.remove();
+
+  if (chunks.length === 0 || totalSize < 10_000) {
+    throw new Error('Video export produced no data. Try a different codec or browser.');
+  }
+
   return blob;
 }
