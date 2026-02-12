@@ -161,8 +161,8 @@ export function createUI({ state, preview, elements }) {
           photo: current.photo
         },
         watermark: current.watermark,
-        fps: 14,
-        durationMs: Math.max(7000, current.theme.timing.fxStopMs || 8000),
+        fps: 3,
+        durationMs: Math.max(7000, current.theme.timing.fxStopMs || 4500),
         onProgress: (message) => {
           exportStatus.textContent = message;
         }
