@@ -15,20 +15,25 @@ const waitForSetCardData = (iframe, timeoutMs = 5000) =>
   });
 
 function getCardElement(iframe) {
-  const cardRoot = iframe?.contentDocument?.getElementById('cardRoot');
-  if (!cardRoot) throw new Error('Card root not found for export');
+  const doc = iframe?.contentDocument;
+  if (!doc) throw new Error('Export failed: iframe document not available.');
+
+  // ✅ grab the real card box only
+  const cardRoot =
+    doc.querySelector('.card-root') ||
+    doc.getElementById('cardRoot');
+
+  if (!cardRoot) throw new Error('Export failed: .card-root/#cardRoot not found.');
 
   const rect = cardRoot.getBoundingClientRect();
-  if (!rect.width || !rect.height) {
-    throw new Error('Export failed: #cardRoot has invalid bounds.');
-  }
+  const width = Math.round(rect.width);
+  const height = Math.round(rect.height);
 
-  return {
-    cardRoot,
-    width: rect.width,
-    height: rect.height
-  };
+  if (!width || !height) throw new Error('Export failed: card bounds invalid.');
+
+  return { doc, cardRoot, width, height };
 }
+
 
 export async function exportGif({
   iframe,
