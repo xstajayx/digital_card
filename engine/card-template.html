@@ -10,7 +10,7 @@
 <body>
   <div class="card-root" id="cardRoot">
     <div class="balloon-curtain" id="balloonCurtain">
-      <div class="curtain-layer"></div>
+      <div class="curtain-layer" id="curtainLayer"></div>
     </div>
 
     <div class="card">
@@ -21,14 +21,12 @@
       </div>
 
       <div class="panel bottom">
-        <div class="photo-wrap" id="photoWrap">
+        <div class="photo-wrap">
           <div class="photo-slot" id="photoSlot">
             <img id="photo" alt="Uploaded" style="display:none;" />
-            <div class="placeholder" id="placeholder">
-              <span>Upload a photo</span>
-            </div>
+            <div class="placeholder" id="placeholder"><span>Upload a photo</span></div>
           </div>
-          <div class="frame-decor" id="frameDecor" aria-hidden="true"></div>
+          <div class="frame-decor" id="frameDecor"></div>
         </div>
       </div>
     </div>
@@ -46,24 +44,11 @@
   </div>
 
   <script>
-    const REVEAL_COUNTS = {
-      balloons: 12,
-      hearts: 16,
-      stars: 16,
-      snow: 24,
-      confetti: 20
-    };
+    const ITEM_TYPES = ['balloons', 'hearts', 'stars', 'snow', 'confetti'];
 
-    const FRAME_DECOR_POSITIONS = [
-      { x: -6, y: -6 },
-      { x: 50, y: -8 },
-      { x: 106, y: -6 },
-      { x: -8, y: 50 },
-      { x: 108, y: 50 },
-      { x: -6, y: 106 },
-      { x: 50, y: 108 },
-      { x: 106, y: 106 }
-    ];
+    function normalizeType(type) {
+      return ITEM_TYPES.includes(type) ? type : 'balloons';
+    }
 
     function setVar(k, v) {
       document.documentElement.style.setProperty(k, v);
@@ -77,46 +62,61 @@
       root.classList.add('play');
     }
 
-    function buildCurtainItems(type = 'balloons', intensity = 0.75) {
-      const curtain = document.getElementById('balloonCurtain');
-      if (!curtain) return;
-      const layer = curtain.querySelector('.curtain-layer');
+    function buildCurtain(revealType) {
+      const layer = document.getElementById('curtainLayer');
       if (!layer) return;
 
+      const type = normalizeType(revealType);
+      const count = Math.floor(Math.random() * 11) + 18;
       layer.innerHTML = '';
-      const count = Math.max(6, Math.round((REVEAL_COUNTS[type] || REVEAL_COUNTS.balloons) * (0.5 + intensity)));
-      const normalized = ['balloons', 'hearts', 'stars', 'snow', 'confetti'].includes(type) ? type : 'balloons';
-
-      curtain.dataset.revealType = normalized;
-      setVar('--overlay-intensity', String(Math.max(0, Math.min(1, intensity))));
 
       for (let i = 0; i < count; i += 1) {
-        const item = document.createElement('span');
-        item.className = `curtain-item ${normalized}`;
-        item.style.setProperty('--i', i + 1);
-        item.style.setProperty('--x', `${(i * 37) % 100}%`);
-        item.style.setProperty('--drift', `${((i % 5) - 2) * 6}px`);
-        item.style.setProperty('--delay', `${(i % 7) * -0.2}s`);
-        layer.appendChild(item);
+        const el = document.createElement('div');
+        el.className = `curtain-item ${type}`;
+        el.style.setProperty('--x', `${Math.round(Math.random() * 100)}%`);
+        el.style.setProperty('--i', i);
+        el.style.setProperty('--delay', `${(Math.random() * 0.6).toFixed(2)}s`);
+        el.style.setProperty('--drift', `${Math.round((Math.random() * 16) - 8)}px`);
+        layer.appendChild(el);
       }
     }
 
-    function buildFrameDecor(type = 'balloons', intensity = 0.65) {
+    function buildFrameDecor(frameDecorType) {
       const frameDecor = document.getElementById('frameDecor');
       if (!frameDecor) return;
 
+      const type = normalizeType(frameDecorType);
       frameDecor.innerHTML = '';
-      const normalized = ['balloons', 'hearts', 'stars', 'snow', 'confetti'].includes(type) ? type : 'balloons';
-      frameDecor.dataset.decorType = normalized;
 
-      const count = Math.max(4, Math.round(FRAME_DECOR_POSITIONS.length * (0.45 + intensity * 0.55)));
+      const ringPositions = [
+        { left: 0, top: 0 },
+        { left: 50, top: 0 },
+        { left: 100, top: 0 },
+        { left: 0, top: 50 },
+        { left: 100, top: 50 },
+        { left: 0, top: 100 },
+        { left: 50, top: 100 },
+        { left: 100, top: 100 }
+      ];
+
+      const count = Math.floor(Math.random() * 5) + 10;
+
+      while (ringPositions.length < count) {
+        const edge = Math.floor(Math.random() * 4);
+        const p = Math.round(Math.random() * 100);
+        if (edge === 0) ringPositions.push({ left: p, top: 0 });
+        if (edge === 1) ringPositions.push({ left: 100, top: p });
+        if (edge === 2) ringPositions.push({ left: p, top: 100 });
+        if (edge === 3) ringPositions.push({ left: 0, top: p });
+      }
+
       for (let i = 0; i < count; i += 1) {
-        const p = FRAME_DECOR_POSITIONS[i % FRAME_DECOR_POSITIONS.length];
-        const item = document.createElement('span');
-        item.className = `frame-item ${normalized}`;
-        item.style.left = `${p.x}%`;
-        item.style.top = `${p.y}%`;
-        item.style.setProperty('--delay', `${(i % 4) * -0.35}s`);
+        const item = document.createElement('div');
+        const pos = ringPositions[i];
+        item.className = `frame-item ${type}`;
+        item.style.left = `${pos.left}%`;
+        item.style.top = `${pos.top}%`;
+        item.style.setProperty('--delay', `${(Math.random() * 1.5).toFixed(2)}s`);
         frameDecor.appendChild(item);
       }
     }
@@ -145,12 +145,11 @@
       if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
 
       const f = data.features || {};
-      const revealType = f.revealType || (f.balloonCurtain ? 'balloons' : 'balloons');
-      const frameDecor = f.frameDecor || revealType;
-      const overlayIntensity = typeof f.overlayIntensity === 'number' ? f.overlayIntensity : 0.7;
+      const revealType = (f.revealType || 'balloons');
+      const frameDecor = (f.frameDecor || revealType);
 
-      buildCurtainItems(revealType, overlayIntensity);
-      buildFrameDecor(frameDecor, overlayIntensity);
+      buildCurtain(revealType);
+      buildFrameDecor(frameDecor);
 
       const headlineEl = document.getElementById('headline');
       const messageEl = document.getElementById('message');
