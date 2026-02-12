@@ -82,6 +82,12 @@ body {
   border: 1px solid #d6d4f5;
 }
 
+.button.video {
+  background: #0f766e;
+  color: white;
+  box-shadow: 0 10px 18px rgba(15, 118, 110, 0.3);
+}
+
 .button:active {
   transform: translateY(1px);
 }

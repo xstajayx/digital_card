@@ -12,6 +12,7 @@ async function init() {
     themeGallery: document.getElementById('themeGallery'),
     replayButton: document.getElementById('replayButton'),
     downloadButton: document.getElementById('downloadButton'),
+    downloadVideoButton: document.getElementById('downloadVideoButton'),
     exportStatus: document.getElementById('exportStatus'),
     previewFrame: document.getElementById('cardPreview')
   };
