@@ -1,5 +1,6 @@
 import { exportGif } from '../engine/export.js';
 import { exportVideo } from '../engine/exportVideo.js';
+import { exportVideoWebCodecs } from '../engine/exportVideoWebCodecs.js';
 
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
@@ -187,20 +188,40 @@ export function createUI({ state, preview, elements }) {
   });
 
   downloadVideoButton.addEventListener('click', async () => {
+    const current = state.get();
+    if (!current.theme) return;
+
     try {
-      const blob = await exportVideo({
-        iframe: previewFrame,
-        durationMs: 5000,
-        fps: 30,
-        onProgress: msg => exportStatus.textContent = msg
-      });
+      let blob;
+
+      if (!('VideoEncoder' in window)) {
+        exportStatus.textContent = 'WebCodecs not supported in this browser. Try Chrome/Edge desktop.';
+        blob = await exportVideo({
+          iframe: previewFrame,
+          durationMs: 5000,
+          fps: 30,
+          onProgress: (msg) => {
+            exportStatus.textContent = msg;
+          }
+        });
+      } else {
+        blob = await exportVideoWebCodecs({
+          iframe: previewFrame,
+          durationMs: 5000,
+          fps: 30,
+          onProgress: (msg) => {
+            exportStatus.textContent = msg;
+          }
+        });
+      }
 
       const url = URL.createObjectURL(blob);
 
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = "card-video.webm";
+      a.download = `${current.theme.id}-card.webm`;
       a.click();
+      URL.revokeObjectURL(url);
     } catch (error) {
       console.error(error);
       exportStatus.textContent = `Video export failed: ${error.message || error}`;
