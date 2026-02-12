@@ -28,61 +28,63 @@
     </nav>
   </header>
 
-  <main class="layout">
-    <!-- Controls -->
-    <section class="controls" aria-label="Card controls">
-      <div class="panel">
-        <h2>Personalize</h2>
+  <main class="studio">
+    <section class="studio-inner">
+      <div class="controls-block" aria-label="Card controls">
+        <div class="panel">
+          <h2>Personalize</h2>
 
-        <label class="field">
-          <span>To</span>
-          <input id="toInput" type="text" placeholder="Name" maxlength="36" autocomplete="off" />
-        </label>
+          <label class="field">
+            <span>To</span>
+            <input id="toInput" type="text" placeholder="Name" maxlength="36" autocomplete="off" />
+          </label>
 
-        <label class="field">
-          <span>Message</span>
-          <textarea id="messageInput" rows="4" placeholder="Write a message…" maxlength="280"></textarea>
-        </label>
+          <label class="field">
+            <span>Message</span>
+            <textarea id="messageInput" rows="4" placeholder="Write a message…" maxlength="280"></textarea>
+          </label>
 
-        <label class="field">
-          <span>From</span>
-          <input id="fromInput" type="text" placeholder="Your name" maxlength="36" autocomplete="off" />
-        </label>
+          <label class="field">
+            <span>From</span>
+            <input id="fromInput" type="text" placeholder="Your name" maxlength="36" autocomplete="off" />
+          </label>
 
-        <label class="field">
-          <span>Photo</span>
-          <input id="photoInput" type="file" accept="image/*" />
-        </label>
+          <label class="field">
+            <span>Photo</span>
+            <input id="photoInput" type="file" accept="image/*" />
+          </label>
 
-        <label class="toggle">
-          <input id="watermarkToggle" type="checkbox" checked />
-          <span>Show watermark</span>
-        </label>
+          <label class="toggle">
+            <input id="watermarkToggle" type="checkbox" checked />
+            <span>Show watermark</span>
+          </label>
+        </div>
       </div>
 
-      <div class="panel">
-        <h2>Choose a theme</h2>
-        <div id="themeGallery" class="theme-grid" role="list"></div>
-      </div>
-    </section>
-
-    <!-- Preview -->
-    <section class="preview" aria-label="Preview">
-      <div class="preview-header">
-        <h2>Live preview</h2>
-        <p>Pick a theme, edit the message, upload a photo — then replay or export.</p>
+      <div class="themes-block">
+        <div class="panel">
+          <h2>Choose a theme</h2>
+          <div id="themeGallery" class="theme-grid" role="list"></div>
+        </div>
       </div>
 
-      <div class="preview-frame">
-        <iframe
-          id="cardPreview"
-          title="Digital card preview"
-          aria-label="Digital card preview"
-          loading="lazy"
-        ></iframe>
-      </div>
+      <div class="preview-block" aria-label="Preview">
+        <div class="preview-header">
+          <h2>Live preview</h2>
+          <p>Create your card then replay or export.</p>
+        </div>
 
-      <div id="exportStatus" class="export-status" aria-live="polite"></div>
+        <div class="preview-card-frame">
+          <iframe
+            id="cardPreview"
+            title="Digital card preview"
+            aria-label="Digital card preview"
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <div id="exportStatus" class="export-status" aria-live="polite"></div>
+      </div>
     </section>
   </main>
 
