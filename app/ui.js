@@ -1,4 +1,5 @@
 import { exportGif } from '../engine/export.js';
+import { exportVideo } from '../engine/exportVideo.js';
 
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
@@ -76,6 +77,7 @@ export function createUI({ state, preview, elements }) {
     themeGallery,
     replayButton,
     downloadButton,
+    downloadVideoButton,
     exportStatus,
     previewFrame
   } = elements;
@@ -178,9 +180,42 @@ export function createUI({ state, preview, elements }) {
       exportStatus.textContent = 'Your GIF is ready!';
     } catch (error) {
       console.error(error);
-      exportStatus.textContent = `Export failed: ${error.message || error}`;
+      exportStatus.textContent = `GIF export failed: ${error.message || error}. Try "Download Video" for a more reliable export.`;
     } finally {
       downloadButton.disabled = false;
+    }
+  });
+
+  downloadVideoButton.addEventListener('click', async () => {
+    const current = state.get();
+    if (!current.theme) return;
+
+    downloadVideoButton.disabled = true;
+    exportStatus.textContent = 'Preparing video export...';
+
+    try {
+      const blob = await exportVideo({
+        iframe: previewFrame,
+        durationMs: Math.min(current.theme.timing.fxStopMs || 5000, 5000),
+        fps: 30,
+        onProgress: (message) => {
+          exportStatus.textContent = message;
+        }
+      });
+
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${current.theme.id}-card.webm`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+
+      exportStatus.textContent = 'Your video is ready!';
+    } catch (error) {
+      console.error(error);
+      exportStatus.textContent = `Video export failed: ${error.message || error}`;
+    } finally {
+      downloadVideoButton.disabled = false;
     }
   });
 
