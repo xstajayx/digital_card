@@ -75,37 +75,54 @@ export async function exportGif({
   const frameDelay = 1000 / fps;
   const frames = Math.max(1, Math.floor(totalDuration / frameDelay));
 
-  const gif = new GIF({
-    workers: 2,
-    quality: 7,
-    width,
-    height,
-    workerScript: './vendor/gif.worker.js'
+ const gif = new GIF({
+  workers: 2,
+  quality: 7,
+  width,
+  height,
+  workerScript: './vendor/gif.worker.js'
+});
+
+// ✅ fixed-size canvas for every frame (prevents black/blank and “rest of page” feeling)
+const frameCanvas = document.createElement('canvas');
+frameCanvas.width = width;
+frameCanvas.height = height;
+const frameCtx = frameCanvas.getContext('2d');
+
+// ✅ solid background for GIF (no alpha in GIF)
+const paper =
+  iframe.contentDocument.documentElement.style.getPropertyValue('--paper')?.trim() || '#ffffff';
+
+const start = performance.now();
+
+for (let i = 0; i < frames; i += 1) {
+  if (onProgress) onProgress(`Rendering frame ${i + 1}/${frames}`);
+
+  const targetTime = start + i * frameDelay;
+  const waitMs = Math.max(0, targetTime - performance.now());
+  if (waitMs > 0) await wait(waitMs);
+
+  // double rAF = more stable paint
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+  // capture at higher scale for clarity
+  const captureScale = 2;
+  const cap = await html2canvas(cardRoot, {
+    backgroundColor: paper,   // ✅ IMPORTANT: no transparency
+    useCORS: true,
+    scale: captureScale
   });
 
-  const start = performance.now();
+  // draw captured image into fixed-size frame
+  frameCtx.clearRect(0, 0, width, height);
+  frameCtx.fillStyle = paper;
+  frameCtx.fillRect(0, 0, width, height);
 
-  for (let i = 0; i < frames; i += 1) {
-    if (onProgress) {
-      onProgress(`Rendering frame ${i + 1}/${frames}`);
-    }
+  // cap is (width*captureScale x height*captureScale), draw down to exact GIF size
+  frameCtx.drawImage(cap, 0, 0, width, height);
 
-    const targetTime = start + i * frameDelay;
-    const waitMs = Math.max(0, targetTime - performance.now());
-    if (waitMs > 0) {
-      await wait(waitMs);
-    }
-
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-    const canvas = await html2canvas(cardRoot, {
-      backgroundColor: null,
-      useCORS: true,
-      scale: window.devicePixelRatio || 2
-    });
-
-    gif.addFrame(canvas, { delay: frameDelay, copy: true });
-  }
+  gif.addFrame(frameCanvas, { delay: frameDelay, copy: true });
+}
 
   const blob = await new Promise((resolve) => {
     gif.on('finished', (result) => resolve(result));
