@@ -33,11 +33,21 @@ body {
   border: 6px solid rgba(255, 255, 255, 0.6);
 }
 
-.card {
+.card{
+  width: min(420px, 96vw);
+  height: min(720px, 92vh);
+  border-radius: 26px;
+  overflow: hidden;
+  position: relative;
+
+  background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.28));
+  border: 2px solid rgba(43,38,34,.12);
+  box-shadow: 0 22px 55px rgba(0,0,0,.20);
+
   display: grid;
-  grid-template-columns: 1fr;
-  height: 100%;
+  grid-template-rows: auto 1fr;
 }
+
 
 .panel {
   padding: clamp(1.4rem, 3vw, 2rem);
