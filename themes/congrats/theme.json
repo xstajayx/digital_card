@@ -27,7 +27,7 @@
     "balloonCurtain": true,
     "confetti": true,
     "sparkles": true,
-    "revealType": "stars",
+    "revealType": "confetti",
     "frameDecor": "stars",
     "overlayIntensity": 0.8
   }
