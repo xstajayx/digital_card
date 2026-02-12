@@ -187,35 +187,23 @@ export function createUI({ state, preview, elements }) {
   });
 
   downloadVideoButton.addEventListener('click', async () => {
-    const current = state.get();
-    if (!current.theme) return;
-
-    downloadVideoButton.disabled = true;
-    exportStatus.textContent = 'Preparing video export...';
-
     try {
       const blob = await exportVideo({
         iframe: previewFrame,
-        durationMs: Math.min(current.theme.timing.fxStopMs || 5000, 5000),
+        durationMs: 5000,
         fps: 30,
-        onProgress: (message) => {
-          exportStatus.textContent = message;
-        }
+        onProgress: msg => exportStatus.textContent = msg
       });
 
       const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `${current.theme.id}-card.webm`;
-      anchor.click();
-      URL.revokeObjectURL(url);
 
-      exportStatus.textContent = 'Your video is ready!';
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "card-video.webm";
+      a.click();
     } catch (error) {
       console.error(error);
       exportStatus.textContent = `Video export failed: ${error.message || error}`;
-    } finally {
-      downloadVideoButton.disabled = false;
     }
   });
 
