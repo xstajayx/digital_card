@@ -26,6 +26,7 @@ export async function createCardController(iframe) {
 
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error('Preview iframe load timeout.')), 12000);
+    iframe.removeAttribute('srcdoc');
     iframe.addEventListener(
       'load',
       () => {

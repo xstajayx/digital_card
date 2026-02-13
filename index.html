@@ -31,6 +31,11 @@
         <div class="panel">
           <h2>Personalize</h2>
 
+          <div class="mode-toggle" role="group" aria-label="Studio mode">
+            <button id="modeShareButton" class="mode-option is-active" type="button" data-mode="share">Share Card</button>
+            <button id="modeGifButton" class="mode-option" type="button" data-mode="gif">GIF (with photo)</button>
+          </div>
+
           <label class="field">
             <span>To</span>
             <input id="toInput" type="text" placeholder="Name" maxlength="36" autocomplete="off" />
@@ -95,7 +100,7 @@
 
         <div class="preview-actions">
           <button id="replayButtonInline" class="button ghost" type="button">Replay</button>
-          <button id="recordGifButton" class="button primary" type="button">Record GIF</button>
+          <button id="createGifButton" class="button primary" type="button">Create GIF</button>
         </div>
 
         <div class="preview-card-frame">
@@ -103,6 +108,12 @@
         </div>
 
         <div id="exportStatus" class="export-status" aria-live="polite"></div>
+
+        <div id="gifResult" class="gif-result" hidden>
+          <h3>Your GIF</h3>
+          <img id="gifPreviewImage" alt="Generated card GIF preview" />
+          <a id="downloadGifLink" class="button primary" download="digital-card.gif">Download GIF</a>
+        </div>
       </div>
     </section>
   </main>

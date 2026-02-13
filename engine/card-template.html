@@ -8,7 +8,7 @@
   <title>Card Preview</title>
 </head>
 <body>
-  <div class="card-root" id="cardRoot">
+  <div class="card-root" id="cardRoot" data-capture-scope="card">
     <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons">
       <div class="dissolve-layer" id="dissolveLayer"></div>
     </div>
@@ -91,6 +91,7 @@
       const root = document.getElementById('cardRoot');
       if (!root) return;
       root.classList.remove('play');
+      root.setAttribute('data-replay-ts', String(Date.now()));
       void root.offsetWidth;
       root.classList.add('play');
     }
