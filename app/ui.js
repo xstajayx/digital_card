@@ -3,44 +3,30 @@ import { sanitizeGiftUrl } from '../engine/sanitize.js';
 
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
-  let ids = [];
 
   try {
     const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
     if (!idsRes.ok) throw new Error(`Failed to load ./themes/themes.json (${idsRes.status})`);
-    ids = await idsRes.json();
-  } catch (error) {
-    console.error('Theme list load failed for ./themes/themes.json', error);
-    if (exportStatus) exportStatus.textContent = 'Unable to load theme list. Check console for details.';
-    return [];
-  }
+    const ids = await idsRes.json();
 
-  if (!Array.isArray(ids) || ids.length === 0) {
-    const message = 'themes/themes.json must be an array of theme folder names.';
-    console.error(message);
-    if (exportStatus) exportStatus.textContent = message;
-    return [];
-  }
+    if (!Array.isArray(ids) || ids.length === 0) {
+      throw new Error('themes/themes.json must be an array of theme folder names.');
+    }
 
-  const themes = [];
-  for (const id of ids) {
-    const themeUrl = `./themes/${id}/theme.json`;
-    try {
-      const themeRes = await fetch(themeUrl, { cache: 'no-store' });
-      if (!themeRes.ok) throw new Error(`HTTP ${themeRes.status}`);
+    const themes = [];
+    for (const id of ids) {
+      const themeRes = await fetch(`./themes/${id}/theme.json`, { cache: 'no-store' });
+      if (!themeRes.ok) throw new Error(`Failed to load ./themes/${id}/theme.json (${themeRes.status})`);
       const theme = await themeRes.json();
       if (!theme.id) theme.id = id;
       themes.push(theme);
-    } catch (error) {
-      console.error(`Theme load failed for ${themeUrl}`, error);
     }
+    return themes;
+  } catch (err) {
+    console.error(err);
+    if (exportStatus) exportStatus.textContent = err.message || 'Unable to load themes.';
+    return [];
   }
-
-  if (!themes.length && exportStatus) {
-    exportStatus.textContent = 'No themes could be loaded. Check console errors for failing URLs.';
-  }
-
-  return themes;
 }
 
 function greetingFor(theme, name) {
@@ -52,14 +38,19 @@ function greetingFor(theme, name) {
     case 'love': return `All my love, <span class="name">${safeName}</span>! 💖`;
     case 'congrats': return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
     case 'christmas': return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
-    default: return `${theme.occasion}, <span class="name">${safeName}</span>!`;
+    default: return `${theme.occasion || 'Hello'}, <span class="name">${safeName}</span>!`;
   }
 }
 
 function base64UrlEncode(str) {
-  // Safe unicode base64
   const b64 = btoa(unescape(encodeURIComponent(str)));
   return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function buildViewerUrl(encoded) {
+  const href = location.href.split('?')[0].split('#')[0];
+  const dir = href.slice(0, href.lastIndexOf('/') + 1);
+  return `${dir}view.html?d=${encoded}`;
 }
 
 function readFileAsDataUrl(file) {
@@ -77,19 +68,17 @@ function compressDataUrl(dataUrl, maxSide, quality) {
     img.onload = () => {
       const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
       const scale = Math.min(1, maxSide / longest);
-      const width = Math.max(1, Math.round(img.naturalWidth * scale));
-      const height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
 
       const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = w;
+      canvas.height = h;
 
       const ctx = canvas.getContext('2d');
       if (!ctx) return reject(new Error('Image compression is unavailable.'));
 
-      ctx.drawImage(img, 0, 0, width, height);
-
-      // Always output JPEG for smallest size
+      ctx.drawImage(img, 0, 0, w, h);
       resolve(canvas.toDataURL('image/jpeg', quality));
     };
     img.onerror = () => reject(new Error('Unsupported image format — please choose a JPEG/PNG.'));
@@ -97,76 +86,39 @@ function compressDataUrl(dataUrl, maxSide, quality) {
   });
 }
 
-async function compressImageFile(file, maxSide, quality) {
-  const dataUrl = await readFileAsDataUrl(file);
-  return compressDataUrl(dataUrl, maxSide, quality);
+async function compressImageFile(file) {
+  // SAFE-SIDE: Aggressive test settings
+  const raw = await readFileAsDataUrl(file);
+  // first pass (still decent)
+  const pass1 = await compressDataUrl(raw, 420, 0.60);
+  // second pass (smaller)
+  const pass2 = await compressDataUrl(pass1, 320, 0.50);
+  return pass2;
 }
 
-function buildViewerUrl(encoded) {
-  const href = location.href.split('?')[0].split('#')[0];
-  const dir = href.slice(0, href.lastIndexOf('/') + 1);
-  return `${dir}view.html?d=${encoded}`;
-}
-
-/**
- * SAFE MVP SETTINGS (for debugging / proof of concept)
- * - very conservative URL max length
- * - aggressive photo compression
- * - will drop photo if still too big (but card still shares)
- */
 async function buildShareUrlAsync(current) {
   const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
 
   const payload = {
     v: 1,
     themeId: current.theme.id,
-    to: current.to,
-    message: current.message,
-    from: current.from,
-    watermark: current.watermark,
+    to: current.to || '',
+    message: current.message || '',
+    from: current.from || '',
+    watermark: !!current.watermark,
     giftUrl: safeGiftUrl,
     photo: current.photo || ''
   };
 
-  // Conservative limit for WhatsApp / mobile
-  const MAX_LEN = 4500;
+  const encoded = base64UrlEncode(JSON.stringify(payload));
 
-  const encodePayload = (p) => base64UrlEncode(JSON.stringify(p));
-
-  let encoded = encodePayload(payload);
-
-  // If too long and we have a photo: compress HARD for sharing
-  let droppedPhoto = false;
-
-  if (encoded.length > MAX_LEN && payload.photo) {
-    payload.photo = await compressDataUrl(payload.photo, 320, 0.50);
-    encoded = encodePayload(payload);
-  }
-  if (encoded.length > MAX_LEN && payload.photo) {
-    payload.photo = await compressDataUrl(payload.photo, 256, 0.45);
-    encoded = encodePayload(payload);
-  }
-  if (encoded.length > MAX_LEN && payload.photo) {
-    payload.photo = await compressDataUrl(payload.photo, 220, 0.40);
-    encoded = encodePayload(payload);
-  }
-
-  // If STILL too long: drop photo for share
-  if (encoded.length > MAX_LEN && payload.photo) {
-    payload.photo = '';
-    droppedPhoto = true;
-    encoded = encodePayload(payload);
-  }
-
+  // Keep it conservative for WhatsApp/browser URL lengths
+  const MAX_LEN = 6000;
   if (encoded.length > MAX_LEN) {
-    throw new Error('Card is still too large to share. Shorten the message and try again.');
+    throw new Error(`Share link too large (${encoded.length} chars). Use a smaller/cropped photo.`);
   }
 
-  return {
-    url: buildViewerUrl(encoded),
-    encodedLen: encoded.length,
-    droppedPhoto
-  };
+  return { url: buildViewerUrl(encoded), encodedLen: encoded.length, photoLen: payload.photo.length };
 }
 
 export function createUI({ state, preview, elements }) {
@@ -189,38 +141,36 @@ export function createUI({ state, preview, elements }) {
 
   let photoJobId = 0;
 
-  function setStatus(msg) {
-    if (exportStatus) exportStatus.textContent = msg;
-  }
+  const setStatus = (msg) => { if (exportStatus) exportStatus.textContent = msg || ''; };
 
-  function setButtonsEnabled(enabled) {
+  const setButtonsEnabled = (enabled) => {
     if (shareLinkButton) shareLinkButton.disabled = !enabled;
     if (shareWhatsappButton) shareWhatsappButton.disabled = !enabled;
-  }
+  };
 
   function renderThemes(current) {
     themeGallery.innerHTML = '';
     current.themes.forEach((theme) => {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'theme-card';
-      if (current.theme && current.theme.id === theme.id) card.classList.add('selected');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-card';
+      if (current.theme && current.theme.id === theme.id) btn.classList.add('selected');
 
-      card.innerHTML = `
-        <h3>${theme.name}</h3>
-        <div class="theme-swatch" style="background: linear-gradient(135deg, ${theme.palette.accent}, ${theme.palette.accent2});"></div>
+      btn.innerHTML = `
+        <h3>${theme.name || theme.id}</h3>
+        <div class="theme-swatch" style="background: linear-gradient(135deg, ${theme.palette?.accent || '#999'}, ${theme.palette?.accent2 || '#666'});"></div>
       `;
 
-      card.addEventListener('click', () => {
+      btn.addEventListener('click', () => {
         state.set({
           theme,
-          to: theme.defaults.to,
-          message: theme.defaults.message,
-          from: theme.defaults.from
+          to: theme.defaults?.to || '',
+          message: theme.defaults?.message || '',
+          from: theme.defaults?.from || ''
         });
       });
 
-      themeGallery.appendChild(card);
+      themeGallery.appendChild(btn);
     });
   }
 
@@ -240,38 +190,32 @@ export function createUI({ state, preview, elements }) {
   }
 
   // Inputs
-  toInput.addEventListener('input', (event) => state.set({ to: event.target.value }));
-  messageInput.addEventListener('input', (event) => state.set({ message: event.target.value }));
-  fromInput.addEventListener('input', (event) => state.set({ from: event.target.value }));
-  watermarkToggle.addEventListener('change', (event) => state.set({ watermark: event.target.checked }));
+  toInput.addEventListener('input', (e) => state.set({ to: e.target.value }));
+  messageInput.addEventListener('input', (e) => state.set({ message: e.target.value }));
+  fromInput.addEventListener('input', (e) => state.set({ from: e.target.value }));
+  watermarkToggle.addEventListener('change', (e) => state.set({ watermark: e.target.checked }));
 
-  giftToggle.addEventListener('change', (event) => {
-    const enabled = event.target.checked;
-    giftField.style.display = enabled ? 'flex' : 'none';
-    if (!enabled) {
-      state.set({ giftEnabled: false, giftUrl: '' });
-      return;
-    }
-    state.set({ giftEnabled: true });
+  giftToggle.addEventListener('change', (e) => {
+    const enabled = e.target.checked;
+    if (giftField) giftField.style.display = enabled ? 'flex' : 'none';
+    state.set({ giftEnabled: enabled, giftUrl: enabled ? (state.get().giftUrl || '') : '' });
   });
 
-  giftInput.addEventListener('input', (event) => {
-    const typedValue = event.target.value;
-    const safe = sanitizeGiftUrl(typedValue);
+  giftInput.addEventListener('input', (e) => {
+    const typed = e.target.value;
+    const safe = sanitizeGiftUrl(typed);
     state.set({ giftUrl: safe });
-    if (typedValue.trim() && !safe) {
-      setStatus('Gift link must be a valid https:// URL.');
-    }
+    if (typed.trim() && !safe) setStatus('Gift link must be a valid https:// URL.');
   });
 
-  // Photo upload (aggressive compression for test)
-  photoInput.addEventListener('change', async (event) => {
-    const file = event.target.files?.[0];
+  // Photo upload (single clean listener)
+  photoInput.addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     const jobId = ++photoJobId;
 
-    // hard size limit (input file)
+    // Hard limit (before reading)
     if (file.size > 2 * 1024 * 1024) {
       state.set({ photo: '', photoBusy: false });
       setButtonsEnabled(true);
@@ -280,27 +224,21 @@ export function createUI({ state, preview, elements }) {
       return;
     }
 
-    state.set({ photoBusy: true });
     setButtonsEnabled(false);
     setStatus('Optimising photo…');
+    state.set({ photoBusy: true });
 
     try {
-      // ✅ VERY LOW for test: 420px + 0.60
-      // (Preview will still look OK in a small card)
-      const dataUrl = await compressImageFile(file, 420, 0.60);
-
+      const dataUrl = await compressImageFile(file);
       if (jobId !== photoJobId) return;
 
-      state.set({ photo: dataUrl });
+      state.set({ photo: dataUrl }); // ✅ THIS is what must persist for sharing
       setStatus(`Photo added ✅ (${dataUrl.length} chars)`);
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       if (jobId !== photoJobId) return;
       state.set({ photo: '' });
-      setStatus(
-        error?.message === 'Unsupported image format — please choose a JPEG/PNG.'
-          ? error.message
-          : 'Could not process photo. Try a different image.'
-      );
+      setStatus(err?.message || 'Could not process photo. Try a different image.');
     } finally {
       if (jobId === photoJobId) {
         state.set({ photoBusy: false });
@@ -319,54 +257,41 @@ export function createUI({ state, preview, elements }) {
     try {
       const current = state.get();
       if (!current.theme) return;
+      if (current.photoBusy) return setStatus('Please wait — photo is still processing…');
 
-      if (current.photoBusy) {
-        setStatus('Please wait — photo is still processing…');
-        return;
-      }
-
-      setStatus('Building share link…');
-
-      const { url, encodedLen, droppedPhoto } = await buildShareUrlAsync(current);
+      setStatus(`Building share… photoLen=${(current.photo || '').length}`);
+      const { url, encodedLen } = await buildShareUrlAsync(current);
 
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
-        setStatus(`Share link copied! (payload: ${encodedLen} chars)${droppedPhoto ? ' — photo removed for sharing' : ''}`);
+        setStatus(`Link copied ✅ (${encodedLen} chars)`);
       } else {
         setStatus(`Copy this link: ${url}`);
       }
-    } catch (error) {
-      console.error(error);
-      setStatus(error.message || 'Unable to build share link.');
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message || 'Unable to build share link.');
     }
   });
 
-  // Share WhatsApp (no popup)
+  // Share to WhatsApp (no blank page)
   shareWhatsappButton.addEventListener('click', async () => {
     try {
       const current = state.get();
       if (!current.theme) return;
+      if (current.photoBusy) return setStatus('Please wait — photo is still processing…');
 
-      if (current.photoBusy) {
-        setStatus('Please wait — photo is still processing…');
-        return;
-      }
-
-      setStatus('Building WhatsApp message…');
-
-      const { url, encodedLen, droppedPhoto } = await buildShareUrlAsync(current);
+      setStatus(`Building WhatsApp share… photoLen=${(current.photo || '').length}`);
+      const { url } = await buildShareUrlAsync(current);
 
       const text = `You’ve got a card 🎉 ${url}`;
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
 
-      // ✅ Avoid blank popup tab behaviour
-      window.location.href = waUrl;
-
-      // Might not display because navigation happens immediately
-      setStatus(`Opening WhatsApp… (payload: ${encodedLen} chars)${droppedPhoto ? ' — photo removed for sharing' : ''}`);
-    } catch (error) {
-      console.error(error);
-      setStatus(error.message || 'Unable to share to WhatsApp.');
+      // ✅ More reliable than window.open (prevents blank page issues)
+      window.location.href = wa;
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message || 'Unable to share to WhatsApp.');
     }
   });
 
@@ -382,10 +307,9 @@ export function createUI({ state, preview, elements }) {
     if (watermarkToggle.checked !== current.watermark) watermarkToggle.checked = current.watermark;
     if (giftToggle.checked !== current.giftEnabled) giftToggle.checked = current.giftEnabled;
 
-    giftField.style.display = current.giftEnabled ? 'flex' : 'none';
+    if (giftField) giftField.style.display = current.giftEnabled ? 'flex' : 'none';
 
     setButtonsEnabled(!current.photoBusy);
-
     updatePreview(current);
   });
 }
