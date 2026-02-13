@@ -6,7 +6,8 @@ export function createState() {
     to: '',
     message: '',
     from: '',
-    photo: null,
+    photo: '',
+    photoBusy: false,
     watermark: true,
     giftEnabled: false,
     giftUrl: ''
