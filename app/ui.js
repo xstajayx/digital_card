@@ -252,9 +252,7 @@ export function createUI({ state, preview, elements }) {
     return;
   }
 
-  // Disable share buttons immediately (safe UI-only)
-  setButtonsEnabled(false);
-  setStatus('Optimising photo…');
+  
 
   // Mark busy (protect against preview errors)
   try {
