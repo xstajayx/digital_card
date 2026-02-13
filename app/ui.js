@@ -282,12 +282,16 @@ export function createUI({ state, preview, elements }) {
         ? error.message
         : 'Could not process photo. Try a different image.';
     setStatus(msg);
-  } finally {
-    if (jobId === photoJobId) {
-      try { state.set({ photoBusy: false }); } catch (e) { console.error(e); }
-      setButtonsEnabled(true);
-    }
+  } 
+  finally {
+  // Always clear busy for this job if it's still the latest
+  if (jobId === photoJobId) {
+    try { state.set({ photoBusy: false }); } catch (e) { console.error(e); }
   }
+
+  // Always re-enable buttons so the UI never "dies"
+  setButtonsEnabled(true);
+}
 });
 
   const replay = () => preview.play();
