@@ -230,39 +230,6 @@ export function createUI({ state, preview, elements }) {
   });
 
   photoInput.addEventListener('change', async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const jobId = ++photoJobId;
-
-    if (file.size > 2 * 1024 * 1024) {
-      state.set({ photo: '', photoBusy: false });
-      setButtonsEnabled(true);
-      setStatus('Photo must be 2MB or smaller.');
-      photoInput.value = '';
-      return;
-    }
-
-    state.set({ photoBusy: true });
-    setButtonsEnabled(false);
-    setStatus('Optimising photo…');
-
-    // 1) Disable buttons first (pure UI, cannot trigger preview)
-setButtonsEnabled(false);
-setStatus('Optimising photo…');
-
-// 2) Now mark busy, but protect it
-try {
-  state.set({ photoBusy: true });
-} catch (e) {
-  console.error(e);
-  // If preview update blows up, do not freeze the UI
-  setButtonsEnabled(true);
-  setStatus('Preview error while preparing photo. Check console.');
-  return;
-}
-
-photoInput.addEventListener('change', async (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
 
@@ -281,7 +248,7 @@ photoInput.addEventListener('change', async (event) => {
   setButtonsEnabled(false);
   setStatus('Optimising photo…');
 
-  // Mark busy, but never allow preview errors to freeze the UI
+  // Mark busy (protect against preview errors)
   try {
     state.set({ photoBusy: true });
   } catch (e) {
@@ -295,7 +262,6 @@ photoInput.addEventListener('change', async (event) => {
     const dataUrl = await compressImageFile(file, 640, 0.72);
     if (jobId !== photoJobId) return;
 
-    // This may still trigger preview updates; keep it inside try
     state.set({ photo: dataUrl });
     setStatus('Photo added ✅');
   } catch (error) {
