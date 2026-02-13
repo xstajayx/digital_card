@@ -1,16 +1,20 @@
 // digital_card/engine/preview.js
 // Loads the preview as a real page (iframe.src), then calls window.setCardData inside it.
-// This avoids srcdoc path issues and works on GitHub Pages subpaths.
+// Hardened: never let preview errors break the main UI.
 
 const TEMPLATE_URL = './engine/card-template.html';
 
-const waitFor = (check, timeoutMs = 5000, intervalMs = 50) =>
+const waitFor = (check, timeoutMs = 7000, intervalMs = 50) =>
   new Promise((resolve, reject) => {
     const start = Date.now();
     const tick = () => {
-      if (check()) return resolve();
+      try {
+        if (check()) return resolve();
+      } catch (e) {
+        // ignore transient iframe access errors while loading
+      }
       if (Date.now() - start > timeoutMs) {
-        return reject(new Error('card-template.html did not expose window.setCardData(data).'));
+        return reject(new Error('Preview iframe is not ready (window.setCardData not found).'));
       }
       return setTimeout(tick, intervalMs);
     };
@@ -21,7 +25,7 @@ export async function createCardController(iframe) {
   if (!iframe) throw new Error('Preview iframe not found.');
 
   await new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Preview iframe load timeout.')), 8000);
+    const timeout = setTimeout(() => reject(new Error('Preview iframe load timeout.')), 12000);
     iframe.addEventListener(
       'load',
       () => {
@@ -42,41 +46,64 @@ export async function createCardController(iframe) {
   let content = { headline: '', message: '', from: '', photo: '', giftUrl: '' };
   let watermark = true;
 
-  function push() {
+  function safeCallSetCardData() {
     const w = iframe.contentWindow;
     if (!w || typeof w.setCardData !== 'function') return;
 
-    w.setCardData({
-      palette: theme?.palette || null,
-      timing: theme?.timing || null,
-      features: theme?.features || null,
-      headline: content.headline || '',
-      message: content.message || '',
-      from: content.from || '',
-      photoDataUrl: content.photo || '',
-      watermark: !!watermark,
-      giftUrl: content.giftUrl || '',
-      themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
-    });
+    try {
+      w.setCardData({
+        palette: theme?.palette || null,
+        timing: theme?.timing || null,
+        features: theme?.features || null,
+        headline: content.headline || '',
+        message: content.message || '',
+        from: content.from || '',
+        photoDataUrl: content.photo || '',
+        watermark: !!watermark,
+        giftUrl: content.giftUrl || '',
+        // ✅ card-template is /engine/card-template.html so ../themes works
+        themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
+      });
+    } catch (err) {
+      // ✅ CRITICAL: never allow preview to break the editor UI
+      console.error('[Preview] setCardData failed:', err);
+
+      // Optional: surface a hint inside the preview frame (if possible)
+      try {
+        const doc = iframe.contentDocument;
+        const root = doc && doc.body;
+        if (root) {
+          root.dataset.previewError = '1';
+        }
+      } catch (_) {}
+    }
+  }
+
+  function safePlay() {
+    safeCallSetCardData();
+    const w = iframe.contentWindow;
+    try {
+      if (w && typeof w.play === 'function') w.play();
+    } catch (err) {
+      console.error('[Preview] play() failed:', err);
+    }
   }
 
   return {
     setTheme(nextTheme) {
       theme = nextTheme;
-      push();
+      safeCallSetCardData();
     },
     setContent(nextContent) {
       content = { ...content, ...nextContent };
-      push();
+      safeCallSetCardData();
     },
     setWatermark(enabled) {
       watermark = !!enabled;
-      push();
+      safeCallSetCardData();
     },
     play() {
-      push();
-      const w = iframe.contentWindow;
-      if (w && typeof w.play === 'function') w.play();
+      safePlay();
     }
   };
 }
