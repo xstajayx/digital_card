@@ -172,9 +172,9 @@ export function createUI({ state, preview, elements }) {
   }
 
   function setButtonsEnabled(enabled) {
-    shareLinkButton.disabled = !enabled;
-    shareWhatsappButton.disabled = !enabled;
-  }
+  if (shareLinkButton) shareLinkButton.disabled = !enabled;
+  if (shareWhatsappButton) shareWhatsappButton.disabled = !enabled;
+}
 
   function renderThemes(current) {
     themeGallery.innerHTML = '';
@@ -282,12 +282,10 @@ export function createUI({ state, preview, elements }) {
     setStatus(msg);
   } 
   finally {
-  // Always clear busy for this job if it's still the latest
   if (jobId === photoJobId) {
     try { state.set({ photoBusy: false }); } catch (e) { console.error(e); }
   }
-
-  // Always re-enable buttons so the UI never "dies"
+  // Always re-enable no matter what
   setButtonsEnabled(true);
 }
 });
