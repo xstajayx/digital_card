@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "confetti",
     "frameDecor": "balloons",
-    "overlayIntensity": 0.9
+    "overlayIntensity": 0.9,
+    "decorType": "balloons",
+    "decorDensity": 16
   }
 }

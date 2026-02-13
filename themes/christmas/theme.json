@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "snow",
     "frameDecor": "snow",
-    "overlayIntensity": 0.85
+    "overlayIntensity": 0.85,
+    "decorType": "snow",
+    "decorDensity": 16
   }
 }

@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "hearts",
     "frameDecor": "hearts",
-    "overlayIntensity": 0.9
+    "overlayIntensity": 0.9,
+    "decorType": "hearts",
+    "decorDensity": 16
   }
 }

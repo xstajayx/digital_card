@@ -5,16 +5,15 @@ import { recordPreviewGif } from '../engine/recordGif.js';
 // =====================
 // Option A limits (no backend)
 // =====================
-// Keep this conservative for WhatsApp + in-app browsers.
-// If you want to push it, raise to 3500, but 3000 is safer.
 const MAX_SHARE_URL_CHARS = 3000;
+const TO_MAX_LEN = 36;
+const FROM_MAX_LEN = 36;
+const MESSAGE_MAX_LEN = 200;
 
-// Photo rules (aggressive to fit in URL)
+// Photo rules (preview/editor only — never included in shared URL)
 const UPLOAD_MAX_BYTES = 2 * 1024 * 1024; // 2MB
 const PHOTO_MAX_SIDE_1 = 420;             // first compress pass
 const PHOTO_QUALITY_1 = 0.60;
-const PHOTO_MAX_SIDE_2 = 320;             // second pass (if needed)
-const PHOTO_QUALITY_2 = 0.50;
 
 // ---------------------
 // Themes
@@ -148,30 +147,21 @@ async function buildShareUrlAsync(current) {
     message: current.message || '',
     from: current.from || '',
     watermark: !!current.watermark,
-    giftUrl: safeGiftUrl,
-    photo: current.photo || ''
+    giftEnabled: !!current.giftEnabled,
+    giftUrl: safeGiftUrl
   };
 
-  // 1) encode once
-  let encoded = base64UrlEncode(JSON.stringify(payload));
-  let url = buildViewerUrl(encoded);
+  const encoded = base64UrlEncode(JSON.stringify(payload));
+  const url = buildViewerUrl(encoded);
 
-  // 2) if too long and we have a photo, re-compress photo harder
-  if (url.length > MAX_SHARE_URL_CHARS && payload.photo) {
-    payload.photo = await compressDataUrl(payload.photo, PHOTO_MAX_SIDE_2, PHOTO_QUALITY_2);
-    encoded = base64UrlEncode(JSON.stringify(payload));
-    url = buildViewerUrl(encoded);
-  }
-
-  // 3) hard fail if still too big
   if (url.length > MAX_SHARE_URL_CHARS) {
     throw new Error(
       `This card is too large to share by link (URL ${url.length} chars, limit ${MAX_SHARE_URL_CHARS}). ` +
-      `Try a different photo, or use a tighter crop.`
+      'Please shorten your message or gift link.'
     );
   }
 
-  return { url, urlLen: url.length };
+  return { url, payloadLen: encoded.length };
 }
 
 // ---------------------
@@ -221,9 +211,9 @@ export function createUI({ state, preview, elements }) {
       btn.addEventListener('click', () => {
         state.set({
           theme,
-          to: theme?.defaults?.to ?? '',
-          message: theme?.defaults?.message ?? '',
-          from: theme?.defaults?.from ?? ''
+          to: clampValue(theme?.defaults?.to ?? '', TO_MAX_LEN),
+          message: clampValue(theme?.defaults?.message ?? '', MESSAGE_MAX_LEN),
+          from: clampValue(theme?.defaults?.from ?? '', FROM_MAX_LEN)
         });
       });
       themeGallery.appendChild(btn);
@@ -245,10 +235,42 @@ export function createUI({ state, preview, elements }) {
     preview.play();
   }
 
+  function clampValue(value, maxLen) {
+    return (value || '').slice(0, maxLen);
+  }
+
+  function updateMessageRemaining(currentLen) {
+    const remainingEl = document.getElementById('messageRemaining');
+    if (!remainingEl) return;
+    const remaining = Math.max(0, MESSAGE_MAX_LEN - currentLen);
+    remainingEl.textContent = `${remaining} characters remaining`;
+  }
+
   // ---- inputs ----
-  toInput.addEventListener('input', (e) => state.set({ to: e.target.value }));
-  messageInput.addEventListener('input', (e) => state.set({ message: e.target.value }));
-  fromInput.addEventListener('input', (e) => state.set({ from: e.target.value }));
+  toInput.setAttribute('maxlength', String(TO_MAX_LEN));
+  fromInput.setAttribute('maxlength', String(FROM_MAX_LEN));
+  messageInput.setAttribute('maxlength', String(MESSAGE_MAX_LEN));
+
+  toInput.addEventListener('input', (e) => {
+    const trimmed = clampValue(e.target.value, TO_MAX_LEN);
+    if (e.target.value !== trimmed) e.target.value = trimmed;
+    state.set({ to: trimmed });
+  });
+  messageInput.addEventListener('input', (e) => {
+    const typed = e.target.value || '';
+    const trimmed = clampValue(typed, MESSAGE_MAX_LEN);
+    if (typed !== trimmed) {
+      e.target.value = trimmed;
+      setStatus('Message trimmed to fit card.');
+    }
+    updateMessageRemaining(trimmed.length);
+    state.set({ message: trimmed });
+  });
+  fromInput.addEventListener('input', (e) => {
+    const trimmed = clampValue(e.target.value, FROM_MAX_LEN);
+    if (e.target.value !== trimmed) e.target.value = trimmed;
+    state.set({ from: trimmed });
+  });
   watermarkToggle.addEventListener('change', (e) => state.set({ watermark: e.target.checked }));
 
   giftToggle.addEventListener('change', (e) => {
@@ -299,7 +321,7 @@ export function createUI({ state, preview, elements }) {
       // optional: warn if likely too big
       // (final URL can still be okay after encoding, but this is a good hint)
       if (photoLen > 12000) {
-        setStatus(`Photo added ✅ (${photoLen} chars) — may be too large to share, we’ll compress again if needed.`);
+        setStatus(`Photo added ✅ (${photoLen} chars) — shown in editor preview only.`);
       }
     } catch (err) {
       if (jobId !== photoJobId) return;
@@ -351,14 +373,14 @@ export function createUI({ state, preview, elements }) {
 
       setStatus('Building share link…');
 
-      const { url, urlLen } = await buildShareUrlAsync(current);
+      const { url, payloadLen } = await buildShareUrlAsync(current);
 
       // copy
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
-        setStatus(`Share link copied ✅ (${urlLen} chars)`);
+        setStatus(`Share link ready (payload: ${payloadLen} chars). Copied ✅`);
       } else {
-        setStatus(`Clipboard unavailable — copy this link:\n${url}`);
+        setStatus(`Share link ready (payload: ${payloadLen} chars). Clipboard unavailable — copy this link:\n${url}`);
       }
     } catch (err) {
       console.error(err);
@@ -375,14 +397,14 @@ export function createUI({ state, preview, elements }) {
 
       setStatus('Building WhatsApp message…');
 
-      const { url, urlLen } = await buildShareUrlAsync(current);
+      const { url, payloadLen } = await buildShareUrlAsync(current);
 
       // IMPORTANT: open directly to wa.me (no intermediate blank page)
       const text = `You’ve got a card 🎉 ${url}`;
       const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(wa, '_blank', 'noopener,noreferrer');
 
-      setStatus(`Ready to share ✅ (${urlLen} chars)`);
+      setStatus(`Share link ready (payload: ${payloadLen} chars). Opening WhatsApp…`);
     } catch (err) {
       console.error(err);
       setStatus(err?.message || 'Unable to share to WhatsApp.');
@@ -404,6 +426,7 @@ export function createUI({ state, preview, elements }) {
 
     giftField.style.display = current.giftEnabled ? 'flex' : 'none';
     setShareEnabled(!current.photoBusy);
+    updateMessageRemaining((current.message || '').length);
 
     updatePreview(current);
   });

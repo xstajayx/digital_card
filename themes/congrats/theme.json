@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "confetti",
     "frameDecor": "stars",
-    "overlayIntensity": 0.8
+    "overlayIntensity": 0.8,
+    "decorType": "stars",
+    "decorDensity": 16
   }
 }

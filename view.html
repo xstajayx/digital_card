@@ -84,7 +84,15 @@
         return;
       }
 
-      const safeGift = sanitizeGiftUrl(payload.giftUrl || '');
+      payload = {
+        ...payload,
+        to: String(payload.to || '').slice(0, 36),
+        from: String(payload.from || '').slice(0, 36),
+        message: String(payload.message || '').slice(0, 200)
+      };
+      if ('photo' in payload) delete payload.photo;
+
+      const safeGift = payload.giftEnabled === false ? '' : sanitizeGiftUrl(payload.giftUrl || '');
 
       let themeIds = [];
       try {
@@ -131,7 +139,8 @@
           headline: greetingFor(payload.themeId, payload.to),
           message: payload.message || '',
           from: payload.from || '',
-          photoDataUrl: payload.photo || '',
+          mode: 'viewer',
+          viewer: true,
           watermark: payload.watermark !== false,
           giftUrl: safeGift,
           themeCssHref: `./themes/${payload.themeId}/theme.css`

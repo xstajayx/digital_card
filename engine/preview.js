@@ -58,6 +58,8 @@ export async function createCardController(iframe) {
         headline: content.headline || '',
         message: content.message || '',
         from: content.from || '',
+        mode: 'editor',
+        viewer: false,
         photoDataUrl: content.photo || '',
         watermark: !!watermark,
         giftUrl: content.giftUrl || '',

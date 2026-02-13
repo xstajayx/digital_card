@@ -38,9 +38,9 @@ async function init() {
     state.set({
       themes,
       theme: initialTheme,
-      to: initialTheme?.defaults?.to || '',
-      message: initialTheme?.defaults?.message || '',
-      from: initialTheme?.defaults?.from || '',
+      to: (initialTheme?.defaults?.to || '').slice(0, 36),
+      message: (initialTheme?.defaults?.message || '').slice(0, 200),
+      from: (initialTheme?.defaults?.from || '').slice(0, 36),
       watermark: true,
       giftEnabled: false,
       giftUrl: ''
