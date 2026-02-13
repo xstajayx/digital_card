@@ -277,6 +277,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 560px;
   background: rgba(255, 255, 255, .04);
   border-radius: 18px;
   padding: 10px;
@@ -284,9 +285,11 @@ body {
 }
 
 #cardPreview {
-  width: 100%;
-  max-width: 420px;
+  width: min(100%, 336px);
   aspect-ratio: 3 / 5;
+  height: auto;
+  display: block;
+  margin: 0 auto;
   border: 0;
   border-radius: 18px;
   background: #fff;

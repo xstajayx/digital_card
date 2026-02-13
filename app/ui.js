@@ -5,7 +5,7 @@ import { exportGif } from '../engine/export.js';
 const MAX_SHARE_URL_CHARS = 3000;
 const TO_MAX_LEN = 36;
 const FROM_MAX_LEN = 36;
-const MESSAGE_MAX_LEN = 200;
+const MESSAGE_MAX_LEN = 180;
 
 const UPLOAD_MAX_BYTES = 2 * 1024 * 1024;
 const PHOTO_MAX_SIDE_1 = 420;
@@ -193,10 +193,7 @@ export function createUI({ state, preview, elements }) {
     modeShareButton?.classList.toggle('is-active', isShare);
     modeGifButton?.classList.toggle('is-active', !isShare);
 
-    shareLinkButton?.classList.toggle('is-hidden', !isShare);
-    shareWhatsappButton?.classList.toggle('is-hidden', !isShare);
-
-    createGifButton?.classList.toggle('is-hidden', isShare);
+    updateModeUI(current.mode);
 
     giftToggle?.closest('label')?.classList.toggle('is-hidden', !isShare);
     giftField?.classList.toggle('is-hidden', !isShare || !current.giftEnabled);
@@ -205,6 +202,15 @@ export function createUI({ state, preview, elements }) {
     if (isShare) {
       resetGifResult();
     }
+  }
+
+  function updateModeUI(mode) {
+    const isGif = mode === 'gif';
+    const photoField = photoInput?.closest('label');
+    if (photoField) photoField.style.display = isGif ? 'flex' : 'none';
+    if (shareLinkButton) shareLinkButton.style.display = isGif ? 'none' : 'inline-flex';
+    if (shareWhatsappButton) shareWhatsappButton.style.display = isGif ? 'none' : 'inline-flex';
+    if (createGifButton) createGifButton.style.display = isGif ? 'inline-flex' : 'none';
   }
 
   function renderThemes(current) {
@@ -233,13 +239,19 @@ export function createUI({ state, preview, elements }) {
   function updatePreview(current) {
     if (!current.theme) return;
 
+    const trimmedMessage = clampValue(current.message, MESSAGE_MAX_LEN);
+    const safeGiftUrl = current.mode === 'share' && current.giftEnabled
+      ? sanitizeGiftUrl(current.giftUrl || '')
+      : '';
+
     preview.setTheme(current.theme);
     preview.setContent({
       headline: greetingFor(current.theme, current.to),
-      message: current.message,
+      message: trimmedMessage,
       from: current.from,
-      photo: current.photo,
-      giftUrl: current.mode === 'share' && current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : ''
+      photo: current.mode === 'gif' ? current.photo : '',
+      giftUrl: safeGiftUrl,
+      mode: current.mode
     });
     preview.setWatermark(current.watermark);
     preview.play();
@@ -260,7 +272,7 @@ export function createUI({ state, preview, elements }) {
   fromInput.setAttribute('maxlength', String(FROM_MAX_LEN));
   messageInput.setAttribute('maxlength', String(MESSAGE_MAX_LEN));
 
-  modeShareButton?.addEventListener('click', () => state.set({ mode: 'share' }));
+  modeShareButton?.addEventListener('click', () => state.set({ mode: 'share', photo: '' }));
   modeGifButton?.addEventListener('click', () => state.set({ mode: 'gif', giftEnabled: false, giftUrl: '' }));
 
   toInput.addEventListener('input', (e) => {
@@ -301,6 +313,12 @@ export function createUI({ state, preview, elements }) {
   });
 
   photoInput.addEventListener('change', async (e) => {
+    if (state.get().mode !== 'gif') {
+      photoInput.value = '';
+      state.set({ photo: '' });
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -358,8 +376,8 @@ export function createUI({ state, preview, elements }) {
           photo: current.photo
         },
         watermark: current.watermark,
-        fps: 8,
-        durationMs: 2800,
+        fps: 10,
+        durationMs: 3000,
         onProgress: (msg) => setStatus(msg)
       });
 
@@ -432,6 +450,10 @@ export function createUI({ state, preview, elements }) {
 
     setShareEnabled(!current.photoBusy);
     updateMessageRemaining((current.message || '').length);
+
+    if (current.mode !== 'gif' && photoInput.value) {
+      photoInput.value = '';
+    }
 
     renderMode(current);
     updatePreview(current);

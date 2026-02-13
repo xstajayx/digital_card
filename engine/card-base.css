@@ -178,14 +178,21 @@ body {
   place-items: center;
 }
 
-.card-root[data-mode="editor"] .decor-panel {
+.card-root[data-mode="gif"] .decor-panel {
   display: none;
 }
 
+.card-root[data-mode="share"],
+.card-root[data-mode="viewer"] {
+  --inside-delay: 380ms;
+}
+
+.card-root[data-mode="share"] .photo-wrap,
 .card-root[data-mode="viewer"] .photo-wrap {
   display: none;
 }
 
+.card-root[data-mode="share"] .decor-panel,
 .card-root[data-mode="viewer"] .decor-panel {
   display: block;
 }
