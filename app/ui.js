@@ -247,26 +247,74 @@ export function createUI({ state, preview, elements }) {
     setButtonsEnabled(false);
     setStatus('Optimising photo…');
 
-    try {
-      const dataUrl = await compressImageFile(file, 640, 0.72);
-      if (jobId !== photoJobId) return;
-      state.set({ photo: dataUrl });
-      setStatus('Photo added ✅');
-    } catch (error) {
-      if (jobId !== photoJobId) return;
-      state.set({ photo: '' });
-      if (error.message === 'Unsupported image format — please choose a JPEG/PNG.') {
-        setStatus(error.message);
-      } else {
-        setStatus('Could not process photo. Try a different image.');
-      }
-    } finally {
-      if (jobId === photoJobId) {
-        state.set({ photoBusy: false });
-        setButtonsEnabled(true);
-      }
+    // 1) Disable buttons first (pure UI, cannot trigger preview)
+setButtonsEnabled(false);
+setStatus('Optimising photo…');
+
+// 2) Now mark busy, but protect it
+try {
+  state.set({ photoBusy: true });
+} catch (e) {
+  console.error(e);
+  // If preview update blows up, do not freeze the UI
+  setButtonsEnabled(true);
+  setStatus('Preview error while preparing photo. Check console.');
+  return;
+}
+
+photoInput.addEventListener('change', async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const jobId = ++photoJobId;
+
+  // Size limit
+  if (file.size > 2 * 1024 * 1024) {
+    try { state.set({ photo: '', photoBusy: false }); } catch (e) { console.error(e); }
+    setButtonsEnabled(true);
+    setStatus('Photo must be 2MB or smaller.');
+    photoInput.value = '';
+    return;
+  }
+
+  // Disable share buttons immediately (safe UI-only)
+  setButtonsEnabled(false);
+  setStatus('Optimising photo…');
+
+  // Mark busy, but never allow preview errors to freeze the UI
+  try {
+    state.set({ photoBusy: true });
+  } catch (e) {
+    console.error(e);
+    setButtonsEnabled(true);
+    setStatus('Preview error while preparing photo. Check console.');
+    return;
+  }
+
+  try {
+    const dataUrl = await compressImageFile(file, 640, 0.72);
+    if (jobId !== photoJobId) return;
+
+    // This may still trigger preview updates; keep it inside try
+    state.set({ photo: dataUrl });
+    setStatus('Photo added ✅');
+  } catch (error) {
+    if (jobId !== photoJobId) return;
+
+    try { state.set({ photo: '' }); } catch (e) { console.error(e); }
+
+    const msg =
+      error?.message === 'Unsupported image format — please choose a JPEG/PNG.'
+        ? error.message
+        : 'Could not process photo. Try a different image.';
+    setStatus(msg);
+  } finally {
+    if (jobId === photoJobId) {
+      try { state.set({ photoBusy: false }); } catch (e) { console.error(e); }
+      setButtonsEnabled(true);
     }
-  });
+  }
+});
 
   const replay = () => preview.play();
   replayButton.addEventListener('click', replay);
