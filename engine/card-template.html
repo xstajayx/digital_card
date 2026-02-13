@@ -28,6 +28,7 @@
           </div>
           <div class="frame-decor" id="frameDecor"></div>
         </div>
+        <a id="giftButton" class="gift-button" target="_blank" rel="noopener" style="display:none;">View Gift</a>
       </div>
     </div>
 
@@ -159,6 +160,17 @@
 
       const wm = document.getElementById('watermark');
       if (wm) wm.style.display = data.watermark ? 'block' : 'none';
+
+      const giftBtn = document.getElementById('giftButton');
+      if (giftBtn) {
+        if (data.giftUrl) {
+          giftBtn.href = data.giftUrl;
+          giftBtn.style.display = 'inline-flex';
+        } else {
+          giftBtn.style.display = 'none';
+          giftBtn.removeAttribute('href');
+        }
+      }
 
       const curtain = document.getElementById('balloonCurtain');
       const confetti = document.getElementById('confetti');

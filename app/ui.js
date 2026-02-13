@@ -1,7 +1,3 @@
-import { exportGif } from '../engine/export.js';
-import { exportVideo } from '../engine/exportVideo.js';
-import { exportVideoWebCodecs } from '../engine/exportVideoWebCodecs.js';
-
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
   let ids = [];
@@ -68,6 +64,44 @@ function greetingFor(theme, name) {
   }
 }
 
+function base64UrlEncode(str) {
+  const b64 = btoa(unescape(encodeURIComponent(str)));
+  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/,'');
+}
+
+
+function base64UrlDecode(b64url) {
+  const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
+  return decodeURIComponent(escape(atob(b64 + pad)));
+}
+
+function buildShareUrl(current, exportStatus) {
+  const payload = {
+    v: 1,
+    themeId: current.theme.id,
+    to: current.to,
+    message: current.message,
+    from: current.from,
+    watermark: current.watermark,
+    giftUrl: current.giftEnabled ? (current.giftUrl || '') : '',
+    photo: current.photo || ''
+  };
+
+  let encoded = base64UrlEncode(JSON.stringify(payload));
+
+  if (encoded.length > 3500 && payload.photo) {
+    payload.photo = '';
+    payload.photoOmitted = true;
+    encoded = base64UrlEncode(JSON.stringify(payload));
+    exportStatus.textContent = 'Photo too large for link — shared without photo.';
+  }
+
+  const base = location.href.split('?')[0].split('#')[0];
+  const dir = base.substring(0, base.lastIndexOf('/') + 1);
+  return `${dir}view.html?d=${encoded}`;
+}
+
 export function createUI({ state, preview, elements }) {
   const {
     toInput,
@@ -75,12 +109,15 @@ export function createUI({ state, preview, elements }) {
     fromInput,
     photoInput,
     watermarkToggle,
+    giftToggle,
+    giftInput,
+    giftField,
     themeGallery,
     replayButton,
-    downloadButton,
-    downloadVideoButton,
-    exportStatus,
-    previewFrame
+    replayButtonInline,
+    shareLinkButton,
+    shareWhatsappButton,
+    exportStatus
   } = elements;
 
   function renderThemes(current) {
@@ -116,24 +153,33 @@ export function createUI({ state, preview, elements }) {
       headline,
       message: current.message,
       from: current.from,
-      photo: current.photo
+      photo: current.photo,
+      giftUrl: current.giftEnabled ? current.giftUrl : ''
     });
     preview.setWatermark(current.watermark);
     preview.play();
   }
 
-  toInput.addEventListener('input', (event) => {
-    state.set({ to: event.target.value });
+  toInput.addEventListener('input', (event) => state.set({ to: event.target.value }));
+  messageInput.addEventListener('input', (event) => state.set({ message: event.target.value }));
+  fromInput.addEventListener('input', (event) => state.set({ from: event.target.value }));
+  watermarkToggle.addEventListener('change', (event) => state.set({ watermark: event.target.checked }));
+
+  giftToggle.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      giftField.style.display = 'flex';
+      state.set({ giftEnabled: true });
+      return;
+    }
+
+    giftField.style.display = 'none';
+    state.set({ giftEnabled: false, giftUrl: '' });
   });
-  messageInput.addEventListener('input', (event) => {
-    state.set({ message: event.target.value });
+
+  giftInput.addEventListener('input', (event) => {
+    state.set({ giftUrl: event.target.value.trim() });
   });
-  fromInput.addEventListener('input', (event) => {
-    state.set({ from: event.target.value });
-  });
-  watermarkToggle.addEventListener('change', (event) => {
-    state.set({ watermark: event.target.checked });
-  });
+
   photoInput.addEventListener('change', async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -142,90 +188,36 @@ export function createUI({ state, preview, elements }) {
     reader.readAsDataURL(file);
   });
 
-  replayButton.addEventListener('click', () => preview.play());
+  const replay = () => preview.play();
+  replayButton.addEventListener('click', replay);
+  replayButtonInline.addEventListener('click', replay);
 
-  downloadButton.addEventListener('click', async () => {
+  shareLinkButton.addEventListener('click', async () => {
     const current = state.get();
     if (!current.theme) return;
 
-    downloadButton.disabled = true;
-    exportStatus.textContent = 'Preparing export...';
-
-    const headline = greetingFor(current.theme, current.to);
+    const url = buildShareUrl(current, exportStatus);
 
     try {
-      const blob = await exportGif({
-        iframe: previewFrame,
-        theme: current.theme,
-        content: {
-          headline,
-          message: current.message,
-          from: current.from,
-          photo: current.photo
-        },
-        watermark: current.watermark,
-        fps: 7,
-        durationMs: Math.min(current.theme.timing.fxStopMs || 5000, 5000),
-        onProgress: (message) => {
-          exportStatus.textContent = message;
-        }
-      });
-
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `${current.theme.id}-card.gif`;
-      anchor.click();
-      URL.revokeObjectURL(url);
-
-      exportStatus.textContent = 'Your GIF is ready!';
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        exportStatus.textContent = 'Share link copied!';
+      } else {
+        exportStatus.textContent = `Copy this link: ${url}`;
+      }
     } catch (error) {
-      console.error(error);
-      exportStatus.textContent = `GIF export failed: ${error.message || error}. Try "Download Video" for a more reliable export.`;
-    } finally {
-      downloadButton.disabled = false;
+      exportStatus.textContent = `Copy this link: ${url}`;
     }
   });
 
-  downloadVideoButton.addEventListener('click', async () => {
+  shareWhatsappButton.addEventListener('click', () => {
     const current = state.get();
     if (!current.theme) return;
 
-    try {
-      let blob;
-
-      if (!('VideoEncoder' in window)) {
-        exportStatus.textContent = 'WebCodecs not supported in this browser. Try Chrome/Edge desktop.';
-        blob = await exportVideo({
-          iframe: previewFrame,
-          durationMs: 5000,
-          fps: 30,
-          onProgress: (msg) => {
-            exportStatus.textContent = msg;
-          }
-        });
-      } else {
-        blob = await exportVideoWebCodecs({
-          iframe: previewFrame,
-          durationMs: 5000,
-          fps: 30,
-          onProgress: (msg) => {
-            exportStatus.textContent = msg;
-          }
-        });
-      }
-
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${current.theme.id}-card.webm`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
-      exportStatus.textContent = `Video export failed: ${error.message || error}`;
-    }
+    const url = buildShareUrl(current, exportStatus);
+    const wa = `https://wa.me/?text=${encodeURIComponent('You’ve got a card 🎉 ' + url)}`;
+    window.open(wa, '_blank', 'noopener');
+    exportStatus.textContent = 'Opening WhatsApp…';
   });
 
   state.subscribe((current) => {
@@ -234,10 +226,16 @@ export function createUI({ state, preview, elements }) {
     if (toInput.value !== current.to) toInput.value = current.to;
     if (messageInput.value !== current.message) messageInput.value = current.message;
     if (fromInput.value !== current.from) fromInput.value = current.from;
+    if (giftInput.value !== current.giftUrl) giftInput.value = current.giftUrl;
 
     if (watermarkToggle.checked !== current.watermark) {
       watermarkToggle.checked = current.watermark;
     }
+
+    if (giftToggle.checked !== current.giftEnabled) {
+      giftToggle.checked = current.giftEnabled;
+    }
+    giftField.style.display = current.giftEnabled ? 'flex' : 'none';
 
     updatePreview(current);
   });

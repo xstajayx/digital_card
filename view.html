@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You've received a card</title>
+  <meta property="og:title" content="You’ve received a card 🎉">
+  <meta property="og:description" content="Tap to open your message.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./share-preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    body{margin:0;font-family:Inter,Segoe UI,system-ui,sans-serif;background:#f5f4fb;color:#1d1b28;display:flex;justify-content:center;padding:20px}
+    .wrap{width:min(520px,100%);text-align:center}
+    h1{font-size:1.2rem;margin:0 0 6px}
+    p{color:#645f77;margin:0 0 12px}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px}
+    .btn{border:1px solid #d7d4eb;background:#fff;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;color:#312b55}
+    .btn.primary{background:#4f46e5;color:#fff;border-color:#4f46e5}
+    .btn.whatsapp{background:#128c7e;color:#fff;border-color:#128c7e}
+    .frame{border:1px solid rgba(79,70,229,.2);border-radius:18px;padding:10px;background:#fff}
+    iframe{width:100%;aspect-ratio:3/5;border:0;border-radius:14px;background:#fff}
+    #status{min-height:18px;color:#645f77;font-size:.88rem;margin-top:10px;word-break:break-word}
+    .gift-cards{margin-top:16px;border:1px solid rgba(79,70,229,.18);border-radius:14px;padding:12px;background:rgba(255,255,255,.8)}
+    .gift-cards h2{font-size:1rem;margin:0 0 10px}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>You’ve received a card 🎉</h1>
+    <p>Open and share this message.</p>
+
+    <div class="actions">
+      <button id="waButton" class="btn whatsapp" type="button">Open in WhatsApp</button>
+      <button id="copyButton" class="btn primary" type="button">Copy link</button>
+      <a id="giftButton" class="btn" href="#" target="_blank" rel="noopener" style="display:none;">View Gift</a>
+    </div>
+
+    <div class="frame">
+      <iframe id="viewerFrame" title="Card viewer"></iframe>
+    </div>
+    <div id="status" aria-live="polite"></div>
+
+    <section id="giftCards" class="gift-cards" style="display:none;">
+      <h2>Gift Cards</h2>
+      <div class="actions">
+        <a class="btn" href="https://www.amazon.com/gift-cards" target="_blank" rel="noopener">Amazon Gift Card</a>
+        <a class="btn" href="https://www.etsy.com/giftcards" target="_blank" rel="noopener">Etsy Gift Cards</a>
+        <a class="btn" href="https://www.moonpig.com/uk/personalised-cards/" target="_blank" rel="noopener">Moonpig</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function base64UrlDecode(b64url) {
+      const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
+      return decodeURIComponent(escape(atob(b64 + pad)));
+    }
+
+    function greetingFor(themeId, name) {
+      const safeName = name || 'Friend';
+      switch (themeId) {
+        case 'birthday-balloons': return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
+        case 'kids-party': return `Party Time, <span class="name">${safeName}</span>! 🥳`;
+        case 'thank-you': return `Thank you, <span class="name">${safeName}</span>!`;
+        case 'love': return `All my love, <span class="name">${safeName}</span>! 💖`;
+        case 'congrats': return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
+        case 'christmas': return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
+        default: return `Hello, <span class="name">${safeName}</span>!`;
+      }
+    }
+
+    async function init() {
+      const status = document.getElementById('status');
+      const giftButton = document.getElementById('giftButton');
+      const giftCards = document.getElementById('giftCards');
+      const iframe = document.getElementById('viewerFrame');
+
+      const params = new URLSearchParams(location.search);
+      const d = params.get('d');
+      if (!d) {
+        status.textContent = 'Missing card data.';
+        return;
+      }
+
+      let payload;
+      try {
+        payload = JSON.parse(base64UrlDecode(d));
+      } catch {
+        status.textContent = 'Invalid card data.';
+        return;
+      }
+
+      let themeIds = [];
+      try {
+        const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
+        themeIds = await idsRes.json();
+      } catch {
+        status.textContent = 'Unable to load themes.';
+        return;
+      }
+
+      if (!Array.isArray(themeIds) || !themeIds.includes(payload.themeId)) {
+        status.textContent = 'This card theme is not available.';
+        return;
+      }
+
+      let theme;
+      try {
+        const themeRes = await fetch(`./themes/${payload.themeId}/theme.json`, { cache: 'no-store' });
+        theme = await themeRes.json();
+      } catch {
+        status.textContent = 'Unable to load this theme.';
+        return;
+      }
+
+      let templateHtml = '';
+      try {
+        const tplRes = await fetch('./engine/card-template.html', { cache: 'no-store' });
+        templateHtml = await tplRes.text();
+        templateHtml = templateHtml.replace('./card-base.css', './engine/card-base.css');
+      } catch {
+        status.textContent = 'Unable to load card template.';
+        return;
+      }
+
+      iframe.srcdoc = templateHtml;
+      iframe.addEventListener('load', () => {
+        const w = iframe.contentWindow;
+        if (!w || typeof w.setCardData !== 'function') return;
+
+        w.setCardData({
+          palette: theme.palette,
+          timing: theme.timing,
+          features: theme.features,
+          headline: greetingFor(payload.themeId, payload.to),
+          message: payload.message || '',
+          from: payload.from || '',
+          photoDataUrl: payload.photo || '',
+          watermark: payload.watermark !== false,
+          giftUrl: payload.giftUrl || '',
+          themeCssHref: `./themes/${payload.themeId}/theme.css`
+        });
+
+        w.play();
+      }, { once: true });
+
+      if (payload.photoOmitted) {
+        status.textContent = 'Photo omitted from shared link.';
+      }
+
+      if (payload.giftUrl) {
+        giftButton.href = payload.giftUrl;
+        giftButton.style.display = 'inline-flex';
+      } else {
+        giftCards.style.display = 'block';
+      }
+
+      document.getElementById('copyButton').addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(location.href);
+            status.textContent = 'Link copied!';
+          } else {
+            status.textContent = location.href;
+          }
+        } catch {
+          status.textContent = location.href;
+        }
+      });
+
+      document.getElementById('waButton').addEventListener('click', () => {
+        const wa = `https://wa.me/?text=${encodeURIComponent('You’ve got a card 🎉 ' + location.href)}`;
+        window.open(wa, '_blank', 'noopener');
+        status.textContent = 'Opening WhatsApp…';
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

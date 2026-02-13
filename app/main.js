@@ -9,10 +9,14 @@ async function init() {
     fromInput: document.getElementById('fromInput'),
     photoInput: document.getElementById('photoInput'),
     watermarkToggle: document.getElementById('watermarkToggle'),
+    giftToggle: document.getElementById('giftToggle'),
+    giftInput: document.getElementById('giftInput'),
+    giftField: document.getElementById('giftField'),
     themeGallery: document.getElementById('themeGallery'),
     replayButton: document.getElementById('replayButton'),
-    downloadButton: document.getElementById('downloadButton'),
-    downloadVideoButton: document.getElementById('downloadVideoButton'),
+    replayButtonInline: document.getElementById('replayButtonInline'),
+    shareLinkButton: document.getElementById('shareLinkButton'),
+    shareWhatsappButton: document.getElementById('shareWhatsappButton'),
     exportStatus: document.getElementById('exportStatus'),
     previewFrame: document.getElementById('cardPreview')
   };
@@ -36,7 +40,9 @@ async function init() {
       to: initialTheme?.defaults?.to || '',
       message: initialTheme?.defaults?.message || '',
       from: initialTheme?.defaults?.from || '',
-      watermark: true
+      watermark: true,
+      giftEnabled: false,
+      giftUrl: ''
     });
 
     createUI({ state, preview, elements });
