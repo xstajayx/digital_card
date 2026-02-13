@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1022" />
   <title>JWorldCreations Digital Card Studio</title>
-  <meta name="description" content="Create animated digital cards and export them as GIFs." />
-
-  <!-- ✅ GitHub Pages friendly relative path -->
+  <meta name="description" content="Create animated digital cards and share them by link." />
   <link rel="stylesheet" href="./assets/app.css" />
 </head>
 
@@ -23,8 +21,8 @@
 
     <nav class="header-actions" aria-label="Actions">
       <button id="replayButton" class="button ghost" type="button">Replay</button>
-      <button id="downloadButton" class="button primary" type="button">Download GIF</button>
-      <button id="downloadVideoButton" class="button video" type="button">Download Video</button>
+      <button id="shareLinkButton" class="button primary" type="button">Share Link</button>
+      <button id="shareWhatsappButton" class="button whatsapp" type="button">Share to WhatsApp</button>
     </nav>
   </header>
 
@@ -58,6 +56,17 @@
             <input id="watermarkToggle" type="checkbox" checked />
             <span>Show watermark</span>
           </label>
+
+          <label class="toggle">
+            <input id="giftToggle" type="checkbox" />
+            <span>Include gift link</span>
+          </label>
+
+          <label class="field" id="giftField" style="display:none;">
+            <span>Gift link (optional)</span>
+            <input id="giftInput" type="url" placeholder="Paste a gift card URL" />
+          </label>
+          <p class="helper-note">Tip: You can paste a gift card link.</p>
         </div>
       </div>
 
@@ -71,7 +80,11 @@
       <div class="preview-block" aria-label="Preview">
         <div class="preview-header">
           <h2>Live preview</h2>
-          <p>Create your card then replay or export.</p>
+          <p>Create your card then replay or share.</p>
+        </div>
+
+        <div class="preview-actions">
+          <button id="replayButtonInline" class="button ghost" type="button">Replay</button>
         </div>
 
         <div class="preview-card-frame">
@@ -89,15 +102,9 @@
   </main>
 
   <footer class="site-footer">
-    <p>Made with love for all ages. Create, export, share.</p>
+    <p>Made with love for all ages. Create, share, celebrate.</p>
   </footer>
 
-  <!-- ✅ Vendor libs (relative paths) -->
-  <script src="./vendor/html2canvas.min.js"></script>
-  <script src="./vendor/gif.min.js"></script>
-  <script src="./vendor/webm-muxer.js"></script>
-
-  <!-- ✅ App entry (module) -->
   <script type="module" src="./app/main.js"></script>
 </body>
 </html>

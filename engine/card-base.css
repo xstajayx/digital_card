@@ -380,6 +380,27 @@ body {
 .sparkles span:nth-child(3) { top: 22%; left: 75%; }
 .sparkles span:nth-child(4) { top: 28%; left: 40%; }
 
+
+.gift-button {
+  margin: 10px auto 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--ink);
+  border: 1px solid rgba(0, 0, 0, .10);
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+}
+
+.gift-button:active {
+  transform: scale(.99);
+}
+
 .watermark {
   position: absolute;
   right: 0.8rem;

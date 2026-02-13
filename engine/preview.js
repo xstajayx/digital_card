@@ -39,7 +39,7 @@ export async function createCardController(iframe) {
   });
 
   let theme = null;
-  let content = { headline: '', message: '', from: '', photo: '' };
+  let content = { headline: '', message: '', from: '', photo: '', giftUrl: '' };
   let watermark = true;
 
   function push() {
@@ -55,6 +55,7 @@ export async function createCardController(iframe) {
       from: content.from || '',
       photoDataUrl: content.photo || '',
       watermark: !!watermark,
+      giftUrl: content.giftUrl || '',
       themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
     });
   }

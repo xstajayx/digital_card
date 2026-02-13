@@ -7,7 +7,9 @@ export function createState() {
     message: '',
     from: '',
     photo: null,
-    watermark: true
+    watermark: true,
+    giftEnabled: false,
+    giftUrl: ''
   };
 
   function notify() {
