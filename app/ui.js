@@ -1,3 +1,5 @@
+import { sanitizeGiftUrl } from '../engine/sanitize.js';
+
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
   let ids = [];
@@ -58,12 +60,6 @@ function base64UrlEncode(str) {
   return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-function base64UrlDecode(b64url) {
-  const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
-  const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
-  return decodeURIComponent(escape(atob(b64 + pad)));
-}
-
 async function compressImage(file, maxSide, quality) {
   const source = typeof file === 'string' ? file : await new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -95,6 +91,8 @@ async function compressImage(file, maxSide, quality) {
 }
 
 async function buildShareUrl(current) {
+  const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
+
   const payload = {
     v: 1,
     themeId: current.theme.id,
@@ -102,7 +100,7 @@ async function buildShareUrl(current) {
     message: current.message,
     from: current.from,
     watermark: current.watermark,
-    giftUrl: current.giftEnabled ? (current.giftUrl || '') : '',
+    giftUrl: safeGiftUrl,
     photo: current.photo || ''
   };
 
@@ -171,7 +169,7 @@ export function createUI({ state, preview, elements }) {
       message: current.message,
       from: current.from,
       photo: current.photo,
-      giftUrl: current.giftEnabled ? current.giftUrl : ''
+      giftUrl: current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : ''
     });
     preview.setWatermark(current.watermark);
     preview.play();
@@ -192,7 +190,14 @@ export function createUI({ state, preview, elements }) {
     state.set({ giftEnabled: true });
   });
 
-  giftInput.addEventListener('input', (event) => state.set({ giftUrl: event.target.value.trim() }));
+  giftInput.addEventListener('input', (event) => {
+    const typedValue = event.target.value;
+    const safe = sanitizeGiftUrl(typedValue);
+    state.set({ giftUrl: safe });
+    if (typedValue.trim() && !safe) {
+      exportStatus.textContent = 'Gift link must be a valid https:// URL.';
+    }
+  });
 
   photoInput.addEventListener('change', async (event) => {
     const file = event.target.files?.[0];
@@ -242,7 +247,7 @@ export function createUI({ state, preview, elements }) {
     try {
       const url = await buildShareUrl(current);
       const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${url}`)}`;
-      window.open(wa, '_blank', 'noopener');
+      window.open(wa, '_blank', 'noopener,noreferrer');
       exportStatus.textContent = 'Opening WhatsApp…';
     } catch (error) {
       exportStatus.textContent = error.message || 'Unable to build share link.';
@@ -262,6 +267,5 @@ export function createUI({ state, preview, elements }) {
     giftField.style.display = current.giftEnabled ? 'flex' : 'none';
 
     updatePreview(current);
-
   });
 }
