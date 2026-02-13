@@ -8,9 +8,7 @@ export async function loadThemes() {
     ids = await idsRes.json();
   } catch (error) {
     console.error('Theme list load failed for ./themes/themes.json', error);
-    if (exportStatus) {
-      exportStatus.textContent = 'Unable to load theme list. Check console for details.';
-    }
+    if (exportStatus) exportStatus.textContent = 'Unable to load theme list. Check console for details.';
     return [];
   }
 
@@ -26,9 +24,7 @@ export async function loadThemes() {
     const themeUrl = `./themes/${id}/theme.json`;
     try {
       const themeRes = await fetch(themeUrl, { cache: 'no-store' });
-      if (!themeRes.ok) {
-        throw new Error(`HTTP ${themeRes.status}`);
-      }
+      if (!themeRes.ok) throw new Error(`HTTP ${themeRes.status}`);
       const theme = await themeRes.json();
       if (!theme.id) theme.id = id;
       themes.push(theme);
@@ -47,28 +43,20 @@ export async function loadThemes() {
 function greetingFor(theme, name) {
   const safeName = name || 'Friend';
   switch (theme.id) {
-    case 'birthday-balloons':
-      return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
-    case 'kids-party':
-      return `Party Time, <span class="name">${safeName}</span>! 🥳`;
-    case 'thank-you':
-      return `Thank you, <span class="name">${safeName}</span>!`;
-    case 'love':
-      return `All my love, <span class="name">${safeName}</span>! 💖`;
-    case 'congrats':
-      return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
-    case 'christmas':
-      return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
-    default:
-      return `${theme.occasion}, <span class="name">${safeName}</span>!`;
+    case 'birthday-balloons': return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
+    case 'kids-party': return `Party Time, <span class="name">${safeName}</span>! 🥳`;
+    case 'thank-you': return `Thank you, <span class="name">${safeName}</span>!`;
+    case 'love': return `All my love, <span class="name">${safeName}</span>! 💖`;
+    case 'congrats': return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
+    case 'christmas': return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
+    default: return `${theme.occasion}, <span class="name">${safeName}</span>!`;
   }
 }
 
 function base64UrlEncode(str) {
   const b64 = btoa(unescape(encodeURIComponent(str)));
-  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/,'');
+  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
-
 
 function base64UrlDecode(b64url) {
   const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
@@ -76,7 +64,37 @@ function base64UrlDecode(b64url) {
   return decodeURIComponent(escape(atob(b64 + pad)));
 }
 
-function buildShareUrl(current, exportStatus) {
+async function compressImage(file, maxSide, quality) {
+  const source = typeof file === 'string' ? file : await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Could not read image file.'));
+    reader.readAsDataURL(file);
+  });
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
+      const scale = Math.min(1, maxSide / longest);
+      const width = Math.max(1, Math.round(img.naturalWidth * scale));
+      const height = Math.max(1, Math.round(img.naturalHeight * scale));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('Image compression is unavailable.'));
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => reject(new Error('Could not process image.'));
+    img.src = source;
+  });
+}
+
+async function buildShareUrl(current) {
   const payload = {
     v: 1,
     themeId: current.theme.id,
@@ -91,14 +109,16 @@ function buildShareUrl(current, exportStatus) {
   let encoded = base64UrlEncode(JSON.stringify(payload));
 
   if (encoded.length > 3500 && payload.photo) {
-    payload.photo = '';
-    payload.photoOmitted = true;
+    payload.photo = await compressImage(payload.photo, 512, 0.62);
     encoded = base64UrlEncode(JSON.stringify(payload));
-    exportStatus.textContent = 'Photo too large for link — shared without photo.';
   }
 
-  const base = location.href.split('?')[0].split('#')[0];
-  const dir = base.substring(0, base.lastIndexOf('/') + 1);
+  if (encoded.length > 3500) {
+    throw new Error('Photo still too large for a share link. Try a different photo or crop it.');
+  }
+
+  const href = location.href.split('?')[0].split('#')[0];
+  const dir = href.slice(0, href.lastIndexOf('/') + 1);
   return `${dir}view.html?d=${encoded}`;
 }
 
@@ -126,9 +146,7 @@ export function createUI({ state, preview, elements }) {
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'theme-card';
-      if (current.theme && current.theme.id === theme.id) {
-        card.classList.add('selected');
-      }
+      if (current.theme && current.theme.id === theme.id) card.classList.add('selected');
       card.innerHTML = `
         <h3>${theme.name}</h3>
         <div class="theme-swatch" style="background: linear-gradient(135deg, ${theme.palette.accent}, ${theme.palette.accent2});"></div>
@@ -147,10 +165,9 @@ export function createUI({ state, preview, elements }) {
 
   function updatePreview(current) {
     if (!current.theme) return;
-    const headline = greetingFor(current.theme, current.to);
     preview.setTheme(current.theme);
     preview.setContent({
-      headline,
+      headline: greetingFor(current.theme, current.to),
       message: current.message,
       from: current.from,
       photo: current.photo,
@@ -166,26 +183,35 @@ export function createUI({ state, preview, elements }) {
   watermarkToggle.addEventListener('change', (event) => state.set({ watermark: event.target.checked }));
 
   giftToggle.addEventListener('change', (event) => {
-    if (event.target.checked) {
-      giftField.style.display = 'flex';
-      state.set({ giftEnabled: true });
+    const enabled = event.target.checked;
+    giftField.style.display = enabled ? 'flex' : 'none';
+    if (!enabled) {
+      state.set({ giftEnabled: false, giftUrl: '' });
+      return;
+    }
+    state.set({ giftEnabled: true });
+  });
+
+  giftInput.addEventListener('input', (event) => state.set({ giftUrl: event.target.value.trim() }));
+
+  photoInput.addEventListener('change', async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      state.set({ photo: '' });
+      exportStatus.textContent = 'Photo must be 2MB or smaller.';
+      photoInput.value = '';
       return;
     }
 
-    giftField.style.display = 'none';
-    state.set({ giftEnabled: false, giftUrl: '' });
-  });
-
-  giftInput.addEventListener('input', (event) => {
-    state.set({ giftUrl: event.target.value.trim() });
-  });
-
-  photoInput.addEventListener('change', async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => state.set({ photo: reader.result });
-    reader.readAsDataURL(file);
+    try {
+      const dataUrl = await compressImage(file, 640, 0.72);
+      state.set({ photo: dataUrl });
+      exportStatus.textContent = 'Photo added and optimized for sharing.';
+    } catch (error) {
+      exportStatus.textContent = error.message || 'Could not process that photo.';
+    }
   });
 
   const replay = () => preview.play();
@@ -196,9 +222,8 @@ export function createUI({ state, preview, elements }) {
     const current = state.get();
     if (!current.theme) return;
 
-    const url = buildShareUrl(current, exportStatus);
-
     try {
+      const url = await buildShareUrl(current);
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
         exportStatus.textContent = 'Share link copied!';
@@ -206,18 +231,22 @@ export function createUI({ state, preview, elements }) {
         exportStatus.textContent = `Copy this link: ${url}`;
       }
     } catch (error) {
-      exportStatus.textContent = `Copy this link: ${url}`;
+      exportStatus.textContent = error.message || 'Unable to build share link.';
     }
   });
 
-  shareWhatsappButton.addEventListener('click', () => {
+  shareWhatsappButton.addEventListener('click', async () => {
     const current = state.get();
     if (!current.theme) return;
 
-    const url = buildShareUrl(current, exportStatus);
-    const wa = `https://wa.me/?text=${encodeURIComponent('You’ve got a card 🎉 ' + url)}`;
-    window.open(wa, '_blank', 'noopener');
-    exportStatus.textContent = 'Opening WhatsApp…';
+    try {
+      const url = await buildShareUrl(current);
+      const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${url}`)}`;
+      window.open(wa, '_blank', 'noopener');
+      exportStatus.textContent = 'Opening WhatsApp…';
+    } catch (error) {
+      exportStatus.textContent = error.message || 'Unable to build share link.';
+    }
   });
 
   state.subscribe((current) => {
@@ -227,16 +256,12 @@ export function createUI({ state, preview, elements }) {
     if (messageInput.value !== current.message) messageInput.value = current.message;
     if (fromInput.value !== current.from) fromInput.value = current.from;
     if (giftInput.value !== current.giftUrl) giftInput.value = current.giftUrl;
+    if (watermarkToggle.checked !== current.watermark) watermarkToggle.checked = current.watermark;
+    if (giftToggle.checked !== current.giftEnabled) giftToggle.checked = current.giftEnabled;
 
-    if (watermarkToggle.checked !== current.watermark) {
-      watermarkToggle.checked = current.watermark;
-    }
-
-    if (giftToggle.checked !== current.giftEnabled) {
-      giftToggle.checked = current.giftEnabled;
-    }
     giftField.style.display = current.giftEnabled ? 'flex' : 'none';
 
     updatePreview(current);
+
   });
 }
