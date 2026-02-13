@@ -44,7 +44,7 @@ async function init() {
       themes,
       theme: initialTheme,
       to: (initialTheme?.defaults?.to || '').slice(0, 36),
-      message: (initialTheme?.defaults?.message || '').slice(0, 200),
+      message: (initialTheme?.defaults?.message || '').slice(0, 180),
       from: (initialTheme?.defaults?.from || '').slice(0, 36),
       watermark: true,
       mode: 'share',

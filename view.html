@@ -88,7 +88,7 @@
         ...payload,
         to: String(payload.to || '').slice(0, 36),
         from: String(payload.from || '').slice(0, 36),
-        message: String(payload.message || '').slice(0, 200)
+        message: String(payload.message || '').slice(0, 180)
       };
       if ('photo' in payload) delete payload.photo;
 

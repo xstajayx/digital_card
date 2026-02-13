@@ -6,8 +6,8 @@ export async function recordPreviewGif({ previewFrame, stateSnapshot, setStatus 
     theme: stateSnapshot.theme,
     content: stateSnapshot.content,
     watermark: stateSnapshot.watermark,
-    fps: 8,
-    durationMs: 2800,
+    fps: 10,
+    durationMs: 3000,
     onProgress: setStatus
   });
 

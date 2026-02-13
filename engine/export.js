@@ -1,9 +1,26 @@
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function getHtml2Canvas() {
+let html2canvasLoader;
+
+async function getHtml2Canvas() {
   if (typeof window !== 'undefined' && typeof window.html2canvas === 'function') return window.html2canvas;
   if (typeof html2canvas === 'function') return html2canvas;
-  throw new Error('html2canvas is not loaded.');
+
+  if (!html2canvasLoader) {
+    html2canvasLoader = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+      script.async = true;
+      script.onload = () => {
+        if (typeof window.html2canvas === 'function') resolve(window.html2canvas);
+        else reject(new Error('html2canvas loaded, but window.html2canvas is unavailable.'));
+      };
+      script.onerror = () => reject(new Error('Failed to load html2canvas from CDN.'));
+      document.head.appendChild(script);
+    });
+  }
+
+  return html2canvasLoader;
 }
 
 const waitForSetCardData = (iframe, timeoutMs = 5000) =>
@@ -55,7 +72,7 @@ export async function exportGif({
     from: content?.from || '',
     photoDataUrl: content?.photo || '',
     watermark: !!watermark,
-    mode: 'editor',
+    mode: 'gif',
     viewer: false,
     giftUrl: '',
     themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
@@ -67,7 +84,7 @@ export async function exportGif({
   await wait(200);
 
   const { cardRoot, width, height } = getCardElement(iframe);
-  const html2canvasFn = getHtml2Canvas();
+  const html2canvasFn = await getHtml2Canvas();
 
   const frameDelay = Math.max(60, Math.round(1000 / Math.max(1, fps)));
   const requestedFrames = Math.max(1, Math.round(durationMs / frameDelay));

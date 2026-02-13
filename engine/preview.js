@@ -44,7 +44,7 @@ export async function createCardController(iframe) {
   });
 
   let theme = null;
-  let content = { headline: '', message: '', from: '', photo: '', giftUrl: '' };
+  let content = { headline: '', message: '', from: '', photo: '', giftUrl: '', mode: 'share' };
   let watermark = true;
 
   function safeCallSetCardData() {
@@ -59,7 +59,7 @@ export async function createCardController(iframe) {
         headline: content.headline || '',
         message: content.message || '',
         from: content.from || '',
-        mode: 'editor',
+        mode: content.mode || 'share',
         viewer: false,
         photoDataUrl: content.photo || '',
         watermark: !!watermark,
