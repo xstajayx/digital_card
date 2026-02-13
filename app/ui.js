@@ -109,6 +109,7 @@ function buildViewerUrl(encoded) {
 
 async function buildShareUrlAsync(current, state) {
   const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
+
   const payload = {
     v: 1,
     themeId: current.theme.id,
@@ -120,23 +121,30 @@ async function buildShareUrlAsync(current, state) {
     photo: current.photo || ''
   };
 
+  const MAX_LEN = 7000;
+
   let encoded = base64UrlEncode(JSON.stringify(payload));
 
-  if (encoded.length > 3500 && payload.photo) {
-    const secondPassPhoto = await compressDataUrl(payload.photo, 512, 0.62);
-    payload.photo = secondPassPhoto;
-    state.set({ photo: secondPassPhoto });
+  // If too big and we have a photo, recompress more aggressively
+  if (encoded.length > MAX_LEN && payload.photo) {
+    const pass2 = await compressDataUrl(payload.photo, 420, 0.60);
+    payload.photo = pass2;
+    state.set({ photo: pass2 });
     encoded = base64UrlEncode(JSON.stringify(payload));
   }
 
-  if (encoded.length > 3500) {
-    throw new Error('Photo still too large for a share link. Try a different photo or crop it.');
+  if (encoded.length > MAX_LEN && payload.photo) {
+    const pass3 = await compressDataUrl(payload.photo, 320, 0.50);
+    payload.photo = pass3;
+    state.set({ photo: pass3 });
+    encoded = base64UrlEncode(JSON.stringify(payload));
   }
 
-  return {
-    url: buildViewerUrl(encoded),
-    encodedLen: encoded.length
-  };
+  if (encoded.length > MAX_LEN) {
+    throw new Error('Photo still too large to share by link. Use a smaller/cropped photo.');
+  }
+
+  return { url: buildViewerUrl(encoded), encodedLen: encoded.length };
 }
 
 export function createUI({ state, preview, elements }) {
