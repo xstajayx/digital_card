@@ -8,7 +8,6 @@
   <meta name="description" content="Create animated digital cards and share them by link." />
   <link rel="stylesheet" href="./assets/app.css" />
 </head>
-
 <body>
   <header class="site-header">
     <div class="brand" aria-label="JWorldCreations Digital Card Studio">
@@ -21,8 +20,8 @@
 
     <nav class="header-actions" aria-label="Actions">
       <button id="replayButton" class="button ghost" type="button">Replay</button>
-      <button id="shareLinkButton" class="button primary" type="button">Share Link</button>
-      <button id="shareWhatsappButton" class="button whatsapp" type="button">Share to WhatsApp</button>
+      <button id="shareLinkButton" class="button" type="button">Share Link</button>
+      <button id="shareWhatsappButton" class="button primary" type="button">Share to WhatsApp</button>
     </nav>
   </header>
 
@@ -64,9 +63,19 @@
 
           <label class="field" id="giftField" style="display:none;">
             <span>Gift link (optional)</span>
-            <input id="giftInput" type="url" placeholder="Paste a gift card URL" />
+            <input id="giftInput" type="url" placeholder="Paste a gift / affiliate link" />
           </label>
-          <p class="helper-note">Tip: You can paste a gift card link.</p>
+
+          <div class="gift-hint">
+            <h3>Make their day even more special (optional)</h3>
+            <p>Pick a provider to create a gift link, then paste it above.</p>
+            <div class="gift-links">
+              <a id="giftSuggestAmazon" href="https://www.amazon.co.uk/gift-cards" target="_blank" rel="noopener">Amazon gift cards</a>
+              <a id="giftSuggestEtsy" href="https://www.etsy.com/uk/market/gift_card" target="_blank" rel="noopener">Etsy gift cards</a>
+              <a id="giftSuggestCharity" href="https://www.justgiving.com/" target="_blank" rel="noopener">Charity donation</a>
+              <a id="giftSuggestCoffee" href="https://www.starbucks.co.uk/gift" target="_blank" rel="noopener">Coffee treat</a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -88,12 +97,7 @@
         </div>
 
         <div class="preview-card-frame">
-          <iframe
-            id="cardPreview"
-            title="Digital card preview"
-            aria-label="Digital card preview"
-            loading="lazy"
-          ></iframe>
+          <iframe id="cardPreview" title="Digital card preview" aria-label="Digital card preview" loading="lazy"></iframe>
         </div>
 
         <div id="exportStatus" class="export-status" aria-live="polite"></div>

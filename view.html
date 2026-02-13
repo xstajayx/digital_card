@@ -2,53 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>You've received a card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>You’ve received a card 🎉</title>
   <meta property="og:title" content="You’ve received a card 🎉">
   <meta property="og:description" content="Tap to open your message.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="./share-preview.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    body{margin:0;font-family:Inter,Segoe UI,system-ui,sans-serif;background:#f5f4fb;color:#1d1b28;display:flex;justify-content:center;padding:20px}
-    .wrap{width:min(520px,100%);text-align:center}
-    h1{font-size:1.2rem;margin:0 0 6px}
-    p{color:#645f77;margin:0 0 12px}
-    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px}
-    .btn{border:1px solid #d7d4eb;background:#fff;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;color:#312b55}
+    :root{font-family:Inter,Segoe UI,system-ui,sans-serif;color:#1f1b2f;background:#f5f4fb}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at top,#fff,#eef0ff 65%,#f7f6fb)}
+    .wrap{width:min(100%,500px);background:rgba(255,255,255,.85);border:1px solid rgba(79,70,229,.18);border-radius:20px;padding:14px}
+    h1{margin:0 0 6px;font-size:1.25rem}
+    p{margin:0 0 10px;color:#645f77;font-size:.92rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .btn{border:1px solid #d6d4f5;background:#fff;color:#4f46e5;border-radius:999px;padding:.58rem .9rem;font-weight:700;text-decoration:none;cursor:pointer}
     .btn.primary{background:#4f46e5;color:#fff;border-color:#4f46e5}
-    .btn.whatsapp{background:#128c7e;color:#fff;border-color:#128c7e}
-    .frame{border:1px solid rgba(79,70,229,.2);border-radius:18px;padding:10px;background:#fff}
+    .frame{border:1px solid rgba(79,70,229,.18);border-radius:18px;padding:10px;background:#fff}
     iframe{width:100%;aspect-ratio:3/5;border:0;border-radius:14px;background:#fff}
     #status{min-height:18px;color:#645f77;font-size:.88rem;margin-top:10px;word-break:break-word}
-    .gift-cards{margin-top:16px;border:1px solid rgba(79,70,229,.18);border-radius:14px;padding:12px;background:rgba(255,255,255,.8)}
-    .gift-cards h2{font-size:1rem;margin:0 0 10px}
   </style>
 </head>
 <body>
   <main class="wrap">
     <h1>You’ve received a card 🎉</h1>
-    <p>Open and share this message.</p>
+    <p>Tap to open your message.</p>
 
     <div class="actions">
-      <button id="waButton" class="btn whatsapp" type="button">Open in WhatsApp</button>
-      <button id="copyButton" class="btn primary" type="button">Copy link</button>
-      <a id="giftButton" class="btn" href="#" target="_blank" rel="noopener" style="display:none;">View Gift</a>
+      <button id="shareButton" class="btn primary" type="button">Share this card</button>
+      <button id="copyButton" class="btn" type="button">Copy link</button>
     </div>
 
     <div class="frame">
       <iframe id="viewerFrame" title="Card viewer"></iframe>
     </div>
     <div id="status" aria-live="polite"></div>
-
-    <section id="giftCards" class="gift-cards" style="display:none;">
-      <h2>Gift Cards</h2>
-      <div class="actions">
-        <a class="btn" href="https://www.amazon.com/gift-cards" target="_blank" rel="noopener">Amazon Gift Card</a>
-        <a class="btn" href="https://www.etsy.com/giftcards" target="_blank" rel="noopener">Etsy Gift Cards</a>
-        <a class="btn" href="https://www.moonpig.com/uk/personalised-cards/" target="_blank" rel="noopener">Moonpig</a>
-      </div>
-    </section>
   </main>
 
   <script>
@@ -73,12 +62,10 @@
 
     async function init() {
       const status = document.getElementById('status');
-      const giftButton = document.getElementById('giftButton');
-      const giftCards = document.getElementById('giftCards');
       const iframe = document.getElementById('viewerFrame');
-
       const params = new URLSearchParams(location.search);
       const d = params.get('d');
+
       if (!d) {
         status.textContent = 'Missing card data.';
         return;
@@ -142,20 +129,8 @@
           giftUrl: payload.giftUrl || '',
           themeCssHref: `./themes/${payload.themeId}/theme.css`
         });
-
         w.play();
       }, { once: true });
-
-      if (payload.photoOmitted) {
-        status.textContent = 'Photo omitted from shared link.';
-      }
-
-      if (payload.giftUrl) {
-        giftButton.href = payload.giftUrl;
-        giftButton.style.display = 'inline-flex';
-      } else {
-        giftCards.style.display = 'block';
-      }
 
       document.getElementById('copyButton').addEventListener('click', async () => {
         try {
@@ -170,8 +145,8 @@
         }
       });
 
-      document.getElementById('waButton').addEventListener('click', () => {
-        const wa = `https://wa.me/?text=${encodeURIComponent('You’ve got a card 🎉 ' + location.href)}`;
+      document.getElementById('shareButton').addEventListener('click', () => {
+        const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${location.href}`)}`;
         window.open(wa, '_blank', 'noopener');
         status.textContent = 'Opening WhatsApp…';
       });
