@@ -222,6 +222,19 @@
       replay();
     };
 
+
+    window.getCardRect = () => {
+      const root = document.getElementById('cardRoot');
+      if (!root) return null;
+      const rect = root.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height
+      };
+    };
+
     window.play = replay;
     replay();
   </script>

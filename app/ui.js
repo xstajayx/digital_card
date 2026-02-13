@@ -1,5 +1,6 @@
 // digital_card/app/ui.js
 import { sanitizeGiftUrl } from '../engine/sanitize.js';
+import { recordPreviewGif } from '../engine/recordGif.js';
 
 // =====================
 // Option A limits (no backend)
@@ -189,6 +190,7 @@ export function createUI({ state, preview, elements }) {
     themeGallery,
     replayButton,
     replayButtonInline,
+    recordGifButton,
     shareLinkButton,
     shareWhatsappButton,
     exportStatus
@@ -320,6 +322,25 @@ export function createUI({ state, preview, elements }) {
   const replay = () => preview.play();
   replayButton.addEventListener('click', replay);
   replayButtonInline.addEventListener('click', replay);
+
+  // ---- Record GIF ----
+  if (recordGifButton) {
+    recordGifButton.addEventListener('click', async () => {
+      recordGifButton.disabled = true;
+      try {
+        await recordPreviewGif({
+          previewFrame: elements.previewFrame,
+          preview,
+          setStatus
+        });
+      } catch (err) {
+        console.error(err);
+        setStatus(err?.message || 'Could not record GIF.');
+      } finally {
+        recordGifButton.disabled = false;
+      }
+    });
+  }
 
   // ---- Share: copy link ----
   shareLinkButton.addEventListener('click', async () => {
