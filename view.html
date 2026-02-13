@@ -21,6 +21,7 @@
     .btn.primary{background:#4f46e5;color:#fff;border-color:#4f46e5}
     .frame{border:1px solid rgba(79,70,229,.18);border-radius:18px;padding:10px;background:#fff}
     iframe{width:100%;aspect-ratio:3/5;border:0;border-radius:14px;background:#fff}
+    .gift-disclaimer{margin:8px auto 0;text-align:center;font-size:.72rem;color:rgba(43,38,34,.55);max-width:90%}
     #status{min-height:18px;color:#645f77;font-size:.88rem;margin-top:10px;word-break:break-word}
   </style>
 </head>
@@ -36,11 +37,14 @@
 
     <div class="frame">
       <iframe id="viewerFrame" title="Card viewer"></iframe>
+      <div id="giftDisclaimer" class="gift-disclaimer" style="display:none;">Links are provided by the sender. Only open if you trust them.</div>
     </div>
     <div id="status" aria-live="polite"></div>
   </main>
 
-  <script>
+  <script type="module">
+    import { sanitizeGiftUrl } from './engine/sanitize.js';
+
     function base64UrlDecode(b64url) {
       const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
       const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
@@ -63,6 +67,7 @@
     async function init() {
       const status = document.getElementById('status');
       const iframe = document.getElementById('viewerFrame');
+      const giftDisclaimer = document.getElementById('giftDisclaimer');
       const params = new URLSearchParams(location.search);
       const d = params.get('d');
 
@@ -78,6 +83,8 @@
         status.textContent = 'Invalid card data.';
         return;
       }
+
+      const safeGift = sanitizeGiftUrl(payload.giftUrl || '');
 
       let themeIds = [];
       try {
@@ -126,11 +133,13 @@
           from: payload.from || '',
           photoDataUrl: payload.photo || '',
           watermark: payload.watermark !== false,
-          giftUrl: payload.giftUrl || '',
+          giftUrl: safeGift,
           themeCssHref: `./themes/${payload.themeId}/theme.css`
         });
         w.play();
       }, { once: true });
+
+      giftDisclaimer.style.display = safeGift ? 'block' : 'none';
 
       document.getElementById('copyButton').addEventListener('click', async () => {
         try {
@@ -147,7 +156,7 @@
 
       document.getElementById('shareButton').addEventListener('click', () => {
         const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${location.href}`)}`;
-        window.open(wa, '_blank', 'noopener');
+        window.open(wa, '_blank', 'noopener,noreferrer');
         status.textContent = 'Opening WhatsApp…';
       });
     }

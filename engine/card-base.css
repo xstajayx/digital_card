@@ -397,6 +397,20 @@ body {
 }
 .gift-button:active{transform:scale(.99)}
 
+.gift-domain{
+  margin: 6px auto 0;
+  text-align:center;
+  font-size: 0.72rem;
+  color: rgba(43,38,34,.55);
+}
+.gift-disclaimer{
+  margin: 8px auto 0;
+  text-align:center;
+  font-size: 0.72rem;
+  color: rgba(43,38,34,.55);
+  max-width: 90%;
+}
+
 .watermark {
   position: absolute;
   right: 0.8rem;

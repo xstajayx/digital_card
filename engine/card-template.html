@@ -28,7 +28,8 @@
           </div>
           <div class="frame-decor" id="frameDecor"></div>
         </div>
-        <a id="giftButton" class="gift-button" target="_blank" rel="noopener" style="display:none;">View Gift</a>
+        <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
+        <div id="giftDomain" class="gift-domain" style="display:none;"></div>
       </div>
     </div>
 
@@ -46,6 +47,34 @@
 
   <script>
     const ITEM_TYPES = ['balloons', 'hearts', 'stars', 'snow', 'confetti'];
+
+    function sanitizeGiftUrl(input) {
+      if (typeof input !== 'string') return '';
+      const trimmed = input.trim();
+      if (!trimmed || trimmed.length > 500) return '';
+
+      let url;
+      try {
+        url = new URL(trimmed);
+      } catch {
+        return '';
+      }
+
+      if (url.protocol !== 'https:') return '';
+      if (url.username || url.password) return '';
+
+      const href = url.href;
+      return href.length <= 500 ? href : '';
+    }
+
+    function getGiftDomain(url) {
+      try {
+        const hostname = new URL(url).hostname || '';
+        return hostname.replace(/^www\./i, '');
+      } catch {
+        return '';
+      }
+    }
 
     function normalizeType(type) {
       return ITEM_TYPES.includes(type) ? type : 'balloons';
@@ -162,13 +191,19 @@
       if (wm) wm.style.display = data.watermark ? 'block' : 'none';
 
       const giftBtn = document.getElementById('giftButton');
-      if (giftBtn) {
-        if (data.giftUrl) {
-          giftBtn.href = data.giftUrl;
+      const giftDomain = document.getElementById('giftDomain');
+      const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || '');
+      if (giftBtn && giftDomain) {
+        if (safeGiftUrl) {
+          giftBtn.href = safeGiftUrl;
           giftBtn.style.display = 'inline-flex';
+          giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
+          giftDomain.style.display = 'block';
         } else {
           giftBtn.style.display = 'none';
           giftBtn.removeAttribute('href');
+          giftDomain.style.display = 'none';
+          giftDomain.textContent = '';
         }
       }
 
