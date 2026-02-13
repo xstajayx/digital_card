@@ -304,7 +304,24 @@ export function createUI({ state, preview, elements }) {
         setStatus('Please wait — photo is still processing…');
         return;
       }
+shareLinkButton.addEventListener('click', async () => {
+  try {
+    const current = state.get();
+    if (!current.theme) return;
+    if (current.photoBusy) {
+      setStatus('Please wait — photo is still processing…');
+      return;
+    }
 
+    setStatus('Building share link…'); // ✅ HERE
+
+    const { url, encodedLen } = await buildShareUrlAsync(current, state);
+    ...
+  } catch (error) {
+    console.error(error); // ✅ add this too for debugging
+    setStatus(error.message || 'Unable to build share link.');
+  }
+});
       const { url, encodedLen } = await buildShareUrlAsync(current, state);
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
