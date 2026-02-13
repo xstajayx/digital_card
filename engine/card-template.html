@@ -21,11 +21,14 @@
       </div>
 
       <div class="panel bottom">
-        <div class="photo-wrap">
+        <div class="photo-wrap" id="photoWrap">
           <div class="photo-slot" id="photoSlot">
             <img id="photo" alt="Uploaded" style="display:none;" />
             <div class="placeholder" id="placeholder"><span>Upload a photo</span></div>
           </div>
+          <div class="frame-decor frame-decor-photo" id="frameDecorPhoto"></div>
+        </div>
+        <div class="decor-panel" id="decorPanel">
           <div class="frame-decor" id="frameDecor"></div>
         </div>
         <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
@@ -92,38 +95,39 @@
       root.classList.add('play');
     }
 
-    function buildFrameDecor(frameDecorType) {
-      const frameDecor = document.getElementById('frameDecor');
+    function buildFrameDecor(frameDecorType, density = 16, viewerMode = false, targetId = 'frameDecor') {
+      const frameDecor = document.getElementById(targetId);
       if (!frameDecor) return;
 
       const type = normalizeType(frameDecorType);
       frameDecor.innerHTML = '';
 
-      const ringPositions = [
-        { left: 0, top: 0 },
-        { left: 50, top: 0 },
-        { left: 100, top: 0 },
-        { left: 0, top: 50 },
-        { left: 100, top: 50 },
-        { left: 0, top: 100 },
-        { left: 50, top: 100 },
-        { left: 100, top: 100 }
-      ];
+      const count = Math.max(10, Math.min(28, Number(density) || 16));
+      const positions = [];
 
-      const count = Math.floor(Math.random() * 5) + 10;
-
-      while (ringPositions.length < count) {
+      // border-safe items
+      const edgeCount = Math.floor(count * 0.45);
+      for (let i = 0; i < edgeCount; i += 1) {
         const edge = Math.floor(Math.random() * 4);
         const p = Math.round(Math.random() * 100);
-        if (edge === 0) ringPositions.push({ left: p, top: 0 });
-        if (edge === 1) ringPositions.push({ left: 100, top: p });
-        if (edge === 2) ringPositions.push({ left: p, top: 100 });
-        if (edge === 3) ringPositions.push({ left: 0, top: p });
+        if (edge === 0) positions.push({ left: p, top: 2 });
+        if (edge === 1) positions.push({ left: 98, top: p });
+        if (edge === 2) positions.push({ left: p, top: 98 });
+        if (edge === 3) positions.push({ left: 2, top: p });
+      }
+
+      // decor-panel-safe items (bottom only in viewer mode)
+      const minTop = viewerMode ? 64 : 44;
+      while (positions.length < count) {
+        positions.push({
+          left: Math.round(8 + Math.random() * 84),
+          top: Math.round(minTop + Math.random() * (96 - minTop))
+        });
       }
 
       for (let i = 0; i < count; i += 1) {
         const item = document.createElement('div');
-        const pos = ringPositions[i];
+        const pos = positions[i];
         item.className = `frame-item ${type}`;
         item.style.left = `${pos.left}%`;
         item.style.top = `${pos.top}%`;
@@ -157,25 +161,34 @@
 
       const f = data.features || {};
       const revealType = normalizeType(f.revealType || 'balloons');
-      const frameDecor = (f.frameDecor || revealType);
+      const decorType = normalizeType(f.decorType || f.frameDecor || revealType);
+      const decorDensity = Math.max(10, Math.min(28, Number(f.decorDensity) || 16));
+      const viewerMode = data.viewer === true || data.mode === 'viewer';
 
       if (f.overlayIntensity != null) {
         setVar('--overlay-intensity', f.overlayIntensity);
       }
 
-      buildFrameDecor(frameDecor);
+      buildFrameDecor(decorType, decorDensity, viewerMode, viewerMode ? 'frameDecor' : 'frameDecorPhoto');
 
       const headlineEl = document.getElementById('headline');
       const messageEl = document.getElementById('message');
       const fromEl = document.getElementById('from');
-      const photoEl = document.getElementById('photo');
-      const placeholderEl = document.getElementById('placeholder');
-
       if (headlineEl) headlineEl.innerHTML = data.headline || '';
       if (messageEl) messageEl.textContent = data.message || '';
       if (fromEl) fromEl.textContent = data.from || '';
 
-      if (photoEl && placeholderEl) {
+      const root = document.getElementById('cardRoot');
+      if (root) root.dataset.mode = viewerMode ? 'viewer' : 'editor';
+
+      const photoWrap = document.getElementById('photoWrap');
+      const decorPanel = document.getElementById('decorPanel');
+      if (photoWrap) photoWrap.style.display = viewerMode ? 'none' : 'block';
+      if (decorPanel) decorPanel.style.display = viewerMode ? 'block' : 'none';
+
+      const photoEl = document.getElementById('photo');
+      const placeholderEl = document.getElementById('placeholder');
+      if (!viewerMode && photoEl && placeholderEl) {
         if (data.photoDataUrl) {
           photoEl.src = data.photoDataUrl;
           photoEl.style.display = 'block';

@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "stars",
     "frameDecor": "stars",
-    "overlayIntensity": 0.55
+    "overlayIntensity": 0.55,
+    "decorType": "stars",
+    "decorDensity": 16
   }
 }

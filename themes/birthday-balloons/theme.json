@@ -29,6 +29,8 @@
     "sparkles": true,
     "revealType": "balloons",
     "frameDecor": "balloons",
-    "overlayIntensity": 0.8
+    "overlayIntensity": 0.8,
+    "decorType": "balloons",
+    "decorDensity": 16
   }
 }
