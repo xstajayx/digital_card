@@ -1,5 +1,9 @@
+// digital_card/app/ui.js
 import { sanitizeGiftUrl } from '../engine/sanitize.js';
 
+/* ---------------------------
+   THEMES
+---------------------------- */
 export async function loadThemes() {
   const exportStatus = document.getElementById('exportStatus');
   let ids = [];
@@ -42,6 +46,9 @@ export async function loadThemes() {
   return themes;
 }
 
+/* ---------------------------
+   GREETING
+---------------------------- */
 function greetingFor(theme, name) {
   const safeName = name || 'Friend';
   switch (theme.id) {
@@ -51,15 +58,27 @@ function greetingFor(theme, name) {
     case 'love': return `All my love, <span class="name">${safeName}</span>! 💖`;
     case 'congrats': return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
     case 'christmas': return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
-    default: return `${theme.occasion}, <span class="name">${safeName}</span>!`;
+    default: return `${theme.occasion || 'Hello'}, <span class="name">${safeName}</span>!`;
   }
 }
 
+/* ---------------------------
+   URL ENCODE / BUILD
+---------------------------- */
 function base64UrlEncode(str) {
   const b64 = btoa(unescape(encodeURIComponent(str)));
   return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
+function buildViewerUrl(encoded) {
+  const href = location.href.split('?')[0].split('#')[0];
+  const dir = href.slice(0, href.lastIndexOf('/') + 1);
+  return `${dir}view.html?d=${encoded}`;
+}
+
+/* ---------------------------
+   IMAGE HELPERS
+---------------------------- */
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -69,28 +88,39 @@ function readFileAsDataUrl(file) {
   });
 }
 
+// Safer compression (prevents decode quirks on mobile)
 function compressDataUrl(dataUrl, maxSide, quality) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => {
-      const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
-      const scale = Math.min(1, maxSide / longest);
-      const width = Math.max(1, Math.round(img.naturalWidth * scale));
-      const height = Math.max(1, Math.round(img.naturalHeight * scale));
+    img.crossOrigin = 'anonymous';
 
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
+    img.onload = async () => {
+      try {
+        if (img.decode) {
+          try { await img.decode(); } catch {}
+        }
 
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        reject(new Error('Image compression is unavailable.'));
-        return;
+        const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
+        const scale = Math.min(1, maxSide / longest);
+        const width = Math.max(1, Math.round(img.naturalWidth * scale));
+        const height = Math.max(1, Math.round(img.naturalHeight * scale));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error('Image compression is unavailable.'));
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // JPEG yields smaller payloads for URLs
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      } catch (e) {
+        reject(new Error('Could not compress image.'));
       }
-
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/jpeg', quality));
     };
+
     img.onerror = () => reject(new Error('Unsupported image format — please choose a JPEG/PNG.'));
     img.src = dataUrl;
   });
@@ -101,12 +131,9 @@ async function compressImageFile(file, maxSide, quality) {
   return compressDataUrl(dataUrl, maxSide, quality);
 }
 
-function buildViewerUrl(encoded) {
-  const href = location.href.split('?')[0].split('#')[0];
-  const dir = href.slice(0, href.lastIndexOf('/') + 1);
-  return `${dir}view.html?d=${encoded}`;
-}
-
+/* ---------------------------
+   SHARE PAYLOAD
+---------------------------- */
 async function buildShareUrlAsync(current, state) {
   const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
 
@@ -121,22 +148,23 @@ async function buildShareUrlAsync(current, state) {
     photo: current.photo || ''
   };
 
-  const MAX_LEN = 7000;
+  // Practical limit (WhatsApp + browsers get unreliable when huge)
+  const MAX_LEN = 6500;
 
   let encoded = base64UrlEncode(JSON.stringify(payload));
 
-  // If too big and we have a photo, recompress more aggressively
+  // Multi-pass shrink if needed
   if (encoded.length > MAX_LEN && payload.photo) {
     const pass2 = await compressDataUrl(payload.photo, 420, 0.60);
     payload.photo = pass2;
-    state.set({ photo: pass2 });
+    try { state.set({ photo: pass2 }); } catch {}
     encoded = base64UrlEncode(JSON.stringify(payload));
   }
 
   if (encoded.length > MAX_LEN && payload.photo) {
-    const pass3 = await compressDataUrl(payload.photo, 320, 0.50);
+    const pass3 = await compressDataUrl(payload.photo, 320, 0.52);
     payload.photo = pass3;
-    state.set({ photo: pass3 });
+    try { state.set({ photo: pass3 }); } catch {}
     encoded = base64UrlEncode(JSON.stringify(payload));
   }
 
@@ -147,6 +175,9 @@ async function buildShareUrlAsync(current, state) {
   return { url: buildViewerUrl(encoded), encodedLen: encoded.length };
 }
 
+/* ---------------------------
+   UI
+---------------------------- */
 export function createUI({ state, preview, elements }) {
   const {
     toInput,
@@ -168,13 +199,13 @@ export function createUI({ state, preview, elements }) {
   let photoJobId = 0;
 
   function setStatus(msg) {
-    if (exportStatus) exportStatus.textContent = msg;
+    if (exportStatus) exportStatus.textContent = msg || '';
   }
 
   function setButtonsEnabled(enabled) {
-  if (shareLinkButton) shareLinkButton.disabled = !enabled;
-  if (shareWhatsappButton) shareWhatsappButton.disabled = !enabled;
-}
+    if (shareLinkButton) shareLinkButton.disabled = !enabled;
+    if (shareWhatsappButton) shareWhatsappButton.disabled = !enabled;
+  }
 
   function renderThemes(current) {
     themeGallery.innerHTML = '';
@@ -183,24 +214,28 @@ export function createUI({ state, preview, elements }) {
       card.type = 'button';
       card.className = 'theme-card';
       if (current.theme && current.theme.id === theme.id) card.classList.add('selected');
+
       card.innerHTML = `
         <h3>${theme.name}</h3>
         <div class="theme-swatch" style="background: linear-gradient(135deg, ${theme.palette.accent}, ${theme.palette.accent2});"></div>
       `;
+
       card.addEventListener('click', () => {
         state.set({
           theme,
-          to: theme.defaults.to,
-          message: theme.defaults.message,
-          from: theme.defaults.from
+          to: theme.defaults?.to || '',
+          message: theme.defaults?.message || '',
+          from: theme.defaults?.from || ''
         });
       });
+
       themeGallery.appendChild(card);
     });
   }
 
   function updatePreview(current) {
     if (!current.theme) return;
+
     preview.setTheme(current.theme);
     preview.setContent({
       headline: greetingFor(current.theme, current.to),
@@ -213,154 +248,159 @@ export function createUI({ state, preview, elements }) {
     preview.play();
   }
 
-  toInput.addEventListener('input', (event) => state.set({ to: event.target.value }));
-  messageInput.addEventListener('input', (event) => state.set({ message: event.target.value }));
-  fromInput.addEventListener('input', (event) => state.set({ from: event.target.value }));
-  watermarkToggle.addEventListener('change', (event) => state.set({ watermark: event.target.checked }));
+  /* Inputs */
+  toInput.addEventListener('input', (e) => state.set({ to: e.target.value }));
+  messageInput.addEventListener('input', (e) => state.set({ message: e.target.value }));
+  fromInput.addEventListener('input', (e) => state.set({ from: e.target.value }));
+  watermarkToggle.addEventListener('change', (e) => state.set({ watermark: e.target.checked }));
 
-  giftToggle.addEventListener('change', (event) => {
-    const enabled = event.target.checked;
-    giftField.style.display = enabled ? 'flex' : 'none';
+  giftToggle.addEventListener('change', (e) => {
+    const enabled = e.target.checked;
+    if (giftField) giftField.style.display = enabled ? 'flex' : 'none';
     if (!enabled) {
       state.set({ giftEnabled: false, giftUrl: '' });
+    } else {
+      state.set({ giftEnabled: true });
+    }
+  });
+
+  giftInput.addEventListener('input', (e) => {
+    const typed = e.target.value;
+    const safe = sanitizeGiftUrl(typed);
+    state.set({ giftUrl: safe });
+    if (typed.trim() && !safe) setStatus('Gift link must be a valid https:// URL.');
+  });
+
+  /* Photo */
+  photoInput.addEventListener('change', async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const jobId = ++photoJobId;
+
+    // immediate UI response
+    setButtonsEnabled(false);
+    setStatus('Optimising photo…');
+
+    if (file.size > 2 * 1024 * 1024) {
+      state.set({ photo: '', photoBusy: false });
+      setButtonsEnabled(true);
+      setStatus('Photo must be 2MB or smaller.');
+      photoInput.value = '';
       return;
     }
-    state.set({ giftEnabled: true });
-  });
 
-  giftInput.addEventListener('input', (event) => {
-    const typedValue = event.target.value;
-    const safe = sanitizeGiftUrl(typedValue);
-    state.set({ giftUrl: safe });
-    if (typedValue.trim() && !safe) {
-      setStatus('Gift link must be a valid https:// URL.');
+    try {
+      state.set({ photoBusy: true });
+
+      const dataUrl = await compressImageFile(file, 640, 0.72);
+      if (jobId !== photoJobId) return;
+
+      state.set({ photo: dataUrl });
+      setStatus('Photo added ✅');
+    } catch (error) {
+      if (jobId !== photoJobId) return;
+
+      try { state.set({ photo: '' }); } catch {}
+      const msg =
+        error?.message === 'Unsupported image format — please choose a JPEG/PNG.'
+          ? error.message
+          : 'Could not process photo. Try a different image.';
+      setStatus(msg);
+    } finally {
+      if (jobId === photoJobId) {
+        try { state.set({ photoBusy: false }); } catch {}
+      }
+      setButtonsEnabled(true);
     }
   });
 
-  photoInput.addEventListener('change', async (event) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  const jobId = ++photoJobId;
-
-  // Size limit
-  if (file.size > 2 * 1024 * 1024) {
-    try { state.set({ photo: '', photoBusy: false }); } catch (e) { console.error(e); }
-    setButtonsEnabled(true);
-    setStatus('Photo must be 2MB or smaller.');
-    photoInput.value = '';
-    return;
-  }
-
-  
-
-  // Mark busy (protect against preview errors)
-  try {
-    state.set({ photoBusy: true });
-  } catch (e) {
-    console.error(e);
-    setButtonsEnabled(true);
-    setStatus('Preview error while preparing photo. Check console.');
-    return;
-  }
-
-  try {
-    const dataUrl = await compressImageFile(file, 640, 0.72);
-    if (jobId !== photoJobId) return;
-
-    state.set({ photo: dataUrl });
-    setStatus('Photo added ✅');
-  } catch (error) {
-    if (jobId !== photoJobId) return;
-
-    try { state.set({ photo: '' }); } catch (e) { console.error(e); }
-
-    const msg =
-      error?.message === 'Unsupported image format — please choose a JPEG/PNG.'
-        ? error.message
-        : 'Could not process photo. Try a different image.';
-    setStatus(msg);
-  } 
-  finally {
-  if (jobId === photoJobId) {
-    try { state.set({ photoBusy: false }); } catch (e) { console.error(e); }
-  }
-  // Always re-enable no matter what
-  setButtonsEnabled(true);
-}
-});
-
+  /* Replay */
   const replay = () => preview.play();
   replayButton.addEventListener('click', replay);
   replayButtonInline.addEventListener('click', replay);
 
+  /* Share Link */
   shareLinkButton.addEventListener('click', async () => {
+    setStatus('Share clicked…');
+
     try {
       const current = state.get();
       if (!current.theme) return;
+
       if (current.photoBusy) {
         setStatus('Please wait — photo is still processing…');
         return;
       }
-shareLinkButton.addEventListener('click', async () => {
-  try {
-    const current = state.get();
-    if (!current.theme) return;
-    if (current.photoBusy) {
-      setStatus('Please wait — photo is still processing…');
-      return;
-    }
 
-    setStatus('Building share link…'); // ✅ HERE
-
-    const { url, encodedLen } = await buildShareUrlAsync(current, state);
-    ...
-  } catch (error) {
-    console.error(error); // ✅ add this too for debugging
-    setStatus(error.message || 'Unable to build share link.');
-  }
-});
+      setStatus('Building share link…');
       const { url, encodedLen } = await buildShareUrlAsync(current, state);
+
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
-        setStatus(`Share link copied! (payload: ${encodedLen} chars)`);
+        setStatus(`Share link copied! (${encodedLen} chars)`);
       } else {
         setStatus(`Clipboard unavailable. Copy this link: ${url}`);
       }
     } catch (error) {
+      console.error('Share link failed:', error);
       setStatus(error.message || 'Unable to build share link.');
     }
   });
 
+  /* Share WhatsApp */
   shareWhatsappButton.addEventListener('click', async () => {
+    // open immediately (keeps click gesture)
+    const popup = window.open('about:blank', '_blank', 'noopener,noreferrer');
+
+    setStatus('Share clicked…');
+
     try {
       const current = state.get();
-      if (!current.theme) return;
-      if (current.photoBusy) {
-        setStatus('Please wait — photo is still processing…');
+      if (!current.theme) {
+        if (popup) popup.close();
         return;
       }
 
-      const { url, encodedLen } = await buildShareUrlAsync(current, state);
-      const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${url}`)}`;
-      window.open(wa, '_blank', 'noopener,noreferrer');
-      setStatus(`Share link copied! (payload: ${encodedLen} chars)`);
+      if (current.photoBusy) {
+        setStatus('Please wait — photo is still processing…');
+        if (popup) popup.close();
+        return;
+      }
+
+      setStatus('Building share link…');
+      const { url } = await buildShareUrlAsync(current, state);
+
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${url}`)}`;
+
+      if (popup && !popup.closed) {
+        popup.location.href = waUrl;
+      } else {
+        location.href = waUrl;
+      }
+
+      setStatus('Opening WhatsApp…');
     } catch (error) {
+      console.error('WhatsApp share failed:', error);
       setStatus(error.message || 'Unable to build share link.');
+      if (popup && !popup.closed) popup.close();
     }
   });
 
+  /* State */
   state.subscribe((current) => {
     renderThemes(current);
 
     if (toInput.value !== current.to) toInput.value = current.to;
     if (messageInput.value !== current.message) messageInput.value = current.message;
     if (fromInput.value !== current.from) fromInput.value = current.from;
-    if (giftInput.value !== current.giftUrl) giftInput.value = current.giftUrl;
-    if (watermarkToggle.checked !== current.watermark) watermarkToggle.checked = current.watermark;
-    if (giftToggle.checked !== current.giftEnabled) giftToggle.checked = current.giftEnabled;
 
-    giftField.style.display = current.giftEnabled ? 'flex' : 'none';
+    if (giftInput.value !== (current.giftUrl || '')) giftInput.value = current.giftUrl || '';
+    if (watermarkToggle.checked !== !!current.watermark) watermarkToggle.checked = !!current.watermark;
+    if (giftToggle.checked !== !!current.giftEnabled) giftToggle.checked = !!current.giftEnabled;
+
+    if (giftField) giftField.style.display = current.giftEnabled ? 'flex' : 'none';
+
     setButtonsEnabled(!current.photoBusy);
 
     updatePreview(current);
