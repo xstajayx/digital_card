@@ -15,6 +15,7 @@ async function init() {
     themeGallery: document.getElementById('themeGallery'),
     replayButton: document.getElementById('replayButton'),
     replayButtonInline: document.getElementById('replayButtonInline'),
+    recordGifButton: document.getElementById('recordGifButton'),
     shareLinkButton: document.getElementById('shareLinkButton'),
     shareWhatsappButton: document.getElementById('shareWhatsappButton'),
     exportStatus: document.getElementById('exportStatus'),
