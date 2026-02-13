@@ -9,6 +9,7 @@ export function createState() {
     photo: '',
     photoBusy: false,
     watermark: true,
+    mode: 'share',
     giftEnabled: false,
     giftUrl: ''
   };

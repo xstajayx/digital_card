@@ -15,7 +15,12 @@ async function init() {
     themeGallery: document.getElementById('themeGallery'),
     replayButton: document.getElementById('replayButton'),
     replayButtonInline: document.getElementById('replayButtonInline'),
-    recordGifButton: document.getElementById('recordGifButton'),
+    createGifButton: document.getElementById('createGifButton'),
+    modeShareButton: document.getElementById('modeShareButton'),
+    modeGifButton: document.getElementById('modeGifButton'),
+    gifResult: document.getElementById('gifResult'),
+    gifPreviewImage: document.getElementById('gifPreviewImage'),
+    downloadGifLink: document.getElementById('downloadGifLink'),
     shareLinkButton: document.getElementById('shareLinkButton'),
     shareWhatsappButton: document.getElementById('shareWhatsappButton'),
     exportStatus: document.getElementById('exportStatus'),
@@ -42,6 +47,7 @@ async function init() {
       message: (initialTheme?.defaults?.message || '').slice(0, 200),
       from: (initialTheme?.defaults?.from || '').slice(0, 36),
       watermark: true,
+      mode: 'share',
       giftEnabled: false,
       giftUrl: ''
     });
