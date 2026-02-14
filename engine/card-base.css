@@ -197,10 +197,53 @@ body {
   display: block;
 }
 
+/* SHARE MODE: text uses full card */
+#cardRoot.mode-share .card {
+  grid-template-rows: 1fr;
+}
+
+#cardRoot.mode-share .panel.bottom {
+  display: none;
+}
+
+#cardRoot.mode-share .panel.top {
+  min-height: 100%;
+  justify-content: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+#cardRoot.mode-share .headline {
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+}
+
+#cardRoot.mode-share .message {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  line-height: 1.6;
+  max-height: calc(var(--card-height) - 160px);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--msg-lines, 14);
+  line-clamp: var(--msg-lines, 14);
+  -webkit-box-orient: vertical;
+}
+
+#cardRoot.mode-share .frame-decor-overlay {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: .25;
+}
+
 .frame-decor {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.frame-decor-overlay {
+  display: none;
 }
 
 .frame-item {

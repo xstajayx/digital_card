@@ -20,6 +20,8 @@
         <div class="from" id="from"></div>
       </div>
 
+      <div class="frame-decor frame-decor-overlay" id="frameDecorOverlay"></div>
+
       <div class="panel bottom">
         <div class="photo-wrap" id="photoWrap">
           <div class="photo-slot" id="photoSlot">
@@ -173,6 +175,7 @@
 
       buildFrameDecor(decorType, decorDensity, true, 'frameDecor');
       buildFrameDecor(decorType, decorDensity, false, 'frameDecorPhoto');
+      buildFrameDecor(decorType, decorDensity, false, 'frameDecorOverlay');
 
       const headlineEl = document.getElementById('headline');
       const messageEl = document.getElementById('message');
@@ -182,7 +185,11 @@
       if (fromEl) fromEl.textContent = data.from || '';
 
       const root = document.getElementById('cardRoot');
-      if (root) root.dataset.mode = isViewer ? 'viewer' : (isShareMode ? 'share' : 'gif');
+      if (root) {
+        root.dataset.mode = isViewer ? 'viewer' : (isShareMode ? 'share' : 'gif');
+        root.classList.toggle('mode-share', data.mode === 'share');
+        root.classList.toggle('mode-gif', data.mode === 'gif');
+      }
 
       const photoWrap = document.getElementById('photoWrap');
       const decorPanel = document.getElementById('decorPanel');

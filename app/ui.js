@@ -5,7 +5,8 @@ import { exportGif } from '../engine/export.js';
 const MAX_SHARE_URL_CHARS = 3000;
 const TO_MAX_LEN = 36;
 const FROM_MAX_LEN = 36;
-const MESSAGE_MAX_LEN = 180;
+const DEFAULT_MESSAGE_MAX_LEN = 180;
+const BIRTHDAY_SHARE_MESSAGE_MAX_LEN = 420;
 
 const UPLOAD_MAX_BYTES = 2 * 1024 * 1024;
 const PHOTO_MAX_SIDE_1 = 420;
@@ -115,14 +116,25 @@ function buildViewerUrl(encoded) {
   return `${dir}view.html?d=${encoded}`;
 }
 
+
+function getMaxMessageLength(current) {
+  if (current?.mode === 'share' && current?.theme?.id === 'birthday-balloons') {
+    return BIRTHDAY_SHARE_MESSAGE_MAX_LEN;
+  }
+  return DEFAULT_MESSAGE_MAX_LEN;
+}
+
 async function buildShareUrlAsync(current) {
   const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
+
+  const maxLen = getMaxMessageLength(current);
+  const safeMsg = (current.message || '').slice(0, maxLen);
 
   const payload = {
     v: 1,
     themeId: current.theme.id,
     to: current.to || '',
-    message: current.message || '',
+    message: safeMsg,
     from: current.from || '',
     watermark: !!current.watermark,
     giftEnabled: !!current.giftEnabled,
@@ -228,7 +240,7 @@ export function createUI({ state, preview, elements }) {
         state.set({
           theme,
           to: clampValue(theme?.defaults?.to ?? '', TO_MAX_LEN),
-          message: clampValue(theme?.defaults?.message ?? '', MESSAGE_MAX_LEN),
+          message: clampValue(theme?.defaults?.message ?? '', getMaxMessageLength({ mode: state.get().mode, theme })),
           from: clampValue(theme?.defaults?.from ?? '', FROM_MAX_LEN)
         });
       });
@@ -239,7 +251,7 @@ export function createUI({ state, preview, elements }) {
   function updatePreview(current) {
     if (!current.theme) return;
 
-    const trimmedMessage = clampValue(current.message, MESSAGE_MAX_LEN);
+    const trimmedMessage = clampValue(current.message, getMaxMessageLength(current));
     const safeGiftUrl = current.mode === 'share' && current.giftEnabled
       ? sanitizeGiftUrl(current.giftUrl || '')
       : '';
@@ -261,16 +273,16 @@ export function createUI({ state, preview, elements }) {
     return (value || '').slice(0, maxLen);
   }
 
-  function updateMessageRemaining(currentLen) {
+  function updateMessageRemaining(currentLen, maxLen) {
     const remainingEl = document.getElementById('messageRemaining');
     if (!remainingEl) return;
-    const remaining = Math.max(0, MESSAGE_MAX_LEN - currentLen);
+    const remaining = Math.max(0, maxLen - currentLen);
     remainingEl.textContent = `${remaining} characters remaining`;
   }
 
   toInput.setAttribute('maxlength', String(TO_MAX_LEN));
   fromInput.setAttribute('maxlength', String(FROM_MAX_LEN));
-  messageInput.setAttribute('maxlength', String(MESSAGE_MAX_LEN));
+  messageInput.setAttribute('maxlength', String(DEFAULT_MESSAGE_MAX_LEN));
 
   modeShareButton?.addEventListener('click', () => state.set({ mode: 'share', photo: '' }));
   modeGifButton?.addEventListener('click', () => state.set({ mode: 'gif', giftEnabled: false, giftUrl: '' }));
@@ -283,12 +295,13 @@ export function createUI({ state, preview, elements }) {
 
   messageInput.addEventListener('input', (e) => {
     const typed = e.target.value || '';
-    const trimmed = clampValue(typed, MESSAGE_MAX_LEN);
+    const maxLen = getMaxMessageLength(state.get());
+    const trimmed = clampValue(typed, maxLen);
     if (typed !== trimmed) {
       e.target.value = trimmed;
       setStatus('Message trimmed to fit card.');
     }
-    updateMessageRemaining(trimmed.length);
+    updateMessageRemaining(trimmed.length, maxLen);
     state.set({ message: trimmed });
   });
 
@@ -449,7 +462,9 @@ export function createUI({ state, preview, elements }) {
     if (giftToggle.checked !== current.giftEnabled) giftToggle.checked = current.giftEnabled;
 
     setShareEnabled(!current.photoBusy);
-    updateMessageRemaining((current.message || '').length);
+    const maxMessageLength = getMaxMessageLength(current);
+    messageInput.setAttribute('maxlength', String(maxMessageLength));
+    updateMessageRemaining((current.message || '').length, maxMessageLength);
 
     if (current.mode !== 'gif' && photoInput.value) {
       photoInput.value = '';
