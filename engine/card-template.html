@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./card-base.css" />
   <link id="themeStyles" rel="stylesheet" href="" />
   <title>Card Preview</title>
@@ -52,6 +55,14 @@
 
   <script>
     const ITEM_TYPES = ['balloons', 'hearts', 'stars', 'snow', 'confetti'];
+    const FONT_MAP = {
+      fredoka: '"Fredoka", system-ui, sans-serif',
+      pacifico: '"Pacifico", system-ui, sans-serif',
+      quicksand: '"Quicksand", system-ui, sans-serif',
+      poppins: '"Poppins", system-ui, sans-serif',
+      nunito: '"Nunito", system-ui, sans-serif',
+      playfair: '"Playfair Display", ui-serif, serif'
+    };
 
     function sanitizeGiftUrl(input) {
       if (typeof input !== 'string') return '';
@@ -87,6 +98,27 @@
 
     function setVar(k, v) {
       document.documentElement.style.setProperty(k, v);
+    }
+
+    function applyFont(fontId) {
+      const font = FONT_MAP[fontId] || FONT_MAP.fredoka;
+      document.documentElement.style.setProperty('--card-font', font);
+    }
+
+    function clampMessage(text, cols, rows) {
+      const clean = String(text || '').replace(/\r\n/g, '\n');
+      const out = [];
+      for (const rawLine of clean.split('\n')) {
+        let s = rawLine;
+        while (s.length > cols) {
+          out.push(s.slice(0, cols));
+          s = s.slice(cols);
+          if (out.length >= rows) return out.slice(0, rows).join('\n');
+        }
+        out.push(s);
+        if (out.length >= rows) return out.slice(0, rows).join('\n');
+      }
+      return out.slice(0, rows).join('\n');
     }
 
     function replay() {
@@ -166,8 +198,10 @@
       const revealType = normalizeType(f.revealType || 'balloons');
       const decorType = normalizeType(f.decorType || f.frameDecor || revealType);
       const decorDensity = Math.max(10, Math.min(28, Number(f.decorDensity) || 16));
-      const isViewer = data.viewer === true || data.mode === 'viewer';
-      const isShareMode = isViewer || data.mode === 'share';
+      const mode = data.mode === 'gif' ? 'gif' : 'share';
+      const isShareMode = mode === 'share';
+
+      applyFont(data.fontId || 'fredoka');
 
       if (f.overlayIntensity != null) {
         setVar('--overlay-intensity', f.overlayIntensity);
@@ -181,14 +215,16 @@
       const messageEl = document.getElementById('message');
       const fromEl = document.getElementById('from');
       if (headlineEl) headlineEl.innerHTML = data.headline || '';
-      if (messageEl) messageEl.textContent = data.message || '';
+      const cols = 19;
+      const rows = mode === 'gif' ? 6 : 12;
+      if (messageEl) messageEl.textContent = clampMessage(data.message, cols, rows);
       if (fromEl) fromEl.textContent = data.from || '';
 
       const root = document.getElementById('cardRoot');
       if (root) {
-        root.dataset.mode = isViewer ? 'viewer' : (isShareMode ? 'share' : 'gif');
-        root.classList.toggle('mode-share', data.mode === 'share');
-        root.classList.toggle('mode-gif', data.mode === 'gif');
+        root.dataset.mode = isShareMode ? 'share' : 'gif';
+        root.classList.toggle('mode-share', isShareMode);
+        root.classList.toggle('mode-gif', !isShareMode);
       }
 
       const photoWrap = document.getElementById('photoWrap');

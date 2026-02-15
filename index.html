@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#0b1022" />
   <title>JWorldCreations Digital Card Studio</title>
   <meta name="description" content="Create animated digital cards and share them by link." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/app.css" />
 </head>
 <body>
@@ -50,6 +53,18 @@
           <label class="field">
             <span>From</span>
             <input id="fromInput" type="text" placeholder="Your name" maxlength="36" autocomplete="off" />
+          </label>
+
+          <label class="field">
+            <span>Font</span>
+            <select id="fontSelect">
+              <option value="fredoka">Fredoka (round playful)</option>
+              <option value="pacifico">Pacifico (handwriting)</option>
+              <option value="quicksand">Quicksand (soft clean)</option>
+              <option value="poppins">Poppins (modern)</option>
+              <option value="nunito">Nunito (friendly)</option>
+              <option value="playfair">Playfair Display (elegant)</option>
+            </select>
           </label>
 
           <label class="field">
