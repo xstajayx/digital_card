@@ -44,7 +44,7 @@ export async function createCardController(iframe) {
   });
 
   let theme = null;
-  let content = { headline: '', message: '', from: '', photo: '', giftUrl: '', mode: 'share' };
+  let content = { headline: '', message: '', from: '', photo: '', giftUrl: '', fontId: 'fredoka', mode: 'share' };
   let watermark = true;
 
   function safeCallSetCardData() {
@@ -60,6 +60,7 @@ export async function createCardController(iframe) {
         message: content.message || '',
         from: content.from || '',
         mode: content.mode || 'share',
+        fontId: content.fontId || 'fredoka',
         viewer: false,
         photoDataUrl: content.photo || '',
         watermark: !!watermark,

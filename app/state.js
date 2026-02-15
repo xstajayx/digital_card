@@ -6,6 +6,7 @@ export function createState() {
     to: '',
     message: '',
     from: '',
+    fontId: 'fredoka',
     photo: '',
     photoBusy: false,
     watermark: true,

@@ -9,6 +9,9 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="./share-preview.png">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root{font-family:Inter,Segoe UI,system-ui,sans-serif;color:#1f1b2f;background:#f5f4fb}
     *{box-sizing:border-box}
@@ -88,11 +91,11 @@
         ...payload,
         to: String(payload.to || '').slice(0, 36),
         from: String(payload.from || '').slice(0, 36),
-        message: String(payload.message || '').slice(0, 180)
+        message: String(payload.message || '').slice(0, 228)
       };
-      if ('photo' in payload) delete payload.photo;
 
       const safeGift = payload.giftEnabled === false ? '' : sanitizeGiftUrl(payload.giftUrl || '');
+      const fontId = payload.fontId || 'fredoka';
 
       let themeIds = [];
       try {
@@ -139,8 +142,10 @@
           headline: greetingFor(payload.themeId, payload.to),
           message: payload.message || '',
           from: payload.from || '',
-          mode: 'viewer',
+          mode: 'share',
+          fontId,
           viewer: true,
+          photoDataUrl: payload.photo || '',
           watermark: payload.watermark !== false,
           giftUrl: safeGift,
           themeCssHref: `./themes/${payload.themeId}/theme.css`

@@ -138,7 +138,9 @@ async function buildShareUrlAsync(current) {
     from: current.from || '',
     watermark: !!current.watermark,
     giftEnabled: !!current.giftEnabled,
-    giftUrl: safeGiftUrl
+    giftUrl: safeGiftUrl,
+    fontId: current.fontId || 'fredoka',
+    photo: current.mode === 'share' ? '' : (current.photo || '')
   };
 
   const encoded = base64UrlEncode(JSON.stringify(payload));
@@ -159,6 +161,7 @@ export function createUI({ state, preview, elements }) {
     toInput,
     messageInput,
     fromInput,
+    fontSelect,
     photoInput,
     watermarkToggle,
     giftToggle,
@@ -263,7 +266,8 @@ export function createUI({ state, preview, elements }) {
       from: current.from,
       photo: current.mode === 'gif' ? current.photo : '',
       giftUrl: safeGiftUrl,
-      mode: current.mode
+      fontId: current.fontId || 'fredoka',
+      mode: current.mode || 'share'
     });
     preview.setWatermark(current.watermark);
     preview.play();
@@ -310,6 +314,8 @@ export function createUI({ state, preview, elements }) {
     if (e.target.value !== trimmed) e.target.value = trimmed;
     state.set({ from: trimmed });
   });
+
+  fontSelect?.addEventListener('change', (e) => state.set({ fontId: e.target.value }));
 
   watermarkToggle.addEventListener('change', (e) => state.set({ watermark: e.target.checked }));
 
@@ -456,6 +462,7 @@ export function createUI({ state, preview, elements }) {
     if (toInput.value !== current.to) toInput.value = current.to;
     if (messageInput.value !== current.message) messageInput.value = current.message;
     if (fromInput.value !== current.from) fromInput.value = current.from;
+    if (fontSelect && fontSelect.value !== current.fontId) fontSelect.value = current.fontId;
     if (giftInput.value !== current.giftUrl) giftInput.value = current.giftUrl;
 
     if (watermarkToggle.checked !== current.watermark) watermarkToggle.checked = current.watermark;
