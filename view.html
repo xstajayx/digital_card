@@ -3,45 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>You’ve received a card 🎉</title>
-  <meta property="og:title" content="You’ve received a card 🎉">
-  <meta property="og:description" content="Tap to open your message.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="./share-preview.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+  <title>Open Card</title>
   <style>
-    :root{font-family:Inter,Segoe UI,system-ui,sans-serif;color:#1f1b2f;background:#f5f4fb}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at top,#fff,#eef0ff 65%,#f7f6fb)}
-    .wrap{width:min(100%,500px);background:rgba(255,255,255,.85);border:1px solid rgba(79,70,229,.18);border-radius:20px;padding:14px}
-    h1{margin:0 0 6px;font-size:1.25rem}
-    p{margin:0 0 10px;color:#645f77;font-size:.92rem}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .btn{border:1px solid #d6d4f5;background:#fff;color:#4f46e5;border-radius:999px;padding:.58rem .9rem;font-weight:700;text-decoration:none;cursor:pointer}
-    .btn.primary{background:#4f46e5;color:#fff;border-color:#4f46e5}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:#f6f7ff;color:#2b2622}
+    .wrap{max-width:560px;margin:0 auto;padding:16px}
+    .actions{display:flex;gap:8px;justify-content:center;margin:10px 0}
+    button{border:1px solid #4f46e5;border-radius:999px;padding:.58rem .9rem;background:#fff;color:#4f46e5;font-weight:700;cursor:pointer}
+    .primary{background:#4f46e5;color:#fff}
     .frame{border:1px solid rgba(79,70,229,.18);border-radius:18px;padding:10px;background:#fff}
     iframe{width:100%;aspect-ratio:3/5;border:0;border-radius:14px;background:#fff}
-    .gift-disclaimer{margin:8px auto 0;text-align:center;font-size:.72rem;color:rgba(43,38,34,.55);max-width:90%}
     #status{min-height:18px;color:#645f77;font-size:.88rem;margin-top:10px;word-break:break-word}
   </style>
 </head>
 <body>
   <main class="wrap">
     <h1>You’ve received a card 🎉</h1>
-    <p>Tap to open your message.</p>
-
     <div class="actions">
-      <button id="shareButton" class="btn primary" type="button">Share this card</button>
-      <button id="copyButton" class="btn" type="button">Copy link</button>
+      <button id="replayButton" type="button">Replay</button>
+      <button id="copyButton" type="button">Copy link</button>
+      <button id="shareButton" class="primary" type="button">Share to WhatsApp</button>
     </div>
-
-    <div class="frame">
-      <iframe id="viewerFrame" title="Card viewer"></iframe>
-      <div id="giftDisclaimer" class="gift-disclaimer" style="display:none;">Links are provided by the sender. Only open if you trust them.</div>
-    </div>
+    <div class="frame"><iframe id="viewerFrame" title="Card viewer"></iframe></div>
     <div id="status" aria-live="polite"></div>
   </main>
 
@@ -54,124 +36,78 @@
       return decodeURIComponent(escape(atob(b64 + pad)));
     }
 
-    function greetingFor(themeId, name) {
+    function suffix(value) {
+      const n = Number(value);
+      const lastTwo = n % 100;
+      if (lastTwo >= 11 && lastTwo <= 13) return 'th';
+      const last = n % 10;
+      if (last === 1) return 'st';
+      if (last === 2) return 'nd';
+      if (last === 3) return 'rd';
+      return 'th';
+    }
+
+    function greetingFor(themeId, name, birthdayNumberEnabled, birthdayNumber) {
       const safeName = name || 'Friend';
-      switch (themeId) {
-        case 'birthday-balloons': return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
-        case 'kids-party': return `Party Time, <span class="name">${safeName}</span>! 🥳`;
-        case 'thank-you': return `Thank you, <span class="name">${safeName}</span>!`;
-        case 'love': return `All my love, <span class="name">${safeName}</span>! 💖`;
-        case 'congrats': return `Congratulations, <span class="name">${safeName}</span>! 🎊`;
-        case 'christmas': return `Merry Christmas, <span class="name">${safeName}</span>! 🎄`;
-        default: return `Hello, <span class="name">${safeName}</span>!`;
+      if (String(themeId || '').startsWith('birthday') && birthdayNumberEnabled && birthdayNumber) {
+        return `Happy ${birthdayNumber}${suffix(birthdayNumber)} Birthday, <span class="name">${safeName}</span>!`;
       }
+      if (themeId === 'birthday-balloons') return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
+      return `Hello, <span class="name">${safeName}</span>!`;
     }
 
     async function init() {
       const status = document.getElementById('status');
       const iframe = document.getElementById('viewerFrame');
-      const giftDisclaimer = document.getElementById('giftDisclaimer');
-      const params = new URLSearchParams(location.search);
-      const d = params.get('d');
-
-      if (!d) {
-        status.textContent = 'Missing card data.';
-        return;
-      }
+      const d = new URLSearchParams(location.search).get('d');
+      if (!d) return void (status.textContent = 'Missing card data.');
 
       let payload;
-      try {
-        payload = JSON.parse(base64UrlDecode(d));
-      } catch {
-        status.textContent = 'Invalid card data.';
-        return;
-      }
+      try { payload = JSON.parse(base64UrlDecode(d)); } catch { return void (status.textContent = 'Invalid card data.'); }
 
-      payload = {
-        ...payload,
-        to: String(payload.to || '').slice(0, 36),
-        from: String(payload.from || '').slice(0, 36),
-        message: String(payload.message || '').slice(0, 228)
-      };
-
-      const safeGift = payload.giftEnabled === false ? '' : sanitizeGiftUrl(payload.giftUrl || '');
       const fontId = payload.fontId || 'fredoka';
+      const birthdayNumber = String(payload.birthdayNumber || '').trim();
+      const birthdayNumberEnabled = !!payload.birthdayNumberEnabled || !!birthdayNumber;
+      const paperOverride = payload.paperOverride || '';
+      const inkOverride = payload.inkOverride || '';
 
-      let themeIds = [];
-      try {
-        const idsRes = await fetch('./themes/themes.json', { cache: 'no-store' });
-        themeIds = await idsRes.json();
-      } catch {
-        status.textContent = 'Unable to load themes.';
-        return;
-      }
+      const ids = await (await fetch('./themes/themes.json', { cache: 'no-store' })).json();
+      if (!ids.includes(payload.themeId)) return void (status.textContent = 'Theme unavailable.');
 
-      if (!Array.isArray(themeIds) || !themeIds.includes(payload.themeId)) {
-        status.textContent = 'This card theme is not available.';
-        return;
-      }
-
-      let theme;
-      try {
-        const themeRes = await fetch(`./themes/${payload.themeId}/theme.json`, { cache: 'no-store' });
-        theme = await themeRes.json();
-      } catch {
-        status.textContent = 'Unable to load this theme.';
-        return;
-      }
-
-      let templateHtml = '';
-      try {
-        const tplRes = await fetch('./engine/card-template.html', { cache: 'no-store' });
-        templateHtml = await tplRes.text();
-        templateHtml = templateHtml.replace('./card-base.css', './engine/card-base.css');
-      } catch {
-        status.textContent = 'Unable to load card template.';
-        return;
-      }
+      const theme = await (await fetch(`./themes/${payload.themeId}/theme.json`, { cache: 'no-store' })).json();
+      let templateHtml = await (await fetch('./engine/card-template.html', { cache: 'no-store' })).text();
+      templateHtml = templateHtml.replace('./card-base.css', './engine/card-base.css');
 
       iframe.srcdoc = templateHtml;
       iframe.addEventListener('load', () => {
-        const w = iframe.contentWindow;
-        if (!w || typeof w.setCardData !== 'function') return;
-
-        w.setCardData({
+        iframe.contentWindow.setCardData({
           palette: theme.palette,
           timing: theme.timing,
           features: theme.features,
-          headline: greetingFor(payload.themeId, payload.to),
-          message: payload.message || '',
-          from: payload.from || '',
+          headline: greetingFor(payload.themeId, payload.to, birthdayNumberEnabled, birthdayNumber),
+          message: String(payload.message || ''),
+          from: String(payload.from || ''),
           mode: 'share',
           fontId,
+          birthdayNumber,
+          paperOverride,
+          inkOverride,
           viewer: true,
-          photoDataUrl: payload.photo || '',
+          photoDataUrl: '',
           watermark: payload.watermark !== false,
-          giftUrl: safeGift,
+          giftUrl: sanitizeGiftUrl(payload.giftUrl || ''),
           themeCssHref: `./themes/${payload.themeId}/theme.css`
         });
-        w.play();
+        iframe.contentWindow.play();
       }, { once: true });
 
-      giftDisclaimer.style.display = safeGift ? 'block' : 'none';
-
+      document.getElementById('replayButton').addEventListener('click', () => iframe.contentWindow?.play?.());
       document.getElementById('copyButton').addEventListener('click', async () => {
-        try {
-          if (navigator.clipboard?.writeText) {
-            await navigator.clipboard.writeText(location.href);
-            status.textContent = 'Link copied!';
-          } else {
-            status.textContent = location.href;
-          }
-        } catch {
-          status.textContent = location.href;
-        }
+        await navigator.clipboard.writeText(location.href);
+        status.textContent = 'Link copied!';
       });
-
       document.getElementById('shareButton').addEventListener('click', () => {
-        const wa = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${location.href}`)}`;
-        window.open(wa, '_blank', 'noopener,noreferrer');
-        status.textContent = 'Opening WhatsApp…';
+        window.open(`https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${location.href}`)}`, '_blank', 'noopener,noreferrer');
       });
     }
 

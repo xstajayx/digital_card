@@ -23,7 +23,7 @@
 
     <nav class="header-actions" aria-label="Actions">
       <button id="replayButton" class="button ghost" type="button">Replay</button>
-      <button id="shareLinkButton" class="button" type="button">Share Link</button>
+      <button id="shareLinkButton" class="button" type="button">Copy link</button>
       <button id="shareWhatsappButton" class="button primary" type="button">Share to WhatsApp</button>
     </nav>
   </header>
@@ -33,11 +33,6 @@
       <div class="controls-block" aria-label="Card controls">
         <div class="panel">
           <h2>Personalize</h2>
-
-          <div class="mode-toggle" role="group" aria-label="Studio mode">
-            <button id="modeShareButton" class="mode-option is-active" type="button" data-mode="share">Share Card</button>
-            <button id="modeGifButton" class="mode-option" type="button" data-mode="gif">GIF Card</button>
-          </div>
 
           <label class="field">
             <span>To</span>
@@ -67,10 +62,32 @@
             </select>
           </label>
 
+          <label class="toggle">
+            <input id="birthdayNumberToggle" type="checkbox" />
+            <span>Add birthday number</span>
+          </label>
+
+          <label class="field" id="birthdayNumberField" style="display:none;">
+            <span>Birthday number</span>
+            <input id="birthdayNumberInput" type="number" min="1" max="120" step="1" placeholder="18" />
+          </label>
+
           <label class="field">
-            <span>Photo</span>
+            <span>Photo (preview only)</span>
             <input id="photoInput" type="file" accept="image/*" />
           </label>
+
+          <label class="field">
+            <span>Background colour</span>
+            <input id="paperColorInput" type="color" value="#fff7f2" />
+          </label>
+
+          <label class="field">
+            <span>Text colour</span>
+            <input id="inkColorInput" type="color" value="#2b2622" />
+          </label>
+
+          <button id="resetColorsButton" class="button ghost" type="button">Reset colours</button>
 
           <label class="toggle">
             <input id="watermarkToggle" type="checkbox" checked />
@@ -86,17 +103,6 @@
             <span>Gift link (optional)</span>
             <input id="giftInput" type="url" placeholder="Paste a gift / affiliate link" />
           </label>
-
-          <div class="gift-hint">
-            <h3>Make their day even more special (optional)</h3>
-            <p>Pick a provider to create a gift link, then paste it above.</p>
-            <div class="gift-links">
-              <a id="giftSuggestAmazon" href="https://www.amazon.co.uk/gift-cards" target="_blank" rel="noopener">Amazon gift cards</a>
-              <a id="giftSuggestEtsy" href="https://www.etsy.com/uk/market/gift_card" target="_blank" rel="noopener">Etsy gift cards</a>
-              <a id="giftSuggestCharity" href="https://www.justgiving.com/" target="_blank" rel="noopener">Charity donation</a>
-              <a id="giftSuggestCoffee" href="https://www.starbucks.co.uk/gift" target="_blank" rel="noopener">Coffee treat</a>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -115,7 +121,6 @@
 
         <div class="preview-actions">
           <button id="replayButtonInline" class="button ghost" type="button">Replay</button>
-          <button id="createGifButton" class="button primary" type="button">Create GIF</button>
         </div>
 
         <div class="preview-card-frame">
@@ -123,12 +128,6 @@
         </div>
 
         <div id="exportStatus" class="export-status" aria-live="polite"></div>
-
-        <div id="gifResult" class="gif-result" hidden>
-          <h3>Your GIF</h3>
-          <img id="gifPreviewImage" alt="Generated card GIF preview" />
-          <a id="downloadGifLink" class="button primary" download="digital-card.gif">Download GIF</a>
-        </div>
       </div>
     </section>
   </main>

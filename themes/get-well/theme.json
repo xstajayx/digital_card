@@ -1,0 +1,9 @@
+{
+  "id": "get-well",
+  "name": "Get Well",
+  "occasion": "Get Well Soon",
+  "defaults": {"to": "Friend", "message": "Sending warm thoughts and hoping each day brings more strength.", "from": "Take care"},
+  "palette": {"paper": "#f3faf5", "ink": "#244133", "accent": "#4caf7a", "accent2": "#8ecae6", "gold": "#f4d35e"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "stars", "frameDecor": "stars", "overlayIntensity": 0.7, "decorType": "stars", "decorDensity": 16}
+}

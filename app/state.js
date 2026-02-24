@@ -12,7 +12,11 @@ export function createState() {
     watermark: true,
     mode: 'share',
     giftEnabled: false,
-    giftUrl: ''
+    giftUrl: '',
+    birthdayNumberEnabled: false,
+    birthdayNumber: '',
+    paperOverride: '',
+    inkOverride: ''
   };
 
   function notify() {

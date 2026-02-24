@@ -13,15 +13,15 @@ async function init() {
     giftToggle: document.getElementById('giftToggle'),
     giftInput: document.getElementById('giftInput'),
     giftField: document.getElementById('giftField'),
+    birthdayNumberToggle: document.getElementById('birthdayNumberToggle'),
+    birthdayNumberInput: document.getElementById('birthdayNumberInput'),
+    birthdayNumberField: document.getElementById('birthdayNumberField'),
+    paperColorInput: document.getElementById('paperColorInput'),
+    inkColorInput: document.getElementById('inkColorInput'),
+    resetColorsButton: document.getElementById('resetColorsButton'),
     themeGallery: document.getElementById('themeGallery'),
     replayButton: document.getElementById('replayButton'),
     replayButtonInline: document.getElementById('replayButtonInline'),
-    createGifButton: document.getElementById('createGifButton'),
-    modeShareButton: document.getElementById('modeShareButton'),
-    modeGifButton: document.getElementById('modeGifButton'),
-    gifResult: document.getElementById('gifResult'),
-    gifPreviewImage: document.getElementById('gifPreviewImage'),
-    downloadGifLink: document.getElementById('downloadGifLink'),
     shareLinkButton: document.getElementById('shareLinkButton'),
     shareWhatsappButton: document.getElementById('shareWhatsappButton'),
     exportStatus: document.getElementById('exportStatus'),
@@ -32,26 +32,24 @@ async function init() {
 
   try {
     const preview = await createCardController(elements.previewFrame);
-
     const themes = await loadThemes();
-    if (!themes.length) {
-      elements.exportStatus.textContent = 'No themes could be loaded. Check console errors for failing URLs.';
-      return;
-    }
-
     const initialTheme = themes[0];
 
     state.set({
       themes,
       theme: initialTheme,
       to: (initialTheme?.defaults?.to || '').slice(0, 36),
-      message: (initialTheme?.defaults?.message || '').slice(0, 180),
+      message: (initialTheme?.defaults?.message || '').slice(0, 280),
       from: (initialTheme?.defaults?.from || '').slice(0, 36),
       fontId: 'fredoka',
       watermark: true,
       mode: 'share',
       giftEnabled: false,
-      giftUrl: ''
+      giftUrl: '',
+      birthdayNumberEnabled: false,
+      birthdayNumber: '',
+      paperOverride: '',
+      inkOverride: ''
     });
 
     createUI({ state, preview, elements });
