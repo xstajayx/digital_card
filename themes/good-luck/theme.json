@@ -1,0 +1,9 @@
+{
+  "id": "good-luck",
+  "name": "Good Luck",
+  "occasion": "Good Luck",
+  "defaults": {"to": "You", "message": "Go shine! You are ready for this moment.", "from": "Cheering you on"},
+  "palette": {"paper": "#fffbea", "ink": "#3b3318", "accent": "#ff9f1c", "accent2": "#2ec4b6", "gold": "#ffd166"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "confetti", "frameDecor": "stars", "overlayIntensity": 0.85, "decorType": "stars", "decorDensity": 16}
+}

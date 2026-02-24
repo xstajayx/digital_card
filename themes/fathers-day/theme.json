@@ -1,0 +1,9 @@
+{
+  "id": "fathers-day",
+  "name": "Father's Day",
+  "occasion": "Father's Day",
+  "defaults": {"to": "Dad", "message": "Thanks for your guidance, patience, and all the laughs.", "from": "With appreciation"},
+  "palette": {"paper": "#eef4ff", "ink": "#1f2f48", "accent": "#3d7eff", "accent2": "#56cfe1", "gold": "#f2c14e"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "stars", "frameDecor": "stars", "overlayIntensity": 0.75, "decorType": "stars", "decorDensity": 16}
+}

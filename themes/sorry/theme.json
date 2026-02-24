@@ -1,0 +1,9 @@
+{
+  "id": "sorry",
+  "name": "Sorry",
+  "occasion": "I'm Sorry",
+  "defaults": {"to": "Friend", "message": "I am truly sorry. I hope we can make things right.", "from": "With sincerity"},
+  "palette": {"paper": "#f5f5f8", "ink": "#2f2f3f", "accent": "#8d99ae", "accent2": "#a0c4ff", "gold": "#e9c46a"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": false, "sparkles": false, "revealType": "stars", "frameDecor": "stars", "overlayIntensity": 0.6, "decorType": "stars", "decorDensity": 16}
+}

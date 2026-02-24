@@ -1,0 +1,9 @@
+{
+  "id": "mothers-day",
+  "name": "Mother's Day",
+  "occasion": "Mother's Day",
+  "defaults": {"to": "Mum", "message": "Thank you for your endless love and gentle strength every day.", "from": "With love"},
+  "palette": {"paper": "#fff1f6", "ink": "#452435", "accent": "#ff7aa2", "accent2": "#c38fff", "gold": "#f7c59f"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "hearts", "frameDecor": "hearts", "overlayIntensity": 0.85, "decorType": "hearts", "decorDensity": 16}
+}

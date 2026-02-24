@@ -1,0 +1,9 @@
+{
+  "id": "anniversary",
+  "name": "Anniversary",
+  "occasion": "Happy Anniversary",
+  "defaults": {"to": "You Two", "message": "Wishing you many more years of love, laughter, and sweet memories.", "from": "Cheers to love"},
+  "palette": {"paper": "#fff7f1", "ink": "#3a2a24", "accent": "#ff6b6b", "accent2": "#f7b267", "gold": "#ffd166"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "hearts", "frameDecor": "hearts", "overlayIntensity": 0.8, "decorType": "hearts", "decorDensity": 16}
+}

@@ -11,48 +11,29 @@
   <title>Card Preview</title>
 </head>
 <body>
-  <div class="card-root" id="cardRoot" data-capture-scope="card">
-    <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons">
-      <div class="dissolve-layer" id="dissolveLayer"></div>
-    </div>
-
+  <div class="card-root" id="cardRoot" data-capture-scope="card" data-mode="share">
+    <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons"><div class="dissolve-layer" id="dissolveLayer"></div></div>
     <div class="card">
       <div class="panel top">
         <div class="headline" id="headline">Happy Day</div>
         <div class="message" id="message"></div>
         <div class="from" id="from"></div>
       </div>
-
       <div class="frame-decor frame-decor-overlay" id="frameDecorOverlay"></div>
-
       <div class="panel bottom">
         <div class="photo-wrap" id="photoWrap">
-          <div class="photo-slot" id="photoSlot">
-            <img id="photo" alt="Uploaded" style="display:none;" />
-            <div class="placeholder" id="placeholder"><span>Upload a photo</span></div>
-          </div>
+          <div class="photo-slot" id="photoSlot"><img id="photo" alt="Uploaded" style="display:none;" /><div class="placeholder" id="placeholder"><span>Upload a photo</span></div></div>
           <div class="frame-decor frame-decor-photo" id="frameDecorPhoto"></div>
         </div>
-        <div class="decor-panel" id="decorPanel">
-          <div class="frame-decor" id="frameDecor"></div>
-        </div>
+        <div class="decor-panel" id="decorPanel"><div class="frame-decor" id="frameDecor"></div></div>
         <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
         <div id="giftDomain" class="gift-domain" style="display:none;"></div>
       </div>
     </div>
-
-    <div class="confetti" id="confetti">
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
-    <div class="sparkles" id="sparkles">
-      <span></span><span></span><span></span><span></span>
-    </div>
-
+    <div class="confetti" id="confetti"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="sparkles" id="sparkles"><span></span><span></span><span></span><span></span></div>
     <div class="watermark" id="watermark">Made with JWorldCreations</div>
   </div>
-
   <script>
     const ITEM_TYPES = ['balloons', 'hearts', 'stars', 'snow', 'confetti'];
     const FONT_MAP = {
@@ -63,69 +44,66 @@
       nunito: '"Nunito", system-ui, sans-serif',
       playfair: '"Playfair Display", ui-serif, serif'
     };
+    const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
+    const normalizeType = (type) => ITEM_TYPES.includes(type) ? type : 'balloons';
 
-    function sanitizeGiftUrl(input) {
-      if (typeof input !== 'string') return '';
-      const trimmed = input.trim();
-      if (!trimmed || trimmed.length > 500) return '';
+    function applyFont(fontId) {
+      setVar('--card-font', FONT_MAP[fontId] || FONT_MAP.fredoka);
+    }
 
-      let url;
-      try {
-        url = new URL(trimmed);
-      } catch {
-        return '';
+    function wrapAndClampMessage(text, cols = 19, rows = 12) {
+      const words = String(text || '').replace(/\r\n/g, '\n').split(/\s+/).filter(Boolean);
+      const lines = [];
+      let current = '';
+
+      function pushLine(line) {
+        if (lines.length < rows) lines.push(line);
       }
 
-      if (url.protocol !== 'https:') return '';
-      if (url.username || url.password) return '';
+      for (const word of words) {
+        if (lines.length >= rows) break;
 
-      const href = url.href;
-      return href.length <= 500 ? href : '';
+        if (word.length > cols) {
+          if (current) {
+            pushLine(current);
+            current = '';
+            if (lines.length >= rows) break;
+          }
+          for (let i = 0; i < word.length && lines.length < rows; i += cols) {
+            pushLine(word.slice(i, i + cols));
+          }
+          continue;
+        }
+
+        if (!current) {
+          current = word;
+        } else if ((current.length + 1 + word.length) <= cols) {
+          current += ` ${word}`;
+        } else {
+          pushLine(current);
+          current = word;
+        }
+      }
+
+      if (current && lines.length < rows) pushLine(current);
+      return lines.slice(0, rows).join('\n');
+    }
+
+    function sanitizeGiftUrl(input) {
+      try {
+        const u = new URL(String(input || '').trim());
+        if (u.protocol !== 'https:') return '';
+        return u.href;
+      } catch { return ''; }
     }
 
     function getGiftDomain(url) {
-      try {
-        const hostname = new URL(url).hostname || '';
-        return hostname.replace(/^www\./i, '');
-      } catch {
-        return '';
-      }
-    }
-
-    function normalizeType(type) {
-      return ITEM_TYPES.includes(type) ? type : 'balloons';
-    }
-
-    function setVar(k, v) {
-      document.documentElement.style.setProperty(k, v);
-    }
-
-    function applyFont(fontId) {
-      const font = FONT_MAP[fontId] || FONT_MAP.fredoka;
-      document.documentElement.style.setProperty('--card-font', font);
-    }
-
-    function clampMessage(text, cols, rows) {
-      const clean = String(text || '').replace(/\r\n/g, '\n');
-      const out = [];
-      for (const rawLine of clean.split('\n')) {
-        let s = rawLine;
-        while (s.length > cols) {
-          out.push(s.slice(0, cols));
-          s = s.slice(cols);
-          if (out.length >= rows) return out.slice(0, rows).join('\n');
-        }
-        out.push(s);
-        if (out.length >= rows) return out.slice(0, rows).join('\n');
-      }
-      return out.slice(0, rows).join('\n');
+      try { return new URL(url).hostname.replace(/^www\./i, ''); } catch { return ''; }
     }
 
     function replay() {
       const root = document.getElementById('cardRoot');
-      if (!root) return;
       root.classList.remove('play');
-      root.setAttribute('data-replay-ts', String(Date.now()));
       void root.offsetWidth;
       root.classList.add('play');
     }
@@ -133,55 +111,28 @@
     function buildFrameDecor(frameDecorType, density = 16, viewerMode = false, targetId = 'frameDecor') {
       const frameDecor = document.getElementById(targetId);
       if (!frameDecor) return;
-
       const type = normalizeType(frameDecorType);
       frameDecor.innerHTML = '';
-
       const count = Math.max(10, Math.min(28, Number(density) || 16));
-      const positions = [];
-
-      // border-safe items
-      const edgeCount = Math.floor(count * 0.45);
-      for (let i = 0; i < edgeCount; i += 1) {
-        const edge = Math.floor(Math.random() * 4);
-        const p = Math.round(Math.random() * 100);
-        if (edge === 0) positions.push({ left: p, top: 2 });
-        if (edge === 1) positions.push({ left: 98, top: p });
-        if (edge === 2) positions.push({ left: p, top: 98 });
-        if (edge === 3) positions.push({ left: 2, top: p });
-      }
-
-      // decor-panel-safe items (bottom only in viewer mode)
       const minTop = viewerMode ? 64 : 44;
-      while (positions.length < count) {
-        positions.push({
-          left: Math.round(8 + Math.random() * 84),
-          top: Math.round(minTop + Math.random() * (96 - minTop))
-        });
-      }
-
       for (let i = 0; i < count; i += 1) {
         const item = document.createElement('div');
-        const pos = positions[i];
         item.className = `frame-item ${type}`;
-        item.style.left = `${pos.left}%`;
-        item.style.top = `${pos.top}%`;
+        item.style.left = `${Math.round(8 + Math.random() * 84)}%`;
+        item.style.top = `${Math.round(minTop + Math.random() * (96 - minTop))}%`;
         item.style.setProperty('--delay', `${(Math.random() * 1.5).toFixed(2)}s`);
         frameDecor.appendChild(item);
       }
     }
 
     window.setCardData = (data) => {
-      const themeStyles = document.getElementById('themeStyles');
-      if (themeStyles) {
-        themeStyles.href = data.themeCssHref || '';
-      }
-
+      document.getElementById('themeStyles').href = data.themeCssHref || '';
       const p = data.palette || {};
       const t = data.timing || {};
+      const f = data.features || {};
 
-      if (p.paper) setVar('--paper', p.paper);
-      if (p.ink) setVar('--ink', p.ink);
+      setVar('--paper', data.paperOverride || p.paper || '#fff7f2');
+      setVar('--ink', data.inkOverride || p.ink || '#2b2622');
       if (p.accent) setVar('--accent', p.accent);
       if (p.accent2) setVar('--accent2', p.accent2);
       if (p.gold) setVar('--gold', p.gold);
@@ -192,106 +143,46 @@
       if (t.subDelayMs != null) setVar('--sub-delay', `${t.subDelayMs}ms`);
       if (t.fromDelayMs != null) setVar('--from-delay', `${t.fromDelayMs}ms`);
       if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
-      if (t.fxStopMs != null) setVar('--fx-stop', `${t.fxStopMs}ms`);
-
-      const f = data.features || {};
-      const revealType = normalizeType(f.revealType || 'balloons');
-      const decorType = normalizeType(f.decorType || f.frameDecor || revealType);
-      const decorDensity = Math.max(10, Math.min(28, Number(f.decorDensity) || 16));
-      const mode = data.mode === 'gif' ? 'gif' : 'share';
-      const isShareMode = mode === 'share';
 
       applyFont(data.fontId || 'fredoka');
+      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, true, 'frameDecor');
+      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, false, 'frameDecorPhoto');
+      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, false, 'frameDecorOverlay');
 
-      if (f.overlayIntensity != null) {
-        setVar('--overlay-intensity', f.overlayIntensity);
-      }
-
-      buildFrameDecor(decorType, decorDensity, true, 'frameDecor');
-      buildFrameDecor(decorType, decorDensity, false, 'frameDecorPhoto');
-      buildFrameDecor(decorType, decorDensity, false, 'frameDecorOverlay');
-
-      const headlineEl = document.getElementById('headline');
-      const messageEl = document.getElementById('message');
-      const fromEl = document.getElementById('from');
-      if (headlineEl) headlineEl.innerHTML = data.headline || '';
-      const cols = 19;
-      const rows = mode === 'gif' ? 6 : 12;
-      if (messageEl) messageEl.textContent = clampMessage(data.message, cols, rows);
-      if (fromEl) fromEl.textContent = data.from || '';
-
-      const root = document.getElementById('cardRoot');
-      if (root) {
-        root.dataset.mode = isShareMode ? 'share' : 'gif';
-        root.classList.toggle('mode-share', isShareMode);
-        root.classList.toggle('mode-gif', !isShareMode);
-      }
-
-      const photoWrap = document.getElementById('photoWrap');
-      const decorPanel = document.getElementById('decorPanel');
-      if (photoWrap) photoWrap.style.display = isShareMode ? 'none' : 'block';
-      if (decorPanel) decorPanel.style.display = isShareMode ? 'block' : 'none';
+      document.getElementById('headline').innerHTML = data.headline || '';
+      document.getElementById('message').textContent = wrapAndClampMessage(data.message, 19, 12);
+      document.getElementById('from').textContent = data.from || '';
 
       const photoEl = document.getElementById('photo');
-      const placeholderEl = document.getElementById('placeholder');
-      if (!isShareMode && photoEl && placeholderEl) {
-        if (data.photoDataUrl) {
-          photoEl.src = data.photoDataUrl;
-          photoEl.style.display = 'block';
-          placeholderEl.style.display = 'none';
-        } else {
-          photoEl.removeAttribute('src');
-          photoEl.style.display = 'none';
-          placeholderEl.style.display = 'flex';
-        }
+      const placeholder = document.getElementById('placeholder');
+      if (data.viewer || !data.photoDataUrl) {
+        photoEl.style.display = 'none';
+        photoEl.removeAttribute('src');
+        placeholder.style.display = 'flex';
+      } else {
+        photoEl.src = data.photoDataUrl;
+        photoEl.style.display = 'block';
+        placeholder.style.display = 'none';
       }
 
-      const wm = document.getElementById('watermark');
-      if (wm) wm.style.display = data.watermark ? 'block' : 'none';
-
-      const giftBtn = document.getElementById('giftButton');
-      const giftDomain = document.getElementById('giftDomain');
       const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || '');
-      if (giftBtn && giftDomain) {
-        if (isShareMode && safeGiftUrl) {
-          giftBtn.href = safeGiftUrl;
-          giftBtn.style.display = 'inline-flex';
-          giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
-          giftDomain.style.display = 'block';
-        } else {
-          giftBtn.style.display = 'none';
-          giftBtn.removeAttribute('href');
-          giftDomain.style.display = 'none';
-          giftDomain.textContent = '';
-        }
+      const giftButton = document.getElementById('giftButton');
+      const giftDomain = document.getElementById('giftDomain');
+      if (safeGiftUrl) {
+        giftButton.href = safeGiftUrl;
+        giftButton.style.display = 'inline-flex';
+        giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
+        giftDomain.style.display = 'block';
+      } else {
+        giftButton.style.display = 'none';
+        giftDomain.style.display = 'none';
       }
 
-      const curtain = document.getElementById('balloonCurtain');
-      const confetti = document.getElementById('confetti');
-      const sparkles = document.getElementById('sparkles');
-
-      const showCurtain = f.balloonCurtain !== false;
-      if (curtain) {
-        curtain.style.display = showCurtain ? 'block' : 'none';
-        curtain.setAttribute('data-reveal', revealType);
-      }
-      if (confetti) confetti.style.display = f.confetti ? 'block' : 'none';
-      if (sparkles) sparkles.style.display = f.sparkles ? 'block' : 'none';
-
+      document.getElementById('watermark').style.display = data.watermark ? 'block' : 'none';
+      document.getElementById('balloonCurtain').setAttribute('data-reveal', normalizeType(f.revealType || 'balloons'));
+      document.getElementById('confetti').style.display = f.confetti ? 'block' : 'none';
+      document.getElementById('sparkles').style.display = f.sparkles ? 'block' : 'none';
       replay();
-    };
-
-
-    window.getCardRect = () => {
-      const root = document.getElementById('cardRoot');
-      if (!root) return null;
-      const rect = root.getBoundingClientRect();
-      return {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height
-      };
     };
 
     window.play = replay;

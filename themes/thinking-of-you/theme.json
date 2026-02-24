@@ -1,0 +1,9 @@
+{
+  "id": "thinking-of-you",
+  "name": "Thinking of You",
+  "occasion": "Thinking of You",
+  "defaults": {"to": "Friend", "message": "Just a little note to say you are in my thoughts today.", "from": "With care"},
+  "palette": {"paper": "#f9f4ff", "ink": "#352646", "accent": "#b388eb", "accent2": "#7bdff2", "gold": "#f7d794"},
+  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
+  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "stars", "frameDecor": "hearts", "overlayIntensity": 0.75, "decorType": "hearts", "decorDensity": 16}
+}
