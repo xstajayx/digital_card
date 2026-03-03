@@ -38,13 +38,14 @@ export async function createCardController(iframe) {
     headline: '',
     message: '',
     from: '',
-    photo: '',
     giftUrl: '',
     fontId: 'fredoka',
     birthdayNumber: '',
     paperOverride: '',
     inkOverride: '',
-    mode: 'share'
+    mode: 'share',
+    stickerId: '',
+    themeId: ''
   };
   let watermark = true;
 
@@ -65,9 +66,10 @@ export async function createCardController(iframe) {
       paperOverride: content.paperOverride || '',
       inkOverride: content.inkOverride || '',
       viewer: false,
-      photoDataUrl: content.photo || '',
       watermark: !!watermark,
       giftUrl: content.giftUrl || '',
+      stickerId: content.stickerId || '',
+      themeId: content.themeId || theme?.id || '',
       themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
     });
   }

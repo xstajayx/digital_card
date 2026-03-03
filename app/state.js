@@ -7,8 +7,6 @@ export function createState() {
     message: '',
     from: '',
     fontId: 'fredoka',
-    photo: '',
-    photoBusy: false,
     watermark: true,
     mode: 'share',
     giftEnabled: false,
@@ -16,7 +14,9 @@ export function createState() {
     birthdayNumberEnabled: false,
     birthdayNumber: '',
     paperOverride: '',
-    inkOverride: ''
+    inkOverride: '',
+    stickerId: '',
+    stickers: []
   };
 
   function notify() {

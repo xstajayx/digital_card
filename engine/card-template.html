@@ -19,16 +19,11 @@
         <div class="message" id="message"></div>
         <div class="from" id="from"></div>
       </div>
+      <div class="sticker-zone"><img id="stickerImg" alt="Sticker" /></div>
       <div class="frame-decor frame-decor-overlay" id="frameDecorOverlay"></div>
-      <div class="panel bottom">
-        <div class="photo-wrap" id="photoWrap">
-          <div class="photo-slot" id="photoSlot"><img id="photo" alt="Uploaded" style="display:none;" /><div class="placeholder" id="placeholder"><span>Upload a photo</span></div></div>
-          <div class="frame-decor frame-decor-photo" id="frameDecorPhoto"></div>
-        </div>
-        <div class="decor-panel" id="decorPanel"><div class="frame-decor" id="frameDecor"></div></div>
-        <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
-        <div id="giftDomain" class="gift-domain" style="display:none;"></div>
-      </div>
+      <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
+      <div id="giftDomain" class="gift-domain" style="display:none;"></div>
+      <div class="frame-decor" id="frameDecor"></div>
     </div>
     <div class="confetti" id="confetti"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="sparkles" id="sparkles"><span></span><span></span><span></span><span></span></div>
@@ -51,17 +46,23 @@
       setVar('--card-font', FONT_MAP[fontId] || FONT_MAP.fredoka);
     }
 
-    function wrapAndClampMessage(text, cols = 19, rows = 12) {
-      const words = String(text || '').replace(/\r\n/g, '\n').split(/\s+/).filter(Boolean);
+    function wrapAndClampMessage(text, cols = 38, rows = 12) {
+      const words = String(text || '').replace(/\r\n/g, '\n').replace(/\n/g, ' \n ').split(/\s+/).filter(Boolean);
       const lines = [];
       let current = '';
 
-      function pushLine(line) {
+      const pushLine = (line) => {
         if (lines.length < rows) lines.push(line);
-      }
+      };
 
       for (const word of words) {
         if (lines.length >= rows) break;
+
+        if (word === '\n') {
+          pushLine(current);
+          current = '';
+          continue;
+        }
 
         if (word.length > cols) {
           if (current) {
@@ -101,6 +102,26 @@
       try { return new URL(url).hostname.replace(/^www\./i, ''); } catch { return ''; }
     }
 
+    function fallbackSticker(themeId) {
+      const key = String(themeId || '');
+      let shape = '<circle cx="86" cy="110" r="26" fill="%237f6df2"/><circle cx="120" cy="88" r="34" fill="%239987ff"/><circle cx="156" cy="110" r="24" fill="%237f6df2"/>';
+      if (key.startsWith('birthday')) {
+        shape = '<circle cx="120" cy="90" r="40" fill="%23f78ec9"/><rect x="70" y="90" width="100" height="45" rx="10" fill="%23ffc0dd"/><rect x="88" y="58" width="6" height="28" fill="%23ffd56b"/><rect x="116" y="52" width="6" height="34" fill="%236fa8ff"/><rect x="144" y="58" width="6" height="28" fill="%23b985ff"/>';
+      } else if (key === 'love' || key === 'anniversary') {
+        shape = '<path d="M120 170c-4-20-62-42-62-88 0-22 18-40 40-40 16 0 26 8 32 20 6-12 16-20 32-20 22 0 40 18 40 40 0 46-58 68-62 88z" fill="%23ef4f8f"/>';
+      } else if (key === 'christmas') {
+        shape = '<polygon points="120,34 58,130 92,130 76,176 164,176 148,130 182,130" fill="%2342a95f"/><rect x="108" y="176" width="24" height="24" fill="%23a66b37"/>';
+      }
+      return `data:image/svg+xml;utf8,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 220'>${shape}</svg>`}`;
+    }
+
+    function resolveStickerSrc(data) {
+      if (!data.stickerId) return '';
+      if (data.stickerSrc) return data.stickerSrc;
+      const themeId = data.themeId || '';
+      return `../stickers/${themeId}/${data.stickerId}`;
+    }
+
     function replay() {
       const root = document.getElementById('cardRoot');
       root.classList.remove('play');
@@ -114,12 +135,12 @@
       const type = normalizeType(frameDecorType);
       frameDecor.innerHTML = '';
       const count = Math.max(10, Math.min(28, Number(density) || 16));
-      const minTop = viewerMode ? 64 : 44;
+      const minTop = viewerMode ? 12 : 10;
       for (let i = 0; i < count; i += 1) {
         const item = document.createElement('div');
         item.className = `frame-item ${type}`;
         item.style.left = `${Math.round(8 + Math.random() * 84)}%`;
-        item.style.top = `${Math.round(minTop + Math.random() * (96 - minTop))}%`;
+        item.style.top = `${Math.round(minTop + Math.random() * (90 - minTop))}%`;
         item.style.setProperty('--delay', `${(Math.random() * 1.5).toFixed(2)}s`);
         frameDecor.appendChild(item);
       }
@@ -146,23 +167,24 @@
 
       applyFont(data.fontId || 'fredoka');
       buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, true, 'frameDecor');
-      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, false, 'frameDecorPhoto');
       buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, false, 'frameDecorOverlay');
 
       document.getElementById('headline').innerHTML = data.headline || '';
-      document.getElementById('message').textContent = wrapAndClampMessage(data.message, 19, 12);
+      document.getElementById('message').textContent = wrapAndClampMessage(data.message, 38, 12);
       document.getElementById('from').textContent = data.from || '';
 
-      const photoEl = document.getElementById('photo');
-      const placeholder = document.getElementById('placeholder');
-      if (data.viewer || !data.photoDataUrl) {
-        photoEl.style.display = 'none';
-        photoEl.removeAttribute('src');
-        placeholder.style.display = 'flex';
+      const stickerImg = document.getElementById('stickerImg');
+      const stickerSrc = resolveStickerSrc(data);
+      if (!stickerSrc) {
+        stickerImg.style.display = 'none';
+        stickerImg.removeAttribute('src');
       } else {
-        photoEl.src = data.photoDataUrl;
-        photoEl.style.display = 'block';
-        placeholder.style.display = 'none';
+        stickerImg.style.display = 'block';
+        stickerImg.onerror = () => {
+          stickerImg.onerror = null;
+          stickerImg.src = fallbackSticker(data.themeId);
+        };
+        stickerImg.src = stickerSrc;
       }
 
       const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || '');
