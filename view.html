@@ -70,11 +70,13 @@
       const birthdayNumberEnabled = !!payload.birthdayNumberEnabled || !!birthdayNumber;
       const paperOverride = payload.paperOverride || '';
       const inkOverride = payload.inkOverride || '';
+      const themeId = payload.themeId || '';
+      const stickerId = typeof payload.stickerId === 'string' ? payload.stickerId : '';
 
       const ids = await (await fetch('./themes/themes.json', { cache: 'no-store' })).json();
-      if (!ids.includes(payload.themeId)) return void (status.textContent = 'Theme unavailable.');
+      if (!ids.includes(themeId)) return void (status.textContent = 'Theme unavailable.');
 
-      const theme = await (await fetch(`./themes/${payload.themeId}/theme.json`, { cache: 'no-store' })).json();
+      const theme = await (await fetch(`./themes/${themeId}/theme.json`, { cache: 'no-store' })).json();
       let templateHtml = await (await fetch('./engine/card-template.html', { cache: 'no-store' })).text();
       templateHtml = templateHtml.replace('./card-base.css', './engine/card-base.css');
 
@@ -84,7 +86,7 @@
           palette: theme.palette,
           timing: theme.timing,
           features: theme.features,
-          headline: greetingFor(payload.themeId, payload.to, birthdayNumberEnabled, birthdayNumber),
+          headline: greetingFor(themeId, payload.to, birthdayNumberEnabled, birthdayNumber),
           message: String(payload.message || ''),
           from: String(payload.from || ''),
           mode: 'share',
@@ -93,10 +95,12 @@
           paperOverride,
           inkOverride,
           viewer: true,
-          photoDataUrl: '',
           watermark: payload.watermark !== false,
           giftUrl: sanitizeGiftUrl(payload.giftUrl || ''),
-          themeCssHref: `./themes/${payload.themeId}/theme.css`
+          stickerId,
+          themeId,
+          stickerSrc: stickerId ? `./stickers/${themeId}/${stickerId}` : '',
+          themeCssHref: `./themes/${themeId}/theme.css`
         });
         iframe.contentWindow.play();
       }, { once: true });

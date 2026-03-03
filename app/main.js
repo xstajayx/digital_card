@@ -8,7 +8,6 @@ async function init() {
     messageInput: document.getElementById('messageInput'),
     fromInput: document.getElementById('fromInput'),
     fontSelect: document.getElementById('fontSelect'),
-    photoInput: document.getElementById('photoInput'),
     watermarkToggle: document.getElementById('watermarkToggle'),
     giftToggle: document.getElementById('giftToggle'),
     giftInput: document.getElementById('giftInput'),
@@ -20,6 +19,7 @@ async function init() {
     inkColorInput: document.getElementById('inkColorInput'),
     resetColorsButton: document.getElementById('resetColorsButton'),
     themeGallery: document.getElementById('themeGallery'),
+    stickerGallery: document.getElementById('stickerGallery'),
     replayButton: document.getElementById('replayButton'),
     replayButtonInline: document.getElementById('replayButtonInline'),
     shareLinkButton: document.getElementById('shareLinkButton'),
@@ -49,7 +49,9 @@ async function init() {
       birthdayNumberEnabled: false,
       birthdayNumber: '',
       paperOverride: '',
-      inkOverride: ''
+      inkOverride: '',
+      stickerId: '',
+      stickers: []
     });
 
     createUI({ state, preview, elements });

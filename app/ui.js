@@ -4,9 +4,45 @@ const MAX_SHARE_URL_CHARS = 3000;
 const TO_MAX_LEN = 36;
 const FROM_MAX_LEN = 36;
 const MESSAGE_MAX_LEN = 280;
-const UPLOAD_MAX_BYTES = 2 * 1024 * 1024;
-const PHOTO_MAX_SIDE = 420;
-const PHOTO_QUALITY = 0.6;
+
+const THEME_STICKER_FALLBACKS = {
+  'birthday-balloons': [
+    { id: 'cake-pink.png', label: 'Cake (Pink)' },
+    { id: 'cake-yellow.png', label: 'Cake (Yellow)' },
+    { id: 'cake-blue.png', label: 'Cake (Blue)' },
+    { id: 'cake-purple.png', label: 'Cake (Purple)' }
+  ],
+  love: [
+    { id: 'heart-red.png', label: 'Heart (Red)' },
+    { id: 'heart-pink.png', label: 'Heart (Pink)' },
+    { id: 'heart-purple.png', label: 'Heart (Purple)' },
+    { id: 'kiss-black.png', label: 'Kiss (Black)' }
+  ],
+  christmas: [
+    { id: 'tree-green.png', label: 'Tree (Green)' },
+    { id: 'bauble-gold.png', label: 'Bauble (Gold)' },
+    { id: 'snowflake-white.png', label: 'Snowflake (White)' }
+  ],
+  'thank-you': [{ id: 'bouquet-pastel.png', label: 'Bouquet' }, { id: 'ribbon-soft.png', label: 'Ribbon' }, { id: 'sparkles-gold.png', label: 'Sparkles' }],
+  congrats: [{ id: 'trophy-gold.png', label: 'Trophy' }, { id: 'stars-blue.png', label: 'Stars' }, { id: 'confetti-pop.png', label: 'Confetti Pop' }],
+  'kids-party': [{ id: 'balloons-rainbow.png', label: 'Balloons' }, { id: 'hat-party.png', label: 'Party Hat' }, { id: 'animal-bear.png', label: 'Animal' }],
+  'mothers-day': [{ id: 'flowers-rose.png', label: 'Flowers' }, { id: 'heart-soft.png', label: 'Heart' }],
+  'fathers-day': [{ id: 'tie-blue.png', label: 'Tie' }, { id: 'mug-classic.png', label: 'Mug' }],
+  'new-baby': [{ id: 'pram-soft.png', label: 'Pram' }, { id: 'bottle-mint.png', label: 'Bottle' }, { id: 'stars-baby.png', label: 'Stars' }],
+  'get-well': [{ id: 'bandage-red.png', label: 'Bandage' }, { id: 'tea-cup.png', label: 'Tea Cup' }, { id: 'heart-heal.png', label: 'Heart' }],
+  sorry: [{ id: 'heart-small.png', label: 'Small Heart' }, { id: 'note-soft.png', label: 'Note' }, { id: 'flower-soft.png', label: 'Flower' }],
+  'thinking-of-you': [{ id: 'cloud-soft.png', label: 'Cloud' }, { id: 'heart-soft.png', label: 'Heart' }, { id: 'envelope-soft.png', label: 'Envelope' }],
+  graduation: [{ id: 'cap-black.png', label: 'Cap' }, { id: 'diploma-white.png', label: 'Diploma' }, { id: 'stars-gold.png', label: 'Stars' }],
+  anniversary: [{ id: 'heart-red.png', label: 'Heart' }, { id: 'kiss-pink.png', label: 'Kiss Mark' }],
+  'good-luck': [{ id: 'star-gold.png', label: 'Star' }, { id: 'clover-green.png', label: 'Clover' }]
+};
+
+const SVG_BY_THEME = {
+  birthday: '<g fill="%23f78ec9"><circle cx="120" cy="90" r="40"/><rect x="70" y="90" width="100" height="45" rx="10"/></g><rect x="88" y="58" width="6" height="28" fill="%23ffd56b"/><rect x="116" y="52" width="6" height="34" fill="%236fa8ff"/><rect x="144" y="58" width="6" height="28" fill="%23b985ff"/>',
+  love: '<g fill="%23ef4f8f"><path d="M120 170c-4-20-62-42-62-88 0-22 18-40 40-40 16 0 26 8 32 20 6-12 16-20 32-20 22 0 40 18 40 40 0 46-58 68-62 88z"/></g>',
+  christmas: '<polygon points="120,34 58,130 92,130 76,176 164,176 148,130 182,130" fill="%2342a95f"/><rect x="108" y="176" width="24" height="24" fill="%23a66b37"/>',
+  default: '<g fill="%237f6df2"><circle cx="86" cy="110" r="26"/><circle cx="120" cy="88" r="34"/><circle cx="156" cy="110" r="24"/></g>'
+};
 
 export async function loadThemes() {
   const res = await fetch('./themes/themes.json', { cache: 'no-store' });
@@ -75,39 +111,44 @@ function normalizeBirthdayNumber(value) {
   return String(Math.max(1, Math.min(120, Math.round(num))));
 }
 
-function compressDataUrl(dataUrl, maxSide, quality) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const longest = Math.max(img.naturalWidth, img.naturalHeight) || 1;
-      const scale = Math.min(1, maxSide / longest);
-      const w = Math.max(1, Math.round(img.naturalWidth * scale));
-      const h = Math.max(1, Math.round(img.naturalHeight * scale));
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return reject(new Error('Image compression unavailable.'));
-      ctx.drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', quality));
-    };
-    img.onerror = () => reject(new Error('Unsupported image format.'));
-    img.src = dataUrl;
-  });
+function normalizeStickerItems(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((item) => {
+    if (typeof item === 'string') return { id: item, label: item.replace(/\.[^.]+$/, '') };
+    if (!item || typeof item !== 'object') return null;
+    if (!item.id) return null;
+    return { id: String(item.id), label: String(item.label || item.id.replace(/\.[^.]+$/, '')) };
+  }).filter(Boolean);
 }
 
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error('Could not read image file.'));
-    reader.readAsDataURL(file);
-  });
+function fallbackSvgDataUri(themeId) {
+  let key = 'default';
+  if (String(themeId).startsWith('birthday')) key = 'birthday';
+  else if (themeId === 'love' || themeId === 'anniversary') key = 'love';
+  else if (themeId === 'christmas') key = 'christmas';
+  const body = SVG_BY_THEME[key] || SVG_BY_THEME.default;
+  return `data:image/svg+xml;utf8,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 220'><rect width='100%' height='100%' fill='none'/>${body}</svg>`}`;
+}
+
+async function loadStickersForTheme(themeId) {
+  if (!themeId) return [];
+  try {
+    const res = await fetch(`./stickers/${themeId}/stickers.json`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      const normalized = normalizeStickerItems(data);
+      if (normalized.length) return normalized;
+    }
+  } catch {
+    // fallback below
+  }
+  return normalizeStickerItems(THEME_STICKER_FALLBACKS[themeId] || []);
 }
 
 async function buildShareUrlAsync(current) {
   const safeGiftUrl = current.giftEnabled ? sanitizeGiftUrl(current.giftUrl || '') : '';
   const birthdayNumber = current.birthdayNumberEnabled ? normalizeBirthdayNumber(current.birthdayNumber) : '';
+  const stickerValid = current.stickers.some((s) => s.id === current.stickerId);
   const payload = {
     v: 1,
     themeId: current.theme.id,
@@ -121,17 +162,25 @@ async function buildShareUrlAsync(current) {
     birthdayNumberEnabled: !!current.birthdayNumberEnabled,
     paperOverride: current.paperOverride || '',
     inkOverride: current.inkOverride || '',
-    photo: ''
+    stickerId: stickerValid ? current.stickerId : ''
   };
 
   const encoded = base64UrlEncode(JSON.stringify(payload));
   const url = buildViewerUrl(encoded);
   if (url.length > MAX_SHARE_URL_CHARS) throw new Error('Share link is too long. Shorten message or gift URL.');
-  return { url, payloadLen: encoded.length };
+  return { url };
 }
 
 export function createUI({ state, preview, elements }) {
-  const { toInput, messageInput, fromInput, fontSelect, photoInput, watermarkToggle, giftToggle, giftInput, giftField, birthdayNumberToggle, birthdayNumberInput, birthdayNumberField, paperColorInput, inkColorInput, resetColorsButton, themeGallery, replayButton, replayButtonInline, shareLinkButton, shareWhatsappButton, exportStatus } = elements;
+  const {
+    toInput, messageInput, fromInput, fontSelect, watermarkToggle, giftToggle, giftInput, giftField,
+    birthdayNumberToggle, birthdayNumberInput, birthdayNumberField, paperColorInput, inkColorInput,
+    resetColorsButton, themeGallery, stickerGallery, replayButton, replayButtonInline,
+    shareLinkButton, shareWhatsappButton, exportStatus
+  } = elements;
+
+  let stickerThemeVersion = 0;
+  let loadedStickerThemeId = "";
 
   function setStatus(msg) {
     if (exportStatus) exportStatus.textContent = msg || '';
@@ -144,9 +193,13 @@ export function createUI({ state, preview, elements }) {
       button.type = 'button';
       button.className = `theme-tile${current.theme?.id === theme.id ? ' is-active' : ''}`;
       button.textContent = theme.name;
-      button.addEventListener('click', () => {
+      button.addEventListener('click', async () => {
+        const stickers = await loadStickersForTheme(theme.id);
+        loadedStickerThemeId = theme.id;
         state.set({
           theme,
+          stickers,
+          stickerId: '',
           to: clampValue(theme.defaults?.to || '', TO_MAX_LEN),
           message: clampValue(theme.defaults?.message || '', MESSAGE_MAX_LEN),
           from: clampValue(theme.defaults?.from || '', FROM_MAX_LEN),
@@ -158,6 +211,38 @@ export function createUI({ state, preview, elements }) {
     });
   }
 
+  function renderStickerGallery(current) {
+    stickerGallery.innerHTML = '';
+
+    const noneTile = document.createElement('button');
+    noneTile.type = 'button';
+    noneTile.className = `sticker-tile none-option${!current.stickerId ? ' is-active' : ''}`;
+    noneTile.textContent = 'None';
+    noneTile.addEventListener('click', () => state.set({ stickerId: '' }));
+    stickerGallery.appendChild(noneTile);
+
+    current.stickers.forEach((sticker) => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = `sticker-tile${current.stickerId === sticker.id ? ' is-active' : ''}`;
+      tile.title = sticker.label;
+
+      const img = document.createElement('img');
+      img.alt = sticker.label;
+      img.src = `./stickers/${current.theme?.id}/${sticker.id}`;
+      img.loading = 'lazy';
+      img.onerror = () => { img.src = fallbackSvgDataUri(current.theme?.id); };
+
+      const label = document.createElement('span');
+      label.textContent = sticker.label;
+
+      tile.appendChild(img);
+      tile.appendChild(label);
+      tile.addEventListener('click', () => state.set({ stickerId: sticker.id }));
+      stickerGallery.appendChild(tile);
+    });
+  }
+
   function updateBirthdayUI(current) {
     const isBirthdayTheme = String(current.theme?.id || '').startsWith('birthday');
     const showBirthdayControls = isBirthdayTheme || current.birthdayNumberEnabled;
@@ -166,8 +251,24 @@ export function createUI({ state, preview, elements }) {
     birthdayNumberInput.value = current.birthdayNumber || '';
   }
 
+  async function ensureStickers(current) {
+    if (!current.theme) return;
+    if (loadedStickerThemeId === current.theme.id) return;
+    if (Array.isArray(current.stickers) && current.stickers.length) {
+      loadedStickerThemeId = current.theme.id;
+      return;
+    }
+    const version = ++stickerThemeVersion;
+    const stickers = await loadStickersForTheme(current.theme.id);
+    if (version !== stickerThemeVersion) return;
+    const valid = stickers.some((s) => s.id === current.stickerId);
+    loadedStickerThemeId = current.theme.id;
+    state.set({ stickers, stickerId: valid ? current.stickerId : '' });
+  }
+
   function updatePreview(current) {
     if (!current.theme) return;
+    const validSticker = current.stickers.some((s) => s.id === current.stickerId) ? current.stickerId : '';
     preview.setTheme(current.theme);
     preview.setContent({
       headline: greetingFor(current.theme, current.to, current.birthdayNumberEnabled, current.birthdayNumber),
@@ -179,7 +280,8 @@ export function createUI({ state, preview, elements }) {
       paperOverride: current.paperOverride || '',
       inkOverride: current.inkOverride || '',
       mode: 'share',
-      photo: current.photo || ''
+      stickerId: validSticker,
+      themeId: current.theme.id
     });
     preview.setWatermark(current.watermark);
   }
@@ -202,27 +304,6 @@ export function createUI({ state, preview, elements }) {
   paperColorInput.addEventListener('input', (e) => state.set({ paperOverride: e.target.value }));
   inkColorInput.addEventListener('input', (e) => state.set({ inkOverride: e.target.value }));
   resetColorsButton.addEventListener('click', () => state.set({ paperOverride: '', inkOverride: '' }));
-
-  photoInput.addEventListener('change', async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > UPLOAD_MAX_BYTES) {
-      setStatus('Photo must be 2MB or smaller.');
-      photoInput.value = '';
-      return;
-    }
-
-    try {
-      state.set({ photoBusy: true });
-      const dataUrl = await readFileAsDataUrl(file);
-      const compressed = await compressDataUrl(dataUrl, PHOTO_MAX_SIDE, PHOTO_QUALITY);
-      state.set({ photo: compressed, photoBusy: false });
-      setStatus('Photo added for preview.');
-    } catch (err) {
-      state.set({ photo: '', photoBusy: false });
-      setStatus(err.message || 'Could not process photo.');
-    }
-  });
 
   const replay = () => preview.play();
   replayButton.addEventListener('click', replay);
@@ -254,6 +335,7 @@ export function createUI({ state, preview, elements }) {
 
   state.subscribe((current) => {
     renderThemes(current);
+    renderStickerGallery(current);
     giftField.style.display = current.giftEnabled ? '' : 'none';
     updateBirthdayUI(current);
 
@@ -275,5 +357,6 @@ export function createUI({ state, preview, elements }) {
     if (counter) counter.textContent = `${remaining} characters remaining`;
 
     updatePreview(current);
+    ensureStickers(current);
   });
 }
