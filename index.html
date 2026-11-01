@@ -1,141 +1,210 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1022" />
-  <title>JWorldCreations Digital Card Studio</title>
-  <meta name="description" content="Create animated digital cards and share them by link." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/app.css" />
-</head>
-<body>
-  <header class="site-header">
-    <div class="brand" aria-label="JWorldCreations Digital Card Studio">
-      <div class="brand-mark" aria-hidden="true">🎉</div>
-      <div>
-        <p class="brand-title">JWorldCreations</p>
-        <p class="brand-subtitle">Digital Card Studio</p>
+  <head>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b1022" />
+    <link rel="stylesheet" href="./assets/fonts.css" />
+    <title>JWorldCreations Digital Card Studio</title>
+    <meta
+      name="description"
+      content="Create animated digital cards and share them by link."
+    />
+    <link rel="stylesheet" href="./assets/app.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand" aria-label="JWorldCreations Digital Card Studio">
+        <div class="brand-mark" aria-hidden="true">🎉</div>
+        <div>
+          <p class="brand-title">JWorldCreations</p>
+          <p class="brand-subtitle">Digital Card Studio</p>
+        </div>
       </div>
-    </div>
 
-    <nav class="header-actions" aria-label="Actions">
-      <button id="replayButton" class="button ghost" type="button">Replay</button>
-      <button id="shareLinkButton" class="button" type="button">Copy link</button>
-      <button id="shareWhatsappButton" class="button primary" type="button">Share to WhatsApp</button>
-    </nav>
-  </header>
+      <nav class="header-actions" aria-label="Actions">
+        <a class="button preview-jump" href="#preview">Preview card</a>
+        <button id="replayButton" class="button ghost" type="button">
+          Replay
+        </button>
+        <button id="shareLinkButton" class="button" type="button">
+          Copy link
+        </button>
+        <button id="shareWhatsappButton" class="button primary" type="button">
+          Share to WhatsApp
+        </button>
+      </nav>
+    </header>
 
-  <main class="studio">
-    <section class="studio-inner">
-      <div class="controls-block" aria-label="Card controls">
-        <div class="panel">
-          <h2>Personalize</h2>
+    <main class="studio">
+      <section class="studio-inner">
+        <div class="controls-block" aria-label="Card controls">
+          <div class="panel">
+            <h2>Personalize</h2>
 
-          <label class="field">
-            <span>To</span>
-            <input id="toInput" type="text" placeholder="Name" maxlength="36" autocomplete="off" />
-          </label>
+            <label class="field">
+              <span>To</span>
+              <input
+                id="toInput"
+                type="text"
+                placeholder="Name"
+                autocomplete="off"
+              />
+            </label>
 
-          <label class="field">
-            <span>Message</span>
-            <textarea id="messageInput" rows="4" placeholder="Write a message…" maxlength="280"></textarea>
-            <small id="messageRemaining" class="field-counter" aria-live="polite">280 characters remaining</small>
-          </label>
+            <label class="field">
+              <span>Message</span>
+              <textarea
+                id="messageInput"
+                rows="4"
+                placeholder="Write a message…"
+              ></textarea>
+              <small
+                id="messageRemaining"
+                class="field-counter"
+                aria-live="polite"
+                >Paragraphs and newlines are preserved</small
+              >
+            </label>
 
-          <label class="field">
-            <span>From</span>
-            <input id="fromInput" type="text" placeholder="Your name" maxlength="36" autocomplete="off" />
-          </label>
+            <label class="field">
+              <span>From</span>
+              <input
+                id="fromInput"
+                type="text"
+                placeholder="Your name"
+                autocomplete="off"
+              />
+            </label>
 
-          <label class="field">
-            <span>Font</span>
-            <select id="fontSelect">
-              <option value="fredoka">Fredoka (round playful)</option>
-              <option value="pacifico">Pacifico (handwriting)</option>
-              <option value="quicksand">Quicksand (soft clean)</option>
-              <option value="poppins">Poppins (modern)</option>
-              <option value="nunito">Nunito (friendly)</option>
-              <option value="playfair">Playfair Display (elegant)</option>
-            </select>
-          </label>
+            <label class="field">
+              <span>Font</span>
+              <select id="fontSelect">
+                <option value="fredoka">Fredoka (round playful)</option>
+                <option value="pacifico">Pacifico (handwriting)</option>
+                <option value="quicksand">Quicksand (soft clean)</option>
+                <option value="poppins">Poppins (modern)</option>
+                <option value="nunito">Nunito (friendly)</option>
+                <option value="playfair">Playfair Display (elegant)</option>
+              </select>
+            </label>
 
-          <label class="toggle">
-            <input id="birthdayNumberToggle" type="checkbox" />
-            <span>Add birthday number</span>
-          </label>
+            <label class="toggle">
+              <input id="birthdayNumberToggle" type="checkbox" />
+              <span>Add birthday number</span>
+            </label>
 
-          <label class="field" id="birthdayNumberField" style="display:none;">
-            <span>Birthday number</span>
-            <input id="birthdayNumberInput" type="number" min="1" max="120" step="1" placeholder="18" />
-          </label>
+            <label class="field" id="birthdayNumberField" style="display: none">
+              <span>Birthday number</span>
+              <input
+                id="birthdayNumberInput"
+                type="number"
+                min="1"
+                max="120"
+                step="1"
+                placeholder="18"
+              />
+            </label>
 
-          <div class="field">
-            <span>Sticker</span>
-            <div id="stickerGallery" class="sticker-grid" role="listbox" aria-label="Sticker picker"></div>
+            <div class="field">
+              <span>Illustration</span>
+              <div
+                id="stickerGallery"
+                class="sticker-grid"
+                role="listbox"
+                aria-label="Sticker picker"
+              ></div>
+            </div>
+
+            <label class="field">
+              <span>Background colour</span>
+              <input id="paperColorInput" type="color" value="#fff7f2" />
+            </label>
+
+            <label class="field">
+              <span>Text colour</span>
+              <input id="inkColorInput" type="color" value="#2b2622" />
+            </label>
+
+            <label class="field"
+              ><span>Text size</span
+              ><select id="textSize">
+                <option value="20">Large · 20px</option>
+                <option value="18" selected>Standard · 18px</option>
+                <option value="16">Smaller · 16px</option>
+                <option value="14">Compact · 14px</option>
+              </select></label
+            >
+            <button id="resetDesignButton" class="button" type="button">
+              Reset Design
+            </button>
+            <button id="resetColorsButton" class="button ghost" type="button">
+              Reset colours
+            </button>
+
+            <label class="toggle">
+              <input id="watermarkToggle" type="checkbox" checked />
+              <span>Show watermark</span>
+            </label>
+
+            <label class="toggle">
+              <input id="giftToggle" type="checkbox" />
+              <span>Include gift link</span>
+            </label>
+
+            <label class="field" id="giftField" style="display: none">
+              <span>Gift link (optional)</span>
+              <input
+                id="giftInput"
+                type="url"
+                placeholder="Paste a gift / affiliate link"
+              />
+            </label>
+          </div>
+        </div>
+
+        <div class="themes-block">
+          <div class="panel">
+            <h2>Choose a theme</h2>
+            <div id="themeGallery" class="theme-grid" role="list"></div>
+          </div>
+        </div>
+
+        <div class="preview-block" id="preview" aria-label="Preview">
+          <div class="preview-header">
+            <h2>Live preview</h2>
+            <p>Create your card then replay or share.</p>
           </div>
 
-          <label class="field">
-            <span>Background colour</span>
-            <input id="paperColorInput" type="color" value="#fff7f2" />
-          </label>
+          <div class="preview-actions">
+            <button id="replayButtonInline" class="button ghost" type="button">
+              Replay
+            </button>
+          </div>
 
-          <label class="field">
-            <span>Text colour</span>
-            <input id="inkColorInput" type="color" value="#2b2622" />
-          </label>
+          <p id="fitStatus" role="status"></p>
+          <div class="preview-card-frame">
+            <iframe
+              id="cardPreview"
+              title="Digital card preview"
+              aria-label="Digital card preview"
+            ></iframe>
+          </div>
 
-          <button id="resetColorsButton" class="button ghost" type="button">Reset colours</button>
-
-          <label class="toggle">
-            <input id="watermarkToggle" type="checkbox" checked />
-            <span>Show watermark</span>
-          </label>
-
-          <label class="toggle">
-            <input id="giftToggle" type="checkbox" />
-            <span>Include gift link</span>
-          </label>
-
-          <label class="field" id="giftField" style="display:none;">
-            <span>Gift link (optional)</span>
-            <input id="giftInput" type="url" placeholder="Paste a gift / affiliate link" />
-          </label>
+          <div id="exportStatus" class="export-status" aria-live="polite"></div>
         </div>
-      </div>
+      </section>
+    </main>
 
-      <div class="themes-block">
-        <div class="panel">
-          <h2>Choose a theme</h2>
-          <div id="themeGallery" class="theme-grid" role="list"></div>
-        </div>
-      </div>
+    <footer class="site-footer">
+      <p>Made with love for all ages. Create, share, celebrate.</p>
+    </footer>
 
-      <div class="preview-block" aria-label="Preview">
-        <div class="preview-header">
-          <h2>Live preview</h2>
-          <p>Create your card then replay or share.</p>
-        </div>
-
-        <div class="preview-actions">
-          <button id="replayButtonInline" class="button ghost" type="button">Replay</button>
-        </div>
-
-        <div class="preview-card-frame">
-          <iframe id="cardPreview" title="Digital card preview" aria-label="Digital card preview" loading="lazy"></iframe>
-        </div>
-
-        <div id="exportStatus" class="export-status" aria-live="polite"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>Made with love for all ages. Create, share, celebrate.</p>
-  </footer>
-
-  <script type="module" src="./app/main.js"></script>
-</body>
+    <script type="module" src="./app/main.js"></script>
+    <script type="module" src="./app/frame-status.js"></script>
+  </body>
 </html>

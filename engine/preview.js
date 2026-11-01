@@ -1,4 +1,4 @@
-const TEMPLATE_URL = './engine/card-template.html';
+const TEMPLATE_URL = "./engine/card-template.html";
 
 const waitFor = (check, timeoutMs = 7000, intervalMs = 50) =>
   new Promise((resolve, reject) => {
@@ -8,7 +8,11 @@ const waitFor = (check, timeoutMs = 7000, intervalMs = 50) =>
         if (check()) return resolve();
       } catch {}
       if (Date.now() - start > timeoutMs) {
-        return reject(new Error('Preview iframe is not ready (window.setCardData not found).'));
+        return reject(
+          new Error(
+            "Preview iframe is not ready (window.setCardData not found).",
+          ),
+        );
       }
       return setTimeout(tick, intervalMs);
     };
@@ -16,65 +20,77 @@ const waitFor = (check, timeoutMs = 7000, intervalMs = 50) =>
   });
 
 export async function createCardController(iframe) {
-  if (!iframe) throw new Error('Preview iframe not found.');
+  if (!iframe) throw new Error("Preview iframe not found.");
 
   await new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Preview iframe load timeout.')), 12000);
-    iframe.removeAttribute('srcdoc');
-    iframe.addEventListener('load', () => {
-      clearTimeout(timeout);
-      resolve();
-    }, { once: true });
+    const timeout = setTimeout(
+      () => reject(new Error("Preview iframe load timeout.")),
+      12000,
+    );
+    iframe.removeAttribute("srcdoc");
+    iframe.addEventListener(
+      "load",
+      () => {
+        clearTimeout(timeout);
+        resolve();
+      },
+      { once: true },
+    );
     iframe.src = TEMPLATE_URL;
   });
 
   await waitFor(() => {
     const w = iframe.contentWindow;
-    return w && typeof w.setCardData === 'function';
+    return w && typeof w.setCardData === "function";
   });
 
   let theme = null;
   let content = {
-    headline: '',
-    message: '',
-    from: '',
-    giftUrl: '',
-    fontId: 'fredoka',
-    birthdayNumber: '',
-    paperOverride: '',
-    inkOverride: '',
-    mode: 'share',
-    stickerId: '',
-    themeId: ''
+    headline: "",
+    message: "",
+    from: "",
+    giftUrl: "",
+    fontId: "fredoka",
+    birthdayNumber: "",
+    paperOverride: "",
+    inkOverride: "",
+    mode: "share",
+    stickerId: "",
+    themeId: "",
   };
   let watermark = true;
 
   function safeCallSetCardData() {
     const w = iframe.contentWindow;
-    if (!w || typeof w.setCardData !== 'function') return;
+    if (!w || typeof w.setCardData !== "function") return;
 
     w.setCardData({
       palette: theme?.palette || null,
       timing: theme?.timing || null,
       features: theme?.features || null,
-      headline: content.headline || '',
-      message: content.message || '',
-      from: content.from || '',
-      mode: 'share',
-      fontId: content.fontId || 'fredoka',
-      birthdayNumber: content.birthdayNumber || '',
-      paperOverride: content.paperOverride || '',
-      inkOverride: content.inkOverride || '',
+      headline: content.headline || "",
+      recipient: content.recipient || "",
+      message: content.message || "",
+      from: content.from || "",
+      mode: "share",
+      fontId: content.fontId || "fredoka",
+      textSize: content.textSize || 18,
+      birthdayNumber: content.birthdayNumber || "",
+      paperOverride: content.paperOverride || "",
+      inkOverride: content.inkOverride || "",
       viewer: false,
       watermark: !!watermark,
-      giftUrl: content.giftUrl || '',
-      stickerId: content.stickerId || '',
-      themeId: content.themeId || theme?.id || '',
-      themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : ''
+      giftUrl: content.giftUrl || "",
+      stickerId: content.stickerId || "",
+      themeId: content.themeId || theme?.id || "",
+      themeCssHref: theme?.id ? `../themes/${theme.id}/theme.css` : "",
     });
   }
 
   return {
+    async checkFit() {
+      return await iframe.contentWindow.checkFit();
+    },
     setTheme(nextTheme) {
       theme = nextTheme;
       safeCallSetCardData();
@@ -90,6 +106,6 @@ export async function createCardController(iframe) {
     play() {
       safeCallSetCardData();
       iframe.contentWindow?.play?.();
-    }
+    },
   };
 }

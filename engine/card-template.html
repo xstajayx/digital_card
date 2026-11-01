@@ -1,214 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@400;600;700&family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./card-base.css" />
-  <link id="themeStyles" rel="stylesheet" href="" />
-  <title>Card Preview</title>
-</head>
-<body>
-  <div class="card-root" id="cardRoot" data-capture-scope="card" data-mode="share">
-    <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons"><div class="dissolve-layer" id="dissolveLayer"></div></div>
-    <div class="card">
-      <div class="panel top">
-        <div class="headline" id="headline">Happy Day</div>
-        <div class="message" id="message"></div>
-        <div class="from" id="from"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <link rel="stylesheet" href="./card-base.css" />
+    <link id="themeStyles" rel="stylesheet" href="" />
+    <link rel="stylesheet" href="../assets/fonts.css" />
+    <title>Card Preview</title>
+  </head>
+  <body>
+    <div class="card-root" id="cardRoot" data-mode="share">
+      <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons">
+        <div class="dissolve-layer" id="dissolveLayer"></div>
       </div>
-      <div class="sticker-zone"><img id="stickerImg" alt="Sticker" /></div>
-      <div class="frame-decor frame-decor-overlay" id="frameDecorOverlay"></div>
-      <a id="giftButton" class="gift-button" target="_blank" rel="noopener noreferrer" style="display:none;">View Gift</a>
-      <div id="giftDomain" class="gift-domain" style="display:none;"></div>
-      <div class="frame-decor" id="frameDecor"></div>
+      <div class="card">
+        <div class="text-panel">
+          <div class="headline" id="headline">Happy Day</div>
+          <div class="message" id="message"></div>
+          <div class="from" id="from"></div>
+        </div>
+        <div class="sticker-zone"><img id="stickerImg" alt="Sticker" /></div>
+        <div
+          class="frame-decor frame-decor-overlay"
+          id="frameDecorOverlay"
+        ></div>
+        <a
+          id="giftButton"
+          class="gift-button"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display: none"
+          >View Gift</a
+        >
+        <div id="giftDomain" class="gift-domain" style="display: none"></div>
+        <div class="frame-decor" id="frameDecor"></div>
+      </div>
+      <div class="confetti" id="confetti">
+        <span></span><span></span><span></span><span></span><span></span
+        ><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="sparkles" id="sparkles">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="watermark" id="watermark">Made with JWorldCreations</div>
     </div>
-    <div class="confetti" id="confetti"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="sparkles" id="sparkles"><span></span><span></span><span></span><span></span></div>
-    <div class="watermark" id="watermark">Made with JWorldCreations</div>
-  </div>
-  <script>
-    const ITEM_TYPES = ['balloons', 'hearts', 'stars', 'snow', 'confetti'];
-    const FONT_MAP = {
-      fredoka: '"Fredoka", system-ui, sans-serif',
-      pacifico: '"Pacifico", system-ui, sans-serif',
-      quicksand: '"Quicksand", system-ui, sans-serif',
-      poppins: '"Poppins", system-ui, sans-serif',
-      nunito: '"Nunito", system-ui, sans-serif',
-      playfair: '"Playfair Display", ui-serif, serif'
-    };
-    const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
-    const normalizeType = (type) => ITEM_TYPES.includes(type) ? type : 'balloons';
+    <script type="module">
+      import { illustration } from "./illustrations.js";
+      import { sanitizeGiftUrl } from "./sanitize.js";
+      const ITEM_TYPES = ["balloons", "hearts", "stars", "snow", "confetti"];
+      const FONT_MAP = {
+        fredoka: '"Fredoka", system-ui, sans-serif',
+        pacifico: '"Pacifico", system-ui, sans-serif',
+        quicksand: '"Quicksand", system-ui, sans-serif',
+        poppins: '"Poppins", system-ui, sans-serif',
+        nunito: '"Nunito", system-ui, sans-serif',
+        playfair: '"Playfair Display", ui-serif, serif',
+      };
+      const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
+      const normalizeType = (type) =>
+        ITEM_TYPES.includes(type) ? type : "balloons";
 
-    function applyFont(fontId) {
-      setVar('--card-font', FONT_MAP[fontId] || FONT_MAP.fredoka);
-    }
+      function applyFont(fontId) {
+        setVar("--card-font", FONT_MAP[fontId] || FONT_MAP.fredoka);
+      }
 
-    function wrapAndClampMessage(text, cols = 38, rows = 12) {
-      const words = String(text || '').replace(/\r\n/g, '\n').replace(/\n/g, ' \n ').split(/\s+/).filter(Boolean);
-      const lines = [];
-      let current = '';
+      function getGiftDomain(url) {
+        try {
+          return new URL(url).hostname.replace(/^www\./i, "");
+        } catch {
+          return "";
+        }
+      }
 
-      const pushLine = (line) => {
-        if (lines.length < rows) lines.push(line);
+      function replay() {
+        const root = document.getElementById("cardRoot");
+        root.classList.remove("play");
+        void root.offsetWidth;
+        root.classList.add("play");
+      }
+
+      function buildFrameDecor(
+        frameDecorType,
+        density = 16,
+        viewerMode = false,
+        targetId = "frameDecor",
+      ) {
+        const frameDecor = document.getElementById(targetId);
+        if (!frameDecor) return;
+        const type = normalizeType(frameDecorType);
+        frameDecor.innerHTML = "";
+        const count = Math.max(10, Math.min(28, Number(density) || 16));
+        const minTop = viewerMode ? 12 : 10;
+        for (let i = 0; i < count; i += 1) {
+          const item = document.createElement("div");
+          item.className = `frame-item ${type}`;
+          item.style.left = `${i % 2 ? 98 : 2}%`;
+          item.style.top = `${Math.round(minTop + Math.random() * (90 - minTop))}%`;
+          item.style.setProperty(
+            "--delay",
+            `${(Math.random() * 1.5).toFixed(2)}s`,
+          );
+          frameDecor.appendChild(item);
+        }
+      }
+
+      window.setCardData = (data) => {
+        document.getElementById("themeStyles").href = data.themeCssHref || "";
+        const p = data.palette || {};
+        const t = data.timing || {};
+        const f = data.features || {};
+
+        setVar("--paper", data.paperOverride || p.paper || "#fff7f2");
+        setVar("--ink", data.inkOverride || p.ink || "#2b2622");
+        if (p.accent) setVar("--accent", p.accent);
+        if (p.accent2) setVar("--accent2", p.accent2);
+        if (p.gold) setVar("--gold", p.gold);
+
+        if (t.balloonsMs != null)
+          setVar("--balloons-duration", `${t.balloonsMs}ms`);
+        if (t.insideDelayMs != null)
+          setVar("--inside-delay", `${t.insideDelayMs}ms`);
+        if (t.headlineDelayMs != null)
+          setVar("--headline-delay", `${t.headlineDelayMs}ms`);
+        if (t.subDelayMs != null) setVar("--sub-delay", `${t.subDelayMs}ms`);
+        if (t.fromDelayMs != null) setVar("--from-delay", `${t.fromDelayMs}ms`);
+        if (t.fxStartMs != null) setVar("--fx-start", `${t.fxStartMs}ms`);
+
+        applyFont(data.fontId || "fredoka");
+        document.getElementById("cardRoot").dataset.font =
+          data.fontId || "fredoka";
+        buildFrameDecor(
+          f.decorType || f.frameDecor || f.revealType || "balloons",
+          f.decorDensity || 16,
+          true,
+          "frameDecor",
+        );
+        buildFrameDecor(
+          f.decorType || f.frameDecor || f.revealType || "balloons",
+          f.decorDensity || 16,
+          false,
+          "frameDecorOverlay",
+        );
+
+        const headline = document.getElementById("headline");
+        const title = data.headline || "";
+        const name = data.recipient || "";
+        const start = name ? title.lastIndexOf(name) : -1;
+        headline.replaceChildren();
+        if (start >= 0) {
+          const span = document.createElement("span");
+          span.className = "name";
+          span.textContent = name;
+          if (data.inkOverride) span.style.color = data.inkOverride;
+          headline.append(
+            document.createTextNode(title.slice(0, start)),
+            span,
+            document.createTextNode(title.slice(start + name.length)),
+          );
+        } else headline.textContent = title;
+        document.getElementById("message").textContent = String(
+          data.message || "",
+        );
+        document.getElementById("from").textContent = data.from || "";
+
+        const stickerImg = document.getElementById("stickerImg");
+        const item = illustration(data.themeId, data.stickerId);
+        stickerImg.parentElement.hidden = !item;
+        if (item)
+          stickerImg.src = new URL(
+            `../stickers/${data.themeId}/${item.asset}`,
+            import.meta.url,
+          ).href;
+        else stickerImg.removeAttribute("src");
+        document.getElementById("cardRoot").style.background =
+          data.paperOverride || "";
+        document.getElementById("headline").style.color =
+          data.inkOverride || "";
+        preferredSize = data.textSize || 18;
+        queueMicrotask(checkFit);
+        const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || "");
+        const giftButton = document.getElementById("giftButton");
+        const giftDomain = document.getElementById("giftDomain");
+        if (safeGiftUrl) {
+          giftButton.href = safeGiftUrl;
+          giftButton.style.display = "inline-flex";
+          giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
+          giftDomain.style.display = "block";
+        } else {
+          giftButton.style.display = "none";
+          giftDomain.style.display = "none";
+        }
+
+        document.getElementById("watermark").style.display = data.watermark
+          ? "block"
+          : "none";
+        document
+          .getElementById("balloonCurtain")
+          .setAttribute(
+            "data-reveal",
+            normalizeType(f.revealType || "balloons"),
+          );
+        document.getElementById("confetti").style.display = f.confetti
+          ? "block"
+          : "none";
+        document.getElementById("sparkles").style.display = f.sparkles
+          ? "block"
+          : "none";
+        replay();
       };
 
-      for (const word of words) {
-        if (lines.length >= rows) break;
-
-        if (word === '\n') {
-          pushLine(current);
-          current = '';
-          continue;
+      let preferredSize = 18;
+      async function checkFit() {
+        // Trigger and await this selection, even when the previous font's ready
+        // promise has already resolved before style recalculation.
+        const message = document.getElementById("message");
+        await document.fonts.load(getComputedStyle(message).font);
+        await document.fonts.ready;
+        const panel = document.querySelector(".text-panel");
+        const root = document.getElementById("cardRoot");
+        // Measure real selected-font geometry. Never replace or shorten text.
+        root.style.setProperty("--message-size", preferredSize + "px");
+        root.style.setProperty("--heading-size", "30px");
+        root.style.setProperty("--signature-size", preferredSize + "px");
+        const fits = () =>
+          root.scrollHeight <= root.clientHeight + 1 &&
+          panel.scrollWidth <= panel.clientWidth + 1;
+        let size = preferredSize;
+        while (!fits() && size > 14) {
+          size--;
+          root.style.setProperty("--message-size", size + "px");
+          root.style.setProperty("--signature-size", size + "px");
+          root.style.setProperty(
+            "--heading-size",
+            Math.max(22, 30 - (preferredSize - size)) + "px",
+          );
         }
-
-        if (word.length > cols) {
-          if (current) {
-            pushLine(current);
-            current = '';
-            if (lines.length >= rows) break;
-          }
-          for (let i = 0; i < word.length && lines.length < rows; i += cols) {
-            pushLine(word.slice(i, i + cols));
-          }
-          continue;
-        }
-
-        if (!current) {
-          current = word;
-        } else if ((current.length + 1 + word.length) <= cols) {
-          current += ` ${word}`;
-        } else {
-          pushLine(current);
-          current = word;
-        }
+        const valid = fits();
+        root.dataset.fits = String(valid);
+        parent.postMessage({ type: "card-fit", valid, size }, location.origin);
+        return valid;
       }
-
-      if (current && lines.length < rows) pushLine(current);
-      return lines.slice(0, rows).join('\n');
-    }
-
-    function sanitizeGiftUrl(input) {
-      try {
-        const u = new URL(String(input || '').trim());
-        if (u.protocol !== 'https:') return '';
-        return u.href;
-      } catch { return ''; }
-    }
-
-    function getGiftDomain(url) {
-      try { return new URL(url).hostname.replace(/^www\./i, ''); } catch { return ''; }
-    }
-
-    function fallbackSticker(themeId) {
-      const key = String(themeId || '');
-      let shape = '<circle cx="86" cy="110" r="26" fill="%237f6df2"/><circle cx="120" cy="88" r="34" fill="%239987ff"/><circle cx="156" cy="110" r="24" fill="%237f6df2"/>';
-      if (key.startsWith('birthday')) {
-        shape = '<circle cx="120" cy="90" r="40" fill="%23f78ec9"/><rect x="70" y="90" width="100" height="45" rx="10" fill="%23ffc0dd"/><rect x="88" y="58" width="6" height="28" fill="%23ffd56b"/><rect x="116" y="52" width="6" height="34" fill="%236fa8ff"/><rect x="144" y="58" width="6" height="28" fill="%23b985ff"/>';
-      } else if (key === 'love' || key === 'anniversary') {
-        shape = '<path d="M120 170c-4-20-62-42-62-88 0-22 18-40 40-40 16 0 26 8 32 20 6-12 16-20 32-20 22 0 40 18 40 40 0 46-58 68-62 88z" fill="%23ef4f8f"/>';
-      } else if (key === 'christmas') {
-        shape = '<polygon points="120,34 58,130 92,130 76,176 164,176 148,130 182,130" fill="%2342a95f"/><rect x="108" y="176" width="24" height="24" fill="%23a66b37"/>';
-      }
-      return `data:image/svg+xml;utf8,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 220'>${shape}</svg>`}`;
-    }
-
-    function resolveStickerSrc(data) {
-      if (!data.stickerId) return '';
-      if (data.stickerSrc) return data.stickerSrc;
-      const themeId = data.themeId || '';
-      return `../stickers/${themeId}/${data.stickerId}`;
-    }
-
-    function replay() {
-      const root = document.getElementById('cardRoot');
-      root.classList.remove('play');
-      void root.offsetWidth;
-      root.classList.add('play');
-    }
-
-    function buildFrameDecor(frameDecorType, density = 16, viewerMode = false, targetId = 'frameDecor') {
-      const frameDecor = document.getElementById(targetId);
-      if (!frameDecor) return;
-      const type = normalizeType(frameDecorType);
-      frameDecor.innerHTML = '';
-      const count = Math.max(10, Math.min(28, Number(density) || 16));
-      const minTop = viewerMode ? 12 : 10;
-      for (let i = 0; i < count; i += 1) {
-        const item = document.createElement('div');
-        item.className = `frame-item ${type}`;
-        item.style.left = `${Math.round(8 + Math.random() * 84)}%`;
-        item.style.top = `${Math.round(minTop + Math.random() * (90 - minTop))}%`;
-        item.style.setProperty('--delay', `${(Math.random() * 1.5).toFixed(2)}s`);
-        frameDecor.appendChild(item);
-      }
-    }
-
-    window.setCardData = (data) => {
-      document.getElementById('themeStyles').href = data.themeCssHref || '';
-      const p = data.palette || {};
-      const t = data.timing || {};
-      const f = data.features || {};
-
-      setVar('--paper', data.paperOverride || p.paper || '#fff7f2');
-      setVar('--ink', data.inkOverride || p.ink || '#2b2622');
-      if (p.accent) setVar('--accent', p.accent);
-      if (p.accent2) setVar('--accent2', p.accent2);
-      if (p.gold) setVar('--gold', p.gold);
-
-      if (t.balloonsMs != null) setVar('--balloons-duration', `${t.balloonsMs}ms`);
-      if (t.insideDelayMs != null) setVar('--inside-delay', `${t.insideDelayMs}ms`);
-      if (t.headlineDelayMs != null) setVar('--headline-delay', `${t.headlineDelayMs}ms`);
-      if (t.subDelayMs != null) setVar('--sub-delay', `${t.subDelayMs}ms`);
-      if (t.fromDelayMs != null) setVar('--from-delay', `${t.fromDelayMs}ms`);
-      if (t.fxStartMs != null) setVar('--fx-start', `${t.fxStartMs}ms`);
-
-      applyFont(data.fontId || 'fredoka');
-      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, true, 'frameDecor');
-      buildFrameDecor(f.decorType || f.frameDecor || f.revealType || 'balloons', f.decorDensity || 16, false, 'frameDecorOverlay');
-
-      document.getElementById('headline').innerHTML = data.headline || '';
-      document.getElementById('message').textContent = wrapAndClampMessage(data.message, 38, 12);
-      document.getElementById('from').textContent = data.from || '';
-
-      const stickerImg = document.getElementById('stickerImg');
-      const stickerSrc = resolveStickerSrc(data);
-      if (!stickerSrc) {
-        stickerImg.style.display = 'none';
-        stickerImg.removeAttribute('src');
-      } else {
-        stickerImg.style.display = 'block';
-        stickerImg.onerror = () => {
-          stickerImg.onerror = null;
-          stickerImg.src = fallbackSticker(data.themeId);
-        };
-        stickerImg.src = stickerSrc;
-      }
-
-      const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || '');
-      const giftButton = document.getElementById('giftButton');
-      const giftDomain = document.getElementById('giftDomain');
-      if (safeGiftUrl) {
-        giftButton.href = safeGiftUrl;
-        giftButton.style.display = 'inline-flex';
-        giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
-        giftDomain.style.display = 'block';
-      } else {
-        giftButton.style.display = 'none';
-        giftDomain.style.display = 'none';
-      }
-
-      document.getElementById('watermark').style.display = data.watermark ? 'block' : 'none';
-      document.getElementById('balloonCurtain').setAttribute('data-reveal', normalizeType(f.revealType || 'balloons'));
-      document.getElementById('confetti').style.display = f.confetti ? 'block' : 'none';
-      document.getElementById('sparkles').style.display = f.sparkles ? 'block' : 'none';
+      window.checkFit = checkFit;
+      new ResizeObserver(() => checkFit()).observe(document.body);
+      window.play = replay;
       replay();
-    };
-
-    window.play = replay;
-    replay();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
