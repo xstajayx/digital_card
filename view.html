@@ -1,121 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Open Card</title>
-  <style>
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:#f6f7ff;color:#2b2622}
-    .wrap{max-width:560px;margin:0 auto;padding:16px}
-    .actions{display:flex;gap:8px;justify-content:center;margin:10px 0}
-    button{border:1px solid #4f46e5;border-radius:999px;padding:.58rem .9rem;background:#fff;color:#4f46e5;font-weight:700;cursor:pointer}
-    .primary{background:#4f46e5;color:#fff}
-    .frame{border:1px solid rgba(79,70,229,.18);border-radius:18px;padding:10px;background:#fff}
-    iframe{width:100%;aspect-ratio:3/5;border:0;border-radius:14px;background:#fff}
-    #status{min-height:18px;color:#645f77;font-size:.88rem;margin-top:10px;word-break:break-word}
-  </style>
-</head>
-<body>
-  <main class="wrap">
-    <h1>You’ve received a card 🎉</h1>
-    <div class="actions">
-      <button id="replayButton" type="button">Replay</button>
-      <button id="copyButton" type="button">Copy link</button>
-      <button id="shareButton" class="primary" type="button">Share to WhatsApp</button>
-    </div>
-    <div class="frame"><iframe id="viewerFrame" title="Card viewer"></iframe></div>
-    <div id="status" aria-live="polite"></div>
-  </main>
-
-  <script type="module">
-    import { sanitizeGiftUrl } from './engine/sanitize.js';
-
-    function base64UrlDecode(b64url) {
-      const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
-      const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
-      return decodeURIComponent(escape(atob(b64 + pad)));
-    }
-
-    function suffix(value) {
-      const n = Number(value);
-      const lastTwo = n % 100;
-      if (lastTwo >= 11 && lastTwo <= 13) return 'th';
-      const last = n % 10;
-      if (last === 1) return 'st';
-      if (last === 2) return 'nd';
-      if (last === 3) return 'rd';
-      return 'th';
-    }
-
-    function greetingFor(themeId, name, birthdayNumberEnabled, birthdayNumber) {
-      const safeName = name || 'Friend';
-      if (String(themeId || '').startsWith('birthday') && birthdayNumberEnabled && birthdayNumber) {
-        return `Happy ${birthdayNumber}${suffix(birthdayNumber)} Birthday, <span class="name">${safeName}</span>!`;
+  <head>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Open Card</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        background: #f6f7ff;
+        color: #2b2622;
       }
-      if (themeId === 'birthday-balloons') return `Happy Birthday, <span class="name">${safeName}</span>! 🎉`;
-      return `Hello, <span class="name">${safeName}</span>!`;
-    }
+      .wrap {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 10px 0;
+      }
+      button {
+        border: 1px solid #4f46e5;
+        border-radius: 999px;
+        padding: 0.58rem 0.9rem;
+        background: #fff;
+        color: #4f46e5;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .primary {
+        background: #4f46e5;
+        color: #fff;
+      }
+      .frame {
+        border: 1px solid rgba(79, 70, 229, 0.18);
+        border-radius: 18px;
+        padding: 10px;
+        background: #fff;
+      }
+      iframe {
+        display: block;
+        margin: auto;
+        max-width: 420px;
+        width: 100%;
+        aspect-ratio: 3/5;
+        border: 0;
+        border-radius: 14px;
+        background: #fff;
+      }
+      #status {
+        min-height: 18px;
+        color: #645f77;
+        font-size: 0.88rem;
+        margin-top: 10px;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>You’ve received a card 🎉</h1>
+      <div class="actions">
+        <button id="replayButton" type="button">Replay</button>
+        <button id="copyButton" type="button">Copy link</button>
+        <button id="shareButton" class="primary" type="button">
+          Share to WhatsApp
+        </button>
+      </div>
+      <div class="frame">
+        <iframe id="viewerFrame" title="Card viewer"></iframe>
+      </div>
+      <p id="fitStatus" role="status"></p>
+      <div id="status" aria-live="polite"></div>
+    </main>
 
-    async function init() {
-      const status = document.getElementById('status');
-      const iframe = document.getElementById('viewerFrame');
-      const d = new URLSearchParams(location.search).get('d');
-      if (!d) return void (status.textContent = 'Missing card data.');
-
-      let payload;
-      try { payload = JSON.parse(base64UrlDecode(d)); } catch { return void (status.textContent = 'Invalid card data.'); }
-
-      const fontId = payload.fontId || 'fredoka';
-      const birthdayNumber = String(payload.birthdayNumber || '').trim();
-      const birthdayNumberEnabled = !!payload.birthdayNumberEnabled || !!birthdayNumber;
-      const paperOverride = payload.paperOverride || '';
-      const inkOverride = payload.inkOverride || '';
-      const themeId = payload.themeId || '';
-      const stickerId = typeof payload.stickerId === 'string' ? payload.stickerId : '';
-
-      const ids = await (await fetch('./themes/themes.json', { cache: 'no-store' })).json();
-      if (!ids.includes(themeId)) return void (status.textContent = 'Theme unavailable.');
-
-      const theme = await (await fetch(`./themes/${themeId}/theme.json`, { cache: 'no-store' })).json();
-      let templateHtml = await (await fetch('./engine/card-template.html', { cache: 'no-store' })).text();
-      templateHtml = templateHtml.replace('./card-base.css', './engine/card-base.css');
-
-      iframe.srcdoc = templateHtml;
-      iframe.addEventListener('load', () => {
-        iframe.contentWindow.setCardData({
-          palette: theme.palette,
-          timing: theme.timing,
-          features: theme.features,
-          headline: greetingFor(themeId, payload.to, birthdayNumberEnabled, birthdayNumber),
-          message: String(payload.message || ''),
-          from: String(payload.from || ''),
-          mode: 'share',
-          fontId,
-          birthdayNumber,
-          paperOverride,
-          inkOverride,
-          viewer: true,
-          watermark: payload.watermark !== false,
-          giftUrl: sanitizeGiftUrl(payload.giftUrl || ''),
-          stickerId,
-          themeId,
-          stickerSrc: stickerId ? `./stickers/${themeId}/${stickerId}` : '',
-          themeCssHref: `./themes/${themeId}/theme.css`
-        });
-        iframe.contentWindow.play();
-      }, { once: true });
-
-      document.getElementById('replayButton').addEventListener('click', () => iframe.contentWindow?.play?.());
-      document.getElementById('copyButton').addEventListener('click', async () => {
-        await navigator.clipboard.writeText(location.href);
-        status.textContent = 'Link copied!';
-      });
-      document.getElementById('shareButton').addEventListener('click', () => {
-        window.open(`https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${location.href}`)}`, '_blank', 'noopener,noreferrer');
-      });
-    }
-
-    init();
-  </script>
-</body>
+    <script type="module" src="./app/viewer.js"></script>
+    <script type="module" src="./app/frame-status.js"></script>
+  </body>
 </html>

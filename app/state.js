@@ -3,20 +3,21 @@ export function createState() {
   const state = {
     themes: [],
     theme: null,
-    to: '',
-    message: '',
-    from: '',
-    fontId: 'fredoka',
+    to: "",
+    message: "",
+    from: "",
+    fontId: "fredoka",
+    textSize: 18,
     watermark: true,
-    mode: 'share',
+    mode: "share",
     giftEnabled: false,
-    giftUrl: '',
+    giftUrl: "",
     birthdayNumberEnabled: false,
-    birthdayNumber: '',
-    paperOverride: '',
-    inkOverride: '',
-    stickerId: '',
-    stickers: []
+    birthdayNumber: "",
+    paperOverride: "",
+    inkOverride: "",
+    stickerId: "",
+    stickers: [],
   };
 
   function notify() {
@@ -35,6 +36,6 @@ export function createState() {
       listeners.add(listener);
       listener({ ...state });
       return () => listeners.delete(listener);
-    }
+    },
   };
 }

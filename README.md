@@ -1,6 +1,6 @@
 # JWorldCreations Digital Card Studio
 
-A static, GitHub Pages-ready website for building animated digital cards and exporting them as GIFs. Everything runs in the browser—no backend required.
+A static, GitHub Pages-ready website for building animated digital cards and sharing them by link. Everything runs in the browser—no backend required.
 
 ## Run locally
 
@@ -67,6 +67,10 @@ Themes live in `/themes/<themeId>/` and must include both a `theme.json` and a `
 4. Add the new theme ID to `/themes/themes.json`.
 5. Reload the app to see the new theme in the gallery.
 
-## GIF export (brief)
+## Validation
 
-The preview is rendered in an iframe using `/engine/card-template.html`. When you click **Download GIF**, the app spins up an offscreen copy of the same card, restarts the animation from time 0, captures frames with `html2canvas`, and encodes them into an animated GIF using a lightweight `gif.js`-style encoder stored in `/vendor`.
+Run `python3 -m http.server 8001 --directory /workspace` and `python3 tests/browser.py` with Python Playwright and Chromium installed. Tests exercise the GitHub Pages `/digital_card/` prefix. Card text is never truncated; measured fitting stops at 14px and sharing is blocked when content still overflows. Reset Design resets appearance and optional extras while preserving your theme and written content.
+
+The six fonts are served locally from `assets/fonts/`, sourced from the official `google/fonts` repository with their accompanying OFL licenses. Illustration IDs live in `engine/illustrations.js`; old PNG-named IDs map to local SVG assets so existing links continue working. Unknown illustration IDs are ignored. The viewer validates payloads and only accepts HTTPS gift links without embedded credentials.
+
+The browser checks use Chromium and test 360px, 390px, and 1280px widths, all six fonts, all 15 occasions and illustration options, overflow validation, preserved Unicode/newlines, theme/colour/font parity in shared cards, birthday suffixes, legacy links, invalid data, receiver sharing controls, and browser console errors. WhatsApp URLs are intercepted rather than sending messages. Screenshots are written outside the checkout in `/workspace/onboarding/`.
