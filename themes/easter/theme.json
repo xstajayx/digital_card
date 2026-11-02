@@ -1,0 +1,28 @@
+{
+  "id": "easter",
+  "occasionId": "easter",
+  "occasion": "Easter",
+  "name": "Hello, spring",
+  "greeting": "Happy Easter",
+  "group": "Seasonal",
+  "symbol": "❀",
+  "style": "botanical",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "A little sunshine, a little sweetness, and a fresh beginning. Wishing you a beautiful Easter.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f5f1e0",
+    "ink": "#4a4e38",
+    "accent": "#b2b882",
+    "accent2": "#dab69f",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "flowers"
+  },
+  "defaultFontId": "quicksand"
+}

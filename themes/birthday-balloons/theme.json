@@ -1,36 +1,28 @@
 {
   "id": "birthday-balloons",
-  "name": "Birthday Balloons",
+  "occasionId": "birthday",
   "occasion": "Birthday",
+  "name": "Pastel party",
+  "greeting": "Happy Birthday",
+  "group": "Celebrate",
+  "symbol": "◒",
+  "style": "party",
+  "birthday": true,
+  "milestone": false,
   "defaults": {
     "to": "Zoe",
-    "message": "Hope your day is filled with giggles, sweet surprises, and magical moments!",
-    "from": "With love \ud83d\udc9b"
+    "message": "Here’s to another year of little adventures, big dreams, and all the things that make you smile.\n\nHave the loveliest birthday!",
+    "from": "With love"
   },
   "palette": {
-    "paper": "#f7e8d4",
-    "ink": "#2b2622",
-    "accent": "#e85aa3",
-    "accent2": "#65a9ff",
-    "gold": "#f2c14e"
-  },
-  "timing": {
-    "balloonsMs": 3000,
-    "insideDelayMs": 2000,
-    "headlineDelayMs": 2200,
-    "subDelayMs": 2550,
-    "fromDelayMs": 2750,
-    "fxStartMs": 2400,
-    "fxStopMs": 8200
+    "paper": "#fff6e9",
+    "ink": "#443448",
+    "accent": "#d787a7",
+    "accent2": "#9ebdcc",
+    "gold": "#e7ae43"
   },
   "features": {
-    "balloonCurtain": true,
-    "confetti": true,
-    "sparkles": true,
-    "revealType": "balloons",
-    "frameDecor": "balloons",
-    "overlayIntensity": 0.8,
-    "decorType": "balloons",
-    "decorDensity": 16
-  }
+    "opening": "balloons"
+  },
+  "defaultFontId": "fredoka"
 }

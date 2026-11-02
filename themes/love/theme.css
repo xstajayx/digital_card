@@ -1,12 +1,8 @@
+/* Blushing hearts: decorative layers inherit the editable palette. */
 .card-root {
-  background: linear-gradient(160deg, rgba(255, 240, 245, 0.97), rgba(255, 220, 233, 0.97));
-}
-
-.frame-item.hearts,
-.curtain-item.hearts {
-  background: color-mix(in srgb, var(--accent) 80%, #ff4f88);
-}
-
-.confetti span {
-  opacity: 0.65;
+  --surface-pattern: radial-gradient(
+    ellipse at 50% -5%,
+    color-mix(in srgb, var(--accent) 20%, transparent),
+    transparent 60%
+  );
 }

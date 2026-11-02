@@ -1,1 +1,8 @@
-.card-root { background: linear-gradient(155deg, rgba(235,244,255,.96), rgba(225,248,245,.96)); }
+/* Simply the best: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: repeating-linear-gradient(
+    90deg,
+    transparent 0 32px,
+    color-mix(in srgb, var(--accent) 7%, transparent) 32px 48px
+  );
+}

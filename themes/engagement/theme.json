@@ -1,0 +1,28 @@
+{
+  "id": "engagement",
+  "occasionId": "engagement",
+  "occasion": "Engagement",
+  "name": "The next chapter",
+  "greeting": "You’re engaged",
+  "group": "Love & family",
+  "symbol": "◇",
+  "style": "arch",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "What a wonderful beginning! Wishing you both a future as beautiful as the love you share.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f4eef5",
+    "ink": "#523c59",
+    "accent": "#ae8dad",
+    "accent2": "#d4bfce",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "sparkles"
+  },
+  "defaultFontId": "playfair"
+}

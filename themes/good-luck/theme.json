@@ -1,9 +1,28 @@
 {
   "id": "good-luck",
-  "name": "Good Luck",
+  "occasionId": "good-luck",
   "occasion": "Good Luck",
-  "defaults": {"to": "You", "message": "Go shine! You are ready for this moment.", "from": "Cheering you on"},
-  "palette": {"paper": "#fffbea", "ink": "#3b3318", "accent": "#ff9f1c", "accent2": "#2ec4b6", "gold": "#ffd166"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "confetti", "frameDecor": "stars", "overlayIntensity": 0.85, "decorType": "stars", "decorDensity": 16}
+  "name": "A little good fortune",
+  "greeting": "Good luck",
+  "group": "Everyday",
+  "symbol": "♧",
+  "style": "botanical",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "A little extra luck for your next big step. Take a deep breath. You’ve got this, and I’m cheering for you.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#edf4df",
+    "ink": "#3f4c2f",
+    "accent": "#9fac72",
+    "accent2": "#ccbd86",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "stars"
+  },
+  "defaultFontId": "nunito"
 }

@@ -1,0 +1,28 @@
+{
+  "id": "birthday-milestone",
+  "occasionId": "milestone-birthday",
+  "occasion": "Milestone Birthday",
+  "name": "A golden chapter",
+  "greeting": "Happy Birthday",
+  "group": "Celebrate",
+  "symbol": "✧",
+  "style": "milestone",
+  "birthday": true,
+  "milestone": true,
+  "defaults": {
+    "to": "Friend",
+    "message": "A new chapter, a thousand possibilities. Here’s to the memories you’ve made and all the beautiful moments still to come.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#fcf4df",
+    "ink": "#51402e",
+    "accent": "#b59658",
+    "accent2": "#e1c58a",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "confetti"
+  },
+  "defaultFontId": "playfair"
+}

@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "viewports": [
+    [
+      360,
+      800
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      768,
+      1024
+    ],
+    [
+      1440,
+      900
+    ]
+  ],
+  "passed_groups": [
+    "360x800: all 23 occasions / 26 designs, fonts available, artwork loads, proportional layout and no overlap",
+    "360x800: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit",
+    "360x800: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening",
+    "360x800: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design",
+    "360x800: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured",
+    "390x844: all 23 occasions / 26 designs, fonts available, artwork loads, proportional layout and no overlap",
+    "390x844: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit",
+    "390x844: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening",
+    "390x844: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design",
+    "390x844: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured",
+    "768x1024: all 23 occasions / 26 designs, fonts available, artwork loads, proportional layout and no overlap",
+    "768x1024: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit",
+    "768x1024: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening",
+    "768x1024: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design",
+    "768x1024: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured",
+    "1440x900: all 23 occasions / 26 designs, fonts available, artwork loads, proportional layout and no overlap",
+    "1440x900: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit",
+    "1440x900: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening",
+    "1440x900: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design",
+    "1440x900: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured",
+    "native sharing, duplicate prevention, WhatsApp construction/popup fallback, cancellation, clipboard fallback, keyboard and rapid theme switching",
+    "v1/v2 migration, legacy artwork aliases, HTML/path/URL injection rejection, invalid/missing/future-version error states",
+    "reduced-motion preference stops running animations; 200% text scaling preserves readable text or explicit full-message fallback",
+    "no JavaScript console/page errors, failed local requests, or missing assets"
+  ],
+  "errors": []
+}

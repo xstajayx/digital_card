@@ -1,0 +1,8 @@
+/* A winter’s hush: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    ellipse at 0 100%,
+    color-mix(in srgb, var(--accent2) 27%, transparent),
+    transparent 65%
+  );
+}

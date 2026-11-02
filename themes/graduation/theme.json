@@ -1,9 +1,28 @@
 {
   "id": "graduation",
-  "name": "Graduation",
-  "occasion": "Congratulations",
-  "defaults": {"to": "Graduate", "message": "Your hard work paid off. The future is bright and yours to shape.", "from": "So proud of you"},
-  "palette": {"paper": "#f5f7ff", "ink": "#202945", "accent": "#5e60ce", "accent2": "#4ea8de", "gold": "#ffd166"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "confetti", "frameDecor": "stars", "overlayIntensity": 0.82, "decorType": "stars", "decorDensity": 16}
+  "occasionId": "graduation",
+  "occasion": "Graduation",
+  "name": "On to wonderful things",
+  "greeting": "Congratulations, graduate",
+  "group": "Celebrate",
+  "symbol": "◇",
+  "style": "celestial",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "The next chapter is yours to write. Stay curious, be brave, and never stop being wonderfully you.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f0eef9",
+    "ink": "#413b61",
+    "accent": "#9992bc",
+    "accent2": "#d2b77c",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "confetti"
+  },
+  "defaultFontId": "playfair"
 }

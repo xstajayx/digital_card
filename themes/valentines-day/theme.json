@@ -1,0 +1,28 @@
+{
+  "id": "valentines-day",
+  "occasionId": "valentines",
+  "occasion": "Valentine’s Day",
+  "name": "Be my Valentine",
+  "greeting": "Happy Valentine’s Day",
+  "group": "Love & family",
+  "symbol": "♡",
+  "style": "hearts",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "My favourite place is wherever you are. Thank you for filling my world with so much love.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#fbeaf1",
+    "ink": "#592f4b",
+    "accent": "#b5718f",
+    "accent2": "#d6abc7",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "hearts"
+  },
+  "defaultFontId": "playfair"
+}

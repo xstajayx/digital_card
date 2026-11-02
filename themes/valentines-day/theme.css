@@ -1,0 +1,8 @@
+/* Be my Valentine: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    ellipse at 50% -5%,
+    color-mix(in srgb, var(--accent) 20%, transparent),
+    transparent 60%
+  );
+}

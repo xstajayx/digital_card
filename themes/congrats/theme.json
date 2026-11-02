@@ -1,36 +1,28 @@
 {
   "id": "congrats",
-  "name": "Congrats",
+  "occasionId": "congratulations",
   "occasion": "Congratulations",
+  "name": "You did it",
+  "greeting": "Congratulations",
+  "group": "Celebrate",
+  "symbol": "✦",
+  "style": "confetti",
+  "birthday": false,
+  "milestone": false,
   "defaults": {
-    "to": "Sky",
-    "message": "You did it! Celebrate this big win and soak in every proud moment.",
-    "from": "Cheering for you \ud83c\udfc6"
+    "to": "Friend",
+    "message": "Look at you go! You worked for this moment, and you deserve every bit of the joy. So proud of you.",
+    "from": "With love"
   },
   "palette": {
-    "paper": "#fff8e8",
-    "ink": "#2d241a",
-    "accent": "#ff9f1c",
-    "accent2": "#2ec4b6",
-    "gold": "#ffbf69"
-  },
-  "timing": {
-    "balloonsMs": 2500,
-    "insideDelayMs": 1700,
-    "headlineDelayMs": 2050,
-    "subDelayMs": 2350,
-    "fromDelayMs": 2550,
-    "fxStartMs": 2100,
-    "fxStopMs": 7800
+    "paper": "#fff3dc",
+    "ink": "#57432b",
+    "accent": "#c29c57",
+    "accent2": "#c9b791",
+    "gold": "#e7ae43"
   },
   "features": {
-    "balloonCurtain": true,
-    "confetti": true,
-    "sparkles": true,
-    "revealType": "confetti",
-    "frameDecor": "stars",
-    "overlayIntensity": 0.8,
-    "decorType": "stars",
-    "decorDensity": 16
-  }
+    "opening": "confetti"
+  },
+  "defaultFontId": "fredoka"
 }

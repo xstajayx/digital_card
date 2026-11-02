@@ -1,12 +1,8 @@
+/* You did it: decorative layers inherit the editable palette. */
 .card-root {
-  background: linear-gradient(160deg, rgba(255, 248, 232, 0.95), rgba(255, 245, 214, 0.95));
-}
-
-.frame-item.stars,
-.curtain-item.stars {
-  filter: drop-shadow(0 0 4px rgba(255, 191, 105, 0.65));
-}
-
-.confetti span {
-  transform: rotate(15deg);
+  --surface-pattern: radial-gradient(
+    circle at 0 0,
+    color-mix(in srgb, var(--accent) 20%, transparent),
+    transparent 45%
+  );
 }

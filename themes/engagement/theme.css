@@ -1,0 +1,9 @@
+/* The next chapter: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    ellipse at 50% 40%,
+    transparent 48%,
+    color-mix(in srgb, var(--accent) 10%, transparent) 49% 51%,
+    transparent 52%
+  );
+}

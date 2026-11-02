@@ -1,0 +1,13 @@
+/* Love letters: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 27px,
+    color-mix(in srgb, var(--ink) 4%, transparent) 27px,
+    color-mix(in srgb, var(--ink) 4%, transparent) 28px
+  );
+}
+.headline {
+  font-weight: 500;
+}

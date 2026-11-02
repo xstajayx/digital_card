@@ -1,9 +1,28 @@
 {
   "id": "get-well",
-  "name": "Get Well",
+  "occasionId": "get-well",
   "occasion": "Get Well Soon",
-  "defaults": {"to": "Friend", "message": "Sending warm thoughts and hoping each day brings more strength.", "from": "Take care"},
-  "palette": {"paper": "#f3faf5", "ink": "#244133", "accent": "#4caf7a", "accent2": "#8ecae6", "gold": "#f4d35e"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "stars", "frameDecor": "stars", "overlayIntensity": 0.7, "decorType": "stars", "decorDensity": 16}
+  "name": "Rest & little joys",
+  "greeting": "Get well soon",
+  "group": "Everyday",
+  "symbol": "☀",
+  "style": "arch",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "Take things slowly, rest a little longer, and know that you’re being thought of with so much care.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#eff5f0",
+    "ink": "#3a514b",
+    "accent": "#92b3a4",
+    "accent2": "#c8ba8b",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "fade"
+  },
+  "defaultFontId": "nunito"
 }

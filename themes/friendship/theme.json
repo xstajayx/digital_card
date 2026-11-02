@@ -1,0 +1,28 @@
+{
+  "id": "friendship",
+  "occasionId": "friendship",
+  "occasion": "Friendship",
+  "name": "You’re my sunshine",
+  "greeting": "So glad you’re in my life",
+  "group": "Everyday",
+  "symbol": "☀",
+  "style": "sunshine",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "Life is brighter, funnier and a whole lot better with you in it. Here’s to us and all our little adventures.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#fff5df",
+    "ink": "#594736",
+    "accent": "#c9a566",
+    "accent2": "#e4c99a",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "flowers"
+  },
+  "defaultFontId": "quicksand"
+}

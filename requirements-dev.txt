@@ -1,0 +1,2 @@
+# Development/browser validation only; the deployed app has no dependencies.
+playwright==1.62.0

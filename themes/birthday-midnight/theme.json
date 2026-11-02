@@ -1,0 +1,28 @@
+{
+  "id": "birthday-midnight",
+  "occasionId": "birthday",
+  "occasion": "Birthday",
+  "name": "Midnight wishes",
+  "greeting": "Happy Birthday",
+  "group": "Celebrate",
+  "symbol": "◒",
+  "style": "celestial",
+  "birthday": true,
+  "milestone": false,
+  "defaults": {
+    "to": "Zoe",
+    "message": "Here’s to another year of little adventures, big dreams, and all the things that make you smile.\n\nHave the loveliest birthday!",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#282a43",
+    "ink": "#fff3d9",
+    "accent": "#b6a3d4",
+    "accent2": "#85aaa9",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "stars"
+  },
+  "defaultFontId": "playfair"
+}

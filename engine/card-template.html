@@ -2,251 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <link rel="stylesheet" href="./card-base.css" />
-    <link id="themeStyles" rel="stylesheet" href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../assets/fonts.css" />
-    <title>Card Preview</title>
+    <link rel="stylesheet" href="./card-base.css" />
+    <link id="themeStyles" rel="stylesheet" />
+    <title>Your greeting card</title>
   </head>
   <body>
-    <div class="card-root" id="cardRoot" data-mode="share">
-      <div class="balloon-curtain" id="balloonCurtain" data-reveal="balloons">
-        <div class="dissolve-layer" id="dissolveLayer"></div>
-      </div>
+    <article class="card-root" id="cardRoot" aria-label="Greeting card">
+      <div class="edge-decor" id="edgeDecor" aria-hidden="true"></div>
       <div class="card">
         <div class="text-panel">
-          <div class="headline" id="headline">Happy Day</div>
-          <div class="message" id="message"></div>
-          <div class="from" id="from"></div>
+          <div id="ageMark" class="age-mark" aria-hidden="true" hidden></div>
+          <h1 class="headline" id="headline"></h1>
+          <p class="message" id="message"></p>
+          <p class="from" id="from"></p>
         </div>
-        <div class="sticker-zone"><img id="stickerImg" alt="Sticker" /></div>
-        <div
-          class="frame-decor frame-decor-overlay"
-          id="frameDecorOverlay"
-        ></div>
-        <a
-          id="giftButton"
-          class="gift-button"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="display: none"
-          >View Gift</a
-        >
-        <div id="giftDomain" class="gift-domain" style="display: none"></div>
-        <div class="frame-decor" id="frameDecor"></div>
+        <figure class="sticker-zone" hidden>
+          <img id="stickerImg" alt="" width="130" height="100" />
+        </figure>
+        <div id="giftBlock" class="gift-block" hidden>
+          <a
+            id="giftButton"
+            class="gift-button"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerpolicy="no-referrer"
+            >A little gift for you →</a
+          >
+          <p id="giftDomain" class="gift-domain"></p>
+        </div>
+        <footer class="watermark" id="watermark">
+          Made with love · JWorldCreations
+        </footer>
       </div>
-      <div class="confetti" id="confetti">
-        <span></span><span></span><span></span><span></span><span></span
-        ><span></span><span></span><span></span><span></span><span></span>
+      <div class="opening-effects" id="openingEffects" aria-hidden="true"></div>
+      <div class="overflow-notice" id="overflowNotice" role="note" hidden>
+        <span aria-hidden="true">✉</span>
+        <strong>This message needs a little more room</strong>
+        <p>All the words are safe. Read the full message below the card.</p>
       </div>
-      <div class="sparkles" id="sparkles">
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <div class="watermark" id="watermark">Made with JWorldCreations</div>
-    </div>
-    <script type="module">
-      import { illustration } from "./illustrations.js";
-      import { sanitizeGiftUrl } from "./sanitize.js";
-      const ITEM_TYPES = ["balloons", "hearts", "stars", "snow", "confetti"];
-      const FONT_MAP = {
-        fredoka: '"Fredoka", system-ui, sans-serif',
-        pacifico: '"Pacifico", system-ui, sans-serif',
-        quicksand: '"Quicksand", system-ui, sans-serif',
-        poppins: '"Poppins", system-ui, sans-serif',
-        nunito: '"Nunito", system-ui, sans-serif',
-        playfair: '"Playfair Display", ui-serif, serif',
-      };
-      const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
-      const normalizeType = (type) =>
-        ITEM_TYPES.includes(type) ? type : "balloons";
-
-      function applyFont(fontId) {
-        setVar("--card-font", FONT_MAP[fontId] || FONT_MAP.fredoka);
-      }
-
-      function getGiftDomain(url) {
-        try {
-          return new URL(url).hostname.replace(/^www\./i, "");
-        } catch {
-          return "";
-        }
-      }
-
-      function replay() {
-        const root = document.getElementById("cardRoot");
-        root.classList.remove("play");
-        void root.offsetWidth;
-        root.classList.add("play");
-      }
-
-      function buildFrameDecor(
-        frameDecorType,
-        density = 16,
-        viewerMode = false,
-        targetId = "frameDecor",
-      ) {
-        const frameDecor = document.getElementById(targetId);
-        if (!frameDecor) return;
-        const type = normalizeType(frameDecorType);
-        frameDecor.innerHTML = "";
-        const count = Math.max(10, Math.min(28, Number(density) || 16));
-        const minTop = viewerMode ? 12 : 10;
-        for (let i = 0; i < count; i += 1) {
-          const item = document.createElement("div");
-          item.className = `frame-item ${type}`;
-          item.style.left = `${i % 2 ? 98 : 2}%`;
-          item.style.top = `${Math.round(minTop + Math.random() * (90 - minTop))}%`;
-          item.style.setProperty(
-            "--delay",
-            `${(Math.random() * 1.5).toFixed(2)}s`,
-          );
-          frameDecor.appendChild(item);
-        }
-      }
-
-      window.setCardData = (data) => {
-        document.getElementById("themeStyles").href = data.themeCssHref || "";
-        const p = data.palette || {};
-        const t = data.timing || {};
-        const f = data.features || {};
-
-        setVar("--paper", data.paperOverride || p.paper || "#fff7f2");
-        setVar("--ink", data.inkOverride || p.ink || "#2b2622");
-        if (p.accent) setVar("--accent", p.accent);
-        if (p.accent2) setVar("--accent2", p.accent2);
-        if (p.gold) setVar("--gold", p.gold);
-
-        if (t.balloonsMs != null)
-          setVar("--balloons-duration", `${t.balloonsMs}ms`);
-        if (t.insideDelayMs != null)
-          setVar("--inside-delay", `${t.insideDelayMs}ms`);
-        if (t.headlineDelayMs != null)
-          setVar("--headline-delay", `${t.headlineDelayMs}ms`);
-        if (t.subDelayMs != null) setVar("--sub-delay", `${t.subDelayMs}ms`);
-        if (t.fromDelayMs != null) setVar("--from-delay", `${t.fromDelayMs}ms`);
-        if (t.fxStartMs != null) setVar("--fx-start", `${t.fxStartMs}ms`);
-
-        applyFont(data.fontId || "fredoka");
-        document.getElementById("cardRoot").dataset.font =
-          data.fontId || "fredoka";
-        buildFrameDecor(
-          f.decorType || f.frameDecor || f.revealType || "balloons",
-          f.decorDensity || 16,
-          true,
-          "frameDecor",
-        );
-        buildFrameDecor(
-          f.decorType || f.frameDecor || f.revealType || "balloons",
-          f.decorDensity || 16,
-          false,
-          "frameDecorOverlay",
-        );
-
-        const headline = document.getElementById("headline");
-        const title = data.headline || "";
-        const name = data.recipient || "";
-        const start = name ? title.lastIndexOf(name) : -1;
-        headline.replaceChildren();
-        if (start >= 0) {
-          const span = document.createElement("span");
-          span.className = "name";
-          span.textContent = name;
-          if (data.inkOverride) span.style.color = data.inkOverride;
-          headline.append(
-            document.createTextNode(title.slice(0, start)),
-            span,
-            document.createTextNode(title.slice(start + name.length)),
-          );
-        } else headline.textContent = title;
-        document.getElementById("message").textContent = String(
-          data.message || "",
-        );
-        document.getElementById("from").textContent = data.from || "";
-
-        const stickerImg = document.getElementById("stickerImg");
-        const item = illustration(data.themeId, data.stickerId);
-        stickerImg.parentElement.hidden = !item;
-        if (item)
-          stickerImg.src = new URL(
-            `../stickers/${data.themeId}/${item.asset}`,
-            import.meta.url,
-          ).href;
-        else stickerImg.removeAttribute("src");
-        document.getElementById("cardRoot").style.background =
-          data.paperOverride || "";
-        document.getElementById("headline").style.color =
-          data.inkOverride || "";
-        preferredSize = data.textSize || 18;
-        queueMicrotask(checkFit);
-        const safeGiftUrl = sanitizeGiftUrl(data.giftUrl || "");
-        const giftButton = document.getElementById("giftButton");
-        const giftDomain = document.getElementById("giftDomain");
-        if (safeGiftUrl) {
-          giftButton.href = safeGiftUrl;
-          giftButton.style.display = "inline-flex";
-          giftDomain.textContent = `Opens: ${getGiftDomain(safeGiftUrl)}`;
-          giftDomain.style.display = "block";
-        } else {
-          giftButton.style.display = "none";
-          giftDomain.style.display = "none";
-        }
-
-        document.getElementById("watermark").style.display = data.watermark
-          ? "block"
-          : "none";
-        document
-          .getElementById("balloonCurtain")
-          .setAttribute(
-            "data-reveal",
-            normalizeType(f.revealType || "balloons"),
-          );
-        document.getElementById("confetti").style.display = f.confetti
-          ? "block"
-          : "none";
-        document.getElementById("sparkles").style.display = f.sparkles
-          ? "block"
-          : "none";
-        replay();
-      };
-
-      let preferredSize = 18;
-      async function checkFit() {
-        // Trigger and await this selection, even when the previous font's ready
-        // promise has already resolved before style recalculation.
-        const message = document.getElementById("message");
-        await document.fonts.load(getComputedStyle(message).font);
-        await document.fonts.ready;
-        const panel = document.querySelector(".text-panel");
-        const root = document.getElementById("cardRoot");
-        // Measure real selected-font geometry. Never replace or shorten text.
-        root.style.setProperty("--message-size", preferredSize + "px");
-        root.style.setProperty("--heading-size", "30px");
-        root.style.setProperty("--signature-size", preferredSize + "px");
-        const fits = () =>
-          root.scrollHeight <= root.clientHeight + 1 &&
-          panel.scrollWidth <= panel.clientWidth + 1;
-        let size = preferredSize;
-        while (!fits() && size > 14) {
-          size--;
-          root.style.setProperty("--message-size", size + "px");
-          root.style.setProperty("--signature-size", size + "px");
-          root.style.setProperty(
-            "--heading-size",
-            Math.max(22, 30 - (preferredSize - size)) + "px",
-          );
-        }
-        const valid = fits();
-        root.dataset.fits = String(valid);
-        parent.postMessage({ type: "card-fit", valid, size }, location.origin);
-        return valid;
-      }
-      window.checkFit = checkFit;
-      new ResizeObserver(() => checkFit()).observe(document.body);
-      window.play = replay;
-      replay();
-    </script>
+    </article>
+    <script type="module" src="./card-renderer.js"></script>
   </body>
 </html>

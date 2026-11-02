@@ -1,9 +1,28 @@
 {
   "id": "fathers-day",
-  "name": "Father's Day",
-  "occasion": "Father's Day",
-  "defaults": {"to": "Dad", "message": "Thanks for your guidance, patience, and all the laughs.", "from": "With appreciation"},
-  "palette": {"paper": "#eef4ff", "ink": "#1f2f48", "accent": "#3d7eff", "accent2": "#56cfe1", "gold": "#f2c14e"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "stars", "frameDecor": "stars", "overlayIntensity": 0.75, "decorType": "stars", "decorDensity": 16}
+  "occasionId": "fathers-day",
+  "occasion": "Father’s Day",
+  "name": "Simply the best",
+  "greeting": "Happy Father’s Day",
+  "group": "Love & family",
+  "symbol": "☕",
+  "style": "stripes",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "For the steady hand, the terrible jokes and the endless encouragement. Thank you for everything, Dad.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#edf3f0",
+    "ink": "#334c4b",
+    "accent": "#809d94",
+    "accent2": "#c8b790",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "fade"
+  },
+  "defaultFontId": "nunito"
 }
