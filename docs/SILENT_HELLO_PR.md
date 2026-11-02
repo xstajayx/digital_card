@@ -1,0 +1,5 @@
+Evolve the existing studio into a Silent Hello shop without changing its v1/v2/v3 sharing contract. The new storefront browses the shared catalogue, filters cards and opens real previews before routing into the preserved five-step editor. Two new templates add interactive envelope and gift-box openings; explicit local drafts support validated restoration and deletion.
+
+The static core still needs no account, backend or credentials. AI is an honest availability page; uploads, payments and other server-backed capabilities are not enabled. Existing templates/artwork remain intact. No DNS or production deployment changes are included.
+
+Validation: 12 data tests, 24 legacy browser check groups and four additional shop/opening/draft viewport groups. See docs/SILENT_HELLO_DELIVERY.md for screenshots, architecture, compatibility, exact partial scope, owner-review requirements and rollback instructions. This branch includes the preceding unmerged polished-card-studio work; review the cumulative diff when targeting main.

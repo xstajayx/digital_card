@@ -1,4 +1,4 @@
-# JWorldCreations Digital Card Studio
+# Silent Hello
 
 An animated greeting-card studio built with static HTML, CSS and JavaScript. Create a personal card, choose a design and illustration, and send a self-contained link. No account, backend, build step, analytics, photo upload or GIF export.
 
@@ -39,7 +39,7 @@ Checks cover 360×800, 390×844, 768×1024 and 1440×900; every occasion/design;
 
 ## Catalogue and illustrations
 
-`themes/themes.json` is the ordered allowlist of 26 design IDs. Each `themes/<designId>/` contains a `theme.json` and `theme.css`. The 23 occasions are grouped by `occasionId`; Birthday, Love and Christmas each have two designs. Existing design IDs remain valid.
+`themes/themes.json` is the ordered allowlist of 28 design IDs. Each `themes/<designId>/` contains a `theme.json` and `theme.css`. The 23 occasions are grouped by `occasionId`; Birthday, Love and Christmas each have two designs. Existing design IDs remain valid.
 
 A manifest has:
 
@@ -85,3 +85,7 @@ A static site cannot generate tiny unique links without storage. Links contain t
 ## Review and deploy
 
 Review [AUDIT.md](AUDIT.md) and [docs/VALIDATION.md](docs/VALIDATION.md), inspect the screenshots and run both suites. Merge the feature pull request into `main` after review. Keep the existing GitHub Pages branch/root-folder settings: the root `index.html`, `view.html` and relative assets are ready to serve as-is. No build output, domain, DNS or Pages configuration changes are needed. To roll back, revert the merge commit; existing v1/v2 links remain supported by this branch.
+
+## Silent Hello shop release
+
+The storefront is `index.html`; the preserved five-step editor is `studio.html`. Shop links pass an allowlisted `design` query value into that editor. Run `python3 -u tests/shop.py` in addition to the existing suites. Two additional templates use interactive envelope and gift-box openings without changing the 13-field v3 codec. Drafts are saved only by explicit user action in local browser storage. AI is an honest availability notice, not a connected generator. See [the current delivery scope](docs/SILENT_HELLO_DELIVERY.md) for incomplete features and launch requirements.

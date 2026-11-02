@@ -1,0 +1,28 @@
+{
+  "id": "birthday-envelope",
+  "occasionId": "birthday",
+  "occasion": "Birthday",
+  "name": "Sealed golden wishes",
+  "greeting": "Happy Birthday",
+  "group": "Celebrate",
+  "symbol": "\u25d2",
+  "style": "celestial",
+  "birthday": true,
+  "milestone": false,
+  "defaults": {
+    "to": "Zoe",
+    "message": "Here\u2019s to another year of little adventures, big dreams, and all the things that make you smile.\n\nHave the loveliest birthday!",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#282a43",
+    "ink": "#fff3d9",
+    "accent": "#b6a3d4",
+    "accent2": "#85aaa9",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "envelope"
+  },
+  "defaultFontId": "playfair"
+}

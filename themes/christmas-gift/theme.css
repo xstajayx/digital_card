@@ -1,0 +1,12 @@
+/* Forest & wishes: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    ellipse at 50% 110%,
+    color-mix(in srgb, var(--accent) 24%, transparent),
+    transparent 60%
+  );
+}
+.card-root::before {
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 14px;
+}

@@ -3,20 +3,25 @@ import { createUI } from "./ui.js";
 import { loadThemes } from "../engine/card-data.js";
 import { createCardController } from "../engine/preview.js";
 
+import { bindDrafts } from "./drafts.js";
+
 async function init() {
   try {
     const [themes, preview] = await Promise.all([
       loadThemes(),
       createCardController(document.getElementById("cardPreview")),
     ]);
-    const theme = themes[0];
+    const selected = new URLSearchParams(location.search).get("design");
+    const theme = themes.find((t) => t.id === selected) || themes[0];
     const state = createState({
       themes,
       theme,
       ...theme.defaults,
-      stickerId: "pink-cake",
+      stickerId: theme.id === "birthday-balloons" ? "pink-cake" : "",
+      fontId: theme.defaultFontId || "fredoka",
     });
     createUI({ state, preview });
+    bindDrafts(state);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

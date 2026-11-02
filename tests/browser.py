@@ -121,7 +121,7 @@ try:
             context = browser.new_context(viewport={"width": width, "height": height}, permissions=["clipboard-read", "clipboard-write"])
             context.on("page", observe)
             page = context.new_page()
-            page.goto(BASE)
+            page.goto(BASE+"studio.html")
             expect(page.locator(".occasion-tile")).to_have_count(23)
             assert page.locator('input[type="file"]').count() == 0
             assert not page.get_by_role("button", name="GIF", exact=False).count()
@@ -161,7 +161,7 @@ try:
                 page.locator(".none-option").click()
                 step(page, 5)
                 assert fit(page)
-            record(f"{width}x{height}: all 23 occasions / 26 designs, fonts available, artwork loads, proportional layout and no overlap")
+            record(f"{width}x{height}: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap")
 
             choose(page, THEMES[0])
             step(page, 3)
@@ -297,7 +297,7 @@ try:
         # Broader interaction/security tests only need one viewport.
         context = browser.new_context(viewport={"width":390,"height":844}, permissions=["clipboard-read","clipboard-write"])
         context.on("page", observe)
-        page=context.new_page(); page.goto(BASE)
+        page=context.new_page(); page.goto(BASE+"studio.html")
         expect(page.locator(".occasion-tile")).to_have_count(23)
         step(page,3)
         for field in ["toInput", "messageInput", "fromInput"]: page.locator("#"+field).fill("")
