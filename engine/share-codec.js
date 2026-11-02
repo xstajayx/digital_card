@@ -1,3 +1,4 @@
+import { validateOpening } from "./openings/config.js";
 // v1/v2: base64url JSON in ?d=. v3: compact array, optionally deflated, in #c=.
 // The fragment keeps personal text out of HTTP requests and server access logs.
 const MAX_BYTES = 65536;
@@ -76,9 +77,16 @@ function expand(data) {
   };
 }
 export async function encodeCard(card, { compress = true } = {}) {
-  const bytes = new TextEncoder().encode(JSON.stringify(compact(card)));
+  const bytes = new TextEncoder().encode(
+    JSON.stringify(
+      card.v === 4
+        ? [4, compact(card), validateOpening(card.openingConfig)]
+        : compact(card),
+    ),
+  );
   if (bytes.length > MAX_BYTES) throw new Error("Card data is too large.");
-  let payload = `3u.${encode64(bytes)}`;
+  const version = card.v === 4 ? 4 : 3;
+  let payload = `${version}u.${encode64(bytes)}`;
   if (compress && typeof CompressionStream !== "undefined") {
     try {
       const packed = await boundedBytes(
@@ -86,7 +94,7 @@ export async function encodeCard(card, { compress = true } = {}) {
           .stream()
           .pipeThrough(new CompressionStream("deflate")),
       );
-      const candidate = `3z.${encode64(packed)}`;
+      const candidate = `${version}z.${encode64(packed)}`;
       if (candidate.length < payload.length) payload = candidate;
     } catch {
       /* Raw compact links also work without compression support. */
@@ -97,10 +105,10 @@ export async function encodeCard(card, { compress = true } = {}) {
 export async function decodeCard(payload) {
   let bytes,
     modern = false;
-  if (/^3[uz]\./.test(payload)) {
+  if (/^[34][uz]\./.test(payload)) {
     modern = true;
     bytes = decode64(payload.slice(3));
-    if (payload.startsWith("3z.")) {
+    if (payload[1] === "z") {
       if (typeof DecompressionStream === "undefined")
         throw new Error("Please open this card in a current browser.");
       bytes = await boundedBytes(
@@ -114,6 +122,15 @@ export async function decodeCard(payload) {
   const value = JSON.parse(
     new TextDecoder("utf-8", { fatal: true }).decode(bytes),
   );
+  if (modern && payload[0] === "4") {
+    if (!Array.isArray(value) || value.length !== 3 || value[0] !== 4)
+      throw new Error("Invalid v4 card data.");
+    return {
+      ...expand(value[1]),
+      v: 4,
+      openingConfig: validateOpening(value[2]),
+    };
+  }
   return modern ? expand(value) : value;
 }
 export async function buildShareUrl(card) {

@@ -21,12 +21,17 @@ async function init() {
     $("fullMessageText").textContent =
       `${content.headline}\n\n${card.message}\n\n${card.from}`;
     await preview.checkFit();
-    $("recipientSubtitle").textContent = card.to
-      ? `A little something for ${card.to}.`
-      : "Sent with love. Opened with a smile.";
+    $("recipientSubtitle").textContent = card.from
+      ? `${card.from} sent you a little hello${card.to ? `, ${card.to}` : ""}.`
+      : card.to
+        ? `A little something for ${card.to}.`
+        : "Sent with love. Opened with a smile.";
     $("replayButton").onclick = () => preview.play();
     bindShareActions({
+      getContext: () => card,
       buttons: {
+        email: $("emailShareButton"),
+        sms: $("smsShareButton"),
         copy: $("copyButton"),
         native: $("shareButton"),
         whatsapp: $("whatsappButton"),

@@ -349,3 +349,57 @@ test("no photo/GIF controls or unsafe dynamic HTML remain in runtime code", () =
     /type="file"|html2canvas|gif\.js|photoInput|photoData|wrapAndClampMessage|\.innerHTML\s*=/,
   );
 });
+
+import { defaultOpening, validateOpening } from "../engine/openings/config.js";
+import { emailDraft, smsDraft } from "../app/message-links.js";
+test("v4 opening configuration round-trips without changing the v3 array", async () => {
+  for (const type of ["none", "envelope", "gift-box"]) {
+    const card = {
+      ...sample,
+      v: 4,
+      openingConfig: {
+        ...defaultOpening(type),
+        tone: "forest",
+        wrap: "striped",
+        effect: "hearts",
+      },
+    };
+    for (const compress of [false, true]) {
+      const encoded = await encodeCard(card, { compress });
+      assert.match(encoded, /^4[uz]\./);
+      const decoded = await decodeCard(encoded);
+      assert.deepEqual(decoded, card);
+      assert.deepEqual(
+        validateCard(decoded, themes).openingConfig,
+        card.openingConfig,
+      );
+    }
+  }
+  const old = await encodeCard(sample, { compress: false });
+  const raw = JSON.parse(Buffer.from(old.slice(3), "base64url").toString());
+  assert.equal(raw.length, 13);
+  assert.equal(raw[0], 3);
+  for (const partial of [
+    { type: "curtains" },
+    { tone: "url(x)" },
+    { wrap: "<img>" },
+    { seal: "true" },
+    { effect: "javascript:bad" },
+  ]) {
+    const openingConfig = { ...defaultOpening(), ...partial };
+    assert.throws(() => validateOpening(openingConfig));
+    assert.throws(() =>
+      validateCard({ ...sample, v: 4, openingConfig }, themes),
+    );
+  }
+});
+test("email and SMS drafts preserve complete links and never invoke delivery", () => {
+  const url = "https://example.com/view.html#c=4u.test";
+  const email = emailDraft(url, { to: "Maya", from: "Alex\nBcc:evil" });
+  const query = new URLSearchParams(email.slice("mailto:?".length));
+  assert.ok(query.get("body").includes(url));
+  assert.ok(query.get("body").includes("Hello Maya"));
+  assert.doesNotMatch(query.get("subject"), /[\r\n]/);
+  assert.equal(query.get("bcc"), null);
+  assert.ok(decodeURIComponent(smsDraft(url)).includes(url));
+});

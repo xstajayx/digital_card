@@ -1,3 +1,4 @@
+import { validateOpening } from "./openings/config.js";
 import { sanitizeGiftUrl } from "./sanitize.js";
 import { illustration } from "./illustrations.js";
 
@@ -22,14 +23,14 @@ export function ordinal(value) {
 export function validateCard(raw, themes) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw))
     throw new Error("Invalid card data.");
-  if (raw.v != null && ![1, 2, 3].includes(raw.v))
+  if (raw.v != null && ![1, 2, 3, 4].includes(raw.v))
     throw new Error("This card version is not supported yet.");
   const theme = themes.find((t) => t.id === raw.themeId);
   if (!theme) throw new Error("This card design is unavailable.");
   const text = (key) => {
     if (raw[key] == null) return "";
     // Preserve previously supported v1/v2 text. New cards have tighter editor limits.
-    const limit = raw.v === 3 ? LIMITS[key] : 20000;
+    const limit = raw.v >= 3 ? LIMITS[key] : 20000;
     if (typeof raw[key] !== "string" || raw[key].length > limit)
       throw new Error(`Invalid ${key}.`);
     return raw[key];
@@ -40,6 +41,9 @@ export function validateCard(raw, themes) {
       : "";
   return {
     v: raw.v || 1,
+    ...(raw.v === 4
+      ? { openingConfig: validateOpening(raw.openingConfig) }
+      : {}),
     theme,
     themeId: theme.id,
     to: text("to"),

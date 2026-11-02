@@ -17,6 +17,7 @@ export function createState(initial = {}) {
     inkOverride: "",
     stickerId: "",
     fontChosen: false,
+    openingConfig: null,
     ...initial,
   };
   return {

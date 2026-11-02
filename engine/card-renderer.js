@@ -68,13 +68,26 @@ function stopAnimations() {
 }
 const openingController = createOpening(root);
 function replay() {
-  if (!openingController.reset(data.features?.opening, revealEffects))
+  if (
+    !openingController.reset(
+      data.openingConfig?.type || data.features?.opening,
+      revealEffects,
+      data.openingConfig || {},
+      data.recipient,
+      data.from,
+    )
+  )
     revealEffects();
 }
 function revealEffects() {
   stopAnimations();
   root.dataset.replays = String(Number(root.dataset.replays || 0) + 1);
-  if (motion.matches || root.dataset.fits !== "true") return;
+  if (
+    motion.matches ||
+    root.dataset.fits !== "true" ||
+    typeof card.animate !== "function"
+  )
+    return;
   animations.push(
     card.animate(
       [
@@ -84,7 +97,7 @@ function revealEffects() {
       { duration: 650, easing: "cubic-bezier(.2,.7,.3,1)" },
     ),
   );
-  const type = data.features?.opening || "fade";
+  const type = selectedEffect(data);
   $("openingEffects")
     .querySelectorAll(".particle")
     .forEach((node, i) => {
@@ -158,9 +171,16 @@ function reportFailure() {
     location.origin,
   );
 }
+function selectedEffect(card) {
+  return card.openingConfig?.effect && card.openingConfig.effect !== "theme"
+    ? card.openingConfig.effect
+    : card.features?.opening || "fade";
+}
 window.setCardData = (next) => {
   if (!/^[a-z0-9-]+$/.test(next.themeId)) return;
   const changedTheme = next.themeId !== data.themeId;
+  const changedOpening = next.openingConfig?.type !== data.openingConfig?.type;
+  const changedEffect = selectedEffect(next) !== selectedEffect(data);
   data = next;
   version++;
   root.dataset.updates = String(Number(root.dataset.updates || 0) + 1);
@@ -168,12 +188,24 @@ window.setCardData = (next) => {
     stopAnimations();
     changeTheme(data.themeId);
     buildEffects(
-      Object.hasOwn(glyphs, data.features?.opening)
-        ? data.features.opening
+      Object.hasOwn(glyphs, selectedEffect(data))
+        ? selectedEffect(data)
         : "fade",
     );
     pendingOpening = true;
   }
+  if (changedEffect && !changedTheme)
+    buildEffects(
+      Object.hasOwn(glyphs, selectedEffect(data))
+        ? selectedEffect(data)
+        : "fade",
+    );
+  if (changedOpening) pendingOpening = true;
+  openingController.configure(
+    data.openingConfig || {},
+    data.recipient,
+    data.from,
+  );
   const p = data.palette;
   setVar("--paper", data.paperOverride || p.paper);
   setVar("--ink", data.inkOverride || p.ink);

@@ -21,6 +21,7 @@ jobs:
         env:
           CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
       - run: python -u tests/shop.py
+      - run: python -u tests/interactive.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

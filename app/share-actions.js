@@ -1,3 +1,4 @@
+import { emailDraft, smsDraft } from "./message-links.js";
 // Sharing is always user-initiated. No analytics, shortener or message storage.
 export function bindShareActions({
   buttons,
@@ -6,6 +7,7 @@ export function bindShareActions({
   fallback,
   linkInput,
   mirrors = [],
+  getContext = () => ({}),
 }) {
   let busy = false;
   const say = (message) => {
@@ -33,6 +35,9 @@ export function bindShareActions({
       if (busy) return;
       busy = true;
       fallback.hidden = true;
+      const previousLaunch = fallback.nextElementSibling;
+      if (previousLaunch?.classList.contains("transport-link"))
+        previousLaunch.hidden = true;
       const controls = [...Object.values(buttons), ...mirrors];
       controls.forEach((b) => {
         b.disabled = true;
@@ -51,7 +56,23 @@ export function bindShareActions({
           }
         }
         const url = await getUrl();
-        if (kind === "whatsapp") {
+        if (["email", "sms"].includes(kind)) {
+          manual(url);
+          let launch = fallback.nextElementSibling;
+          if (!launch?.classList.contains("transport-link")) {
+            launch = document.createElement("a");
+            launch.className = "button transport-link";
+            fallback.after(launch);
+          }
+          launch.href =
+            kind === "email" ? emailDraft(url, getContext()) : smsDraft(url);
+          launch.textContent =
+            kind === "email" ? "Open email draft" : "Open SMS draft";
+          launch.hidden = false;
+          say(
+            "Draft ready. Open your messaging app below, or copy the complete link. Nothing has been sent.",
+          );
+        } else if (kind === "whatsapp") {
           const destination = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 💌 ${url}`)}`;
           if (popup) {
             popup.location.href = destination;
@@ -64,6 +85,15 @@ export function bindShareActions({
           }
         } else if (kind === "native" && navigator.share) {
           try {
+            const payload = {
+              title: "A little card for you",
+              text: "You’ve got a card 💌",
+              url,
+            };
+            if (navigator.canShare && !navigator.canShare(payload)) {
+              await copy(url);
+              return;
+            }
             await navigator.share({
               title: "A little card for you",
               text: "You’ve got a card 💌",

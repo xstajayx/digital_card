@@ -20,7 +20,11 @@ export function bindDrafts(state) {
       const { themes, theme, ...content } = s;
       localStorage.setItem(
         KEY,
-        JSON.stringify({ ...content, v: 3, themeId: theme.id }),
+        JSON.stringify({
+          ...content,
+          v: s.openingConfig ? 4 : 3,
+          themeId: theme.id,
+        }),
       );
       status.textContent =
         "Draft saved on this browser. Anyone using this browser may access it.";
@@ -35,6 +39,7 @@ export function bindDrafts(state) {
       const card = validateCard(raw, state.get().themes);
       state.set({
         ...card,
+        openingConfig: card.openingConfig || null,
         birthdayNumberEnabled: !!card.birthdayNumber,
         giftEnabled: raw.giftEnabled === true && !!card.giftUrl,
         fontChosen: true,
