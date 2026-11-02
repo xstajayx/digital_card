@@ -269,3 +269,77 @@ body {
     display: none;
   }
 }
+.interactive-opening {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 28px;
+  text-align: center;
+  font:
+    1rem/1.5 Nunito,
+    sans-serif;
+}
+.opening-object {
+  width: 190px;
+  height: 125px;
+  background: var(--accent);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font: 3rem Georgia;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  transform-origin: top;
+  position: relative;
+  box-shadow: 0 16px 30px #0002;
+}
+[data-type="envelope"] .opening-object:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  background: var(--accent2);
+}
+[data-type="gift-box"] .opening-object {
+  height: 160px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 42%,
+    var(--gold) 42% 58%,
+    var(--accent) 58%
+  );
+}
+[data-type="gift-box"] .opening-object:before {
+  content: "୨୧";
+  position: absolute;
+  top: -55px;
+  color: var(--gold);
+  font: 4rem Georgia;
+}
+.interactive-opening button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid currentColor;
+  border-radius: 24px;
+  color: var(--ink);
+  background: var(--paper);
+  font:
+    700 0.9rem Nunito,
+    sans-serif;
+  cursor: pointer;
+}
+.interactive-opening .opening-skip {
+  border: 0;
+  text-decoration: underline;
+}
+.interactive-opening button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
+}

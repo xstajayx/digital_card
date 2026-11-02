@@ -223,3 +223,6 @@ export function illustration(themeId, id) {
 export function illustrationUrl(item) {
   return new URL(`../stickers/${item.asset}`, import.meta.url).href;
 }
+
+ILLUSTRATIONS["birthday-envelope"] = ILLUSTRATIONS["birthday-balloons"];
+ILLUSTRATIONS["christmas-gift"] = ILLUSTRATIONS.christmas;

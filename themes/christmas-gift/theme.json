@@ -1,0 +1,28 @@
+{
+  "id": "christmas-gift",
+  "occasionId": "christmas",
+  "occasion": "Christmas",
+  "name": "Wrapped forest wishes",
+  "greeting": "Merry Christmas",
+  "group": "Seasonal",
+  "symbol": "\u2667",
+  "style": "forest",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "May your days be cosy, your heart be light, and your home be filled with the people and things you love.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#264b3d",
+    "ink": "#fff4dc",
+    "accent": "#9eb797",
+    "accent2": "#d0b878",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "gift-box"
+  },
+  "defaultFontId": "playfair"
+}

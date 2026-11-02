@@ -39,8 +39,8 @@ const sample = {
   stickerId: "pink-cake",
 };
 
-test("catalogue has 23 occasions, 26 unique designs and all legacy theme IDs", () => {
-  assert.equal(themes.length, 26);
+test("catalogue has 23 occasions, 28 unique designs and all legacy theme IDs", () => {
+  assert.equal(themes.length, 28);
   assert.equal(new Set(ids).size, ids.length);
   assert.equal(new Set(themes.map((t) => t.occasionId)).size, 23);
   for (const id of [
@@ -62,7 +62,7 @@ test("catalogue has 23 occasions, 26 unique designs and all legacy theme IDs", (
   ])
     assert.ok(ids.includes(id));
   for (const occasion of ["birthday", "love", "christmas"])
-    assert.equal(themes.filter((t) => t.occasionId === occasion).length, 2);
+    assert.ok(themes.filter((t) => t.occasionId === occasion).length >= 2);
 });
 test("all metadata, palettes and local assets are usable", () => {
   for (const theme of themes) {

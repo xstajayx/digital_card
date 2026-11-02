@@ -1,3 +1,4 @@
+import { createOpening } from "./openings/controller.js";
 import { illustration, illustrationUrl } from "./illustrations.js";
 import { sanitizeGiftUrl } from "./sanitize.js";
 
@@ -65,7 +66,12 @@ function stopAnimations() {
   animations.forEach((a) => a.cancel());
   animations = [];
 }
+const openingController = createOpening(root);
 function replay() {
+  if (!openingController.reset(data.features?.opening, revealEffects))
+    revealEffects();
+}
+function revealEffects() {
   stopAnimations();
   root.dataset.replays = String(Number(root.dataset.replays || 0) + 1);
   if (motion.matches || root.dataset.fits !== "true") return;

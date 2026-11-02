@@ -1,0 +1,12 @@
+/* Midnight wishes: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    circle at 80% 8%,
+    color-mix(in srgb, var(--accent) 17%, transparent),
+    transparent 42%
+  );
+}
+.card-root::before {
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 14px;
+}
