@@ -1,3 +1,4 @@
+import { bindOpeningPicker } from "./opening-picker.js";
 import { createState } from "./state.js";
 import { createUI } from "./ui.js";
 import { loadThemes } from "../engine/card-data.js";
@@ -22,6 +23,7 @@ async function init() {
     });
     createUI({ state, preview });
     bindDrafts(state);
+    bindOpeningPicker(state);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

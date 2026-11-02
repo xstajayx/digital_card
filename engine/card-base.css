@@ -343,3 +343,172 @@ body {
   outline: 3px solid var(--ink);
   outline-offset: 4px;
 }
+/* Opening layers remain separate from the card's text and celebration effects. */
+.interactive-opening {
+  --wrap-paper: var(--accent);
+  --wrap-accent: var(--accent2);
+  --wrap-ink: var(--ink);
+  perspective: 900px;
+}
+.interactive-opening .opening-object {
+  width: 220px;
+  height: 145px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent !important;
+  box-shadow: none;
+  perspective: 800px;
+  isolation: isolate;
+  color: var(--wrap-ink);
+  margin-top: 55px;
+  margin-bottom: 10px;
+}
+.interactive-opening .opening-object::before {
+  display: none;
+}
+.opening-object > span {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+}
+.opening-back {
+  inset: 0;
+  background: var(--wrap-accent);
+  border-radius: 6px;
+  box-shadow: 0 18px 28px #0003;
+  z-index: 0;
+}
+.opening-insert {
+  inset: 12px 17px;
+  background: #fffaf1;
+  border: 1px solid #d4c5ad;
+  border-radius: 5px;
+  z-index: 1;
+  font:
+    italic 1.2rem/1.4 "Playfair Display",
+    serif;
+  color: #433b35;
+  padding: 30px 12px;
+  box-shadow: 0 2px 8px #0002;
+}
+.opening-front {
+  inset: 0;
+  background:
+    linear-gradient(32deg, var(--wrap-paper) 49%, transparent 50%),
+    linear-gradient(-32deg, var(--wrap-paper) 49%, transparent 50%);
+  border: 1px solid #0001;
+  border-radius: 6px;
+  z-index: 3;
+}
+.opening-flap {
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 65%);
+  background: linear-gradient(160deg, var(--wrap-paper), var(--wrap-accent));
+  transform-origin: top;
+  z-index: 4;
+  backface-visibility: visible;
+}
+.opening-seal {
+  top: 44%;
+  left: calc(50% - 19px);
+  width: 38px;
+  height: 38px;
+  border-radius: 48% 45% 50% 44%;
+  background: #974452;
+  color: #ffdfc6;
+  font:
+    1.4rem/38px Georgia,
+    serif;
+  box-shadow:
+    inset 0 0 0 3px #ffffff22,
+    0 3px 5px #0003;
+  z-index: 5;
+}
+.opening-tag {
+  top: 70%;
+  left: 10%;
+  width: 80%;
+  font:
+    0.8rem/1.3 Nunito,
+    sans-serif;
+  text-align: center;
+  overflow-wrap: anywhere;
+  max-height: 45px;
+  overflow: hidden;
+  z-index: 6;
+}
+[data-type="envelope"] .opening-lid,
+[data-type="envelope"] .opening-ribbon {
+  display: none;
+}
+[data-type="gift-box"] .opening-front {
+  top: 20%;
+  background: var(--wrap-paper);
+  border-radius: 3px;
+  box-shadow: inset -16px 0 #0001;
+}
+[data-type="gift-box"] .opening-back {
+  top: 20%;
+}
+[data-type="gift-box"] .opening-lid {
+  top: 8%;
+  left: -5%;
+  width: 110%;
+  height: 25%;
+  background: var(--wrap-paper);
+  box-shadow:
+    0 5px 8px #0003,
+    inset 0 3px #fff3;
+  border-radius: 4px;
+  z-index: 5;
+}
+[data-type="gift-box"] .opening-flap,
+[data-type="gift-box"] .opening-seal {
+  display: none;
+}
+[data-type="gift-box"] .opening-ribbon {
+  inset: 8% 43% 0;
+  background: var(--wrap-accent);
+  z-index: 6;
+  transform-origin: center;
+}
+[data-type="gift-box"] .opening-ribbon::before {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 35px;
+  left: -25px;
+  top: -30px;
+  border: 10px solid var(--wrap-accent);
+  border-radius: 60% 60% 30% 30%;
+  transform: rotate(-5deg);
+}
+[data-type="gift-box"] .opening-tag {
+  background: #fffaf1;
+  color: #433b35;
+  padding: 7px;
+  top: 50%;
+  left: 53%;
+  width: 40%;
+  border-radius: 3px;
+  transform: rotate(6deg);
+  box-shadow: 0 2px 5px #0002;
+}
+[data-wrap="striped"][data-type="gift-box"] .opening-front {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--wrap-paper) 0 15px,
+    var(--wrap-accent) 15px 19px
+  );
+}
+[data-wrap="dots"][data-type="gift-box"] .opening-front {
+  background-color: var(--wrap-paper);
+  background-image: radial-gradient(var(--wrap-accent) 2px, transparent 3px);
+  background-size: 16px 16px;
+}
+@media (max-width: 300px) {
+  .interactive-opening .opening-object {
+    width: 190px;
+    height: 130px;
+  }
+}

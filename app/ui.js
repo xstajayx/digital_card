@@ -273,6 +273,7 @@ export function createUI({ state, preview }) {
     state.set({
       fontId: state.get().theme.defaultFontId || "fredoka",
       fontChosen: false,
+      openingConfig: null,
       textSize: 18,
       paperOverride: "",
       inkOverride: "",
@@ -292,6 +293,7 @@ export function createUI({ state, preview }) {
 
   state.subscribe((current, changed) => {
     revision++;
+    document.querySelector(".transport-link")?.remove();
     const theme = current.theme,
       items = ILLUSTRATIONS[theme.id] || [];
     if (theme.occasionId !== designKey) {
@@ -380,7 +382,10 @@ export function createUI({ state, preview }) {
     }
   });
   bindShareActions({
+    getContext: () => state.get(),
     buttons: {
+      email: $("emailShareButton"),
+      sms: $("smsShareButton"),
       copy: $("shareLinkButton"),
       native: $("nativeShareButton"),
       whatsapp: $("shareWhatsappButton"),
@@ -411,7 +416,10 @@ export function createUI({ state, preview }) {
         throw new Error(
           "Content does not fit. Choose smaller text or shorten the message before sharing.",
         );
-      const card = validateCard({ ...cardContent(current), v: 3 }, themes);
+      const card = validateCard(
+        { ...cardContent(current), v: current.openingConfig ? 4 : 3 },
+        themes,
+      );
       const url = await buildShareUrl(card);
       if (before !== revision)
         throw new Error(

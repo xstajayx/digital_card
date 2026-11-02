@@ -36,6 +36,7 @@ export async function createCardController(iframe) {
     update(card) {
       queued = {
         headline: card.headline,
+        openingConfig: card.openingConfig || null,
         recipient: card.recipient,
         message: card.message,
         from: card.from,
