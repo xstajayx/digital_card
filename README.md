@@ -76,7 +76,7 @@ Font measurements wait for the selected font and theme stylesheet, coalesce upda
 
 ## Sharing and compatibility
 
-New cards use version 3: a compact fixed-field array, optionally compressed using the browser's native `CompressionStream`, encoded as base64url in `view.html#c=…`. The fragment keeps message data out of HTTP requests and server logs. An uncompressed compact fallback is used when compression is unavailable or larger. Receiving compressed links requires a current browser with `DecompressionStream`.
+Cards using design defaults use version 3: a compact fixed-field array, optionally compressed using the browser's native `CompressionStream`, encoded as base64url in `view.html#c=…`. The fragment keeps message data out of HTTP requests and server logs. An uncompressed compact fallback is used when compression is unavailable or larger. Receiving compressed links requires a current browser with `DecompressionStream`.
 
 Existing v1 and v2 `view.html?d=…` JSON links remain supported. Versions are validated, Unicode is preserved and decompression is bounded to 64 KiB. Editor limits: 120 characters for recipient, 6,000 for message, 160 for sender and 500 for gift URL; fit usually limits messages earlier. New share URLs have a 12,000-character ceiling. Optional gifts must use HTTPS and cannot contain a username/password. All displayed input uses text nodes.
 
@@ -89,3 +89,7 @@ Review [AUDIT.md](AUDIT.md) and [docs/VALIDATION.md](docs/VALIDATION.md), inspec
 ## Silent Hello shop release
 
 The storefront is `index.html`; the preserved five-step editor is `studio.html`. Shop links pass an allowlisted `design` query value into that editor. Run `python3 -u tests/shop.py` in addition to the existing suites. Two additional templates use interactive envelope and gift-box openings without changing the 13-field v3 codec. Drafts are saved only by explicit user action in local browser storage. AI is an honest availability notice, not a connected generator. See [the current delivery scope](docs/SILENT_HELLO_DELIVERY.md) for incomplete features and launch requirements.
+
+## Universal opening release
+
+Opening, wrapping palette, seal and celebration can now be chosen independently for all 28 designs. Enhanced cards use validated v4 framing around the unchanged 13-element v3 content array; old links retain their decoder paths. Optional local drafts persist these choices. Email and SMS prepare drafts with a copy fallback; nothing is automatically sent. Run `python3 -u tests/interactive.py` alongside the three existing commands. See [current delivery and limitations](docs/INTERACTIVE_DELIVERY.md) and [future backend specification](docs/INTERACTIVE_BACKEND.md). QR codes, additional opening mechanisms and media are not implemented.
