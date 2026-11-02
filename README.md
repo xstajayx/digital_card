@@ -93,3 +93,7 @@ The storefront is `index.html`; the preserved five-step editor is `studio.html`.
 ## Universal opening release
 
 Opening, wrapping palette, seal and celebration can now be chosen independently for all 28 designs. Enhanced cards use validated v4 framing around the unchanged 13-element v3 content array; old links retain their decoder paths. Optional local drafts persist these choices. Email and SMS prepare drafts with a copy fallback; nothing is automatically sent. Run `python3 -u tests/interactive.py` alongside the three existing commands. See [current delivery and limitations](docs/INTERACTIVE_DELIVERY.md) and [future backend specification](docs/INTERACTIVE_BACKEND.md). QR codes, additional opening mechanisms and media are not implemented.
+
+## Physical folded-card release
+
+Personalise now offers an opt-in paper-card journey: an addressed envelope extracts the actual illustrated cover, which opens to a separate handwritten inside page. Choose cover/inside art, cover greeting, six paper surfaces and signature style. Use close/reopen, full Replay, Skip or Read comfortably. Narrow layouts show a full-width reading page. New paper cards use validated v5 links and drafts; all v1–v4 paths remain available. Run `python3 -u tests/physical.py` in addition to the existing four commands. See [the physical-card delivery and compatibility notes](docs/PHYSICAL_CARD_DELIVERY.md). No backend, upload, paid service or DNS change is required.
