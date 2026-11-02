@@ -1,0 +1,27 @@
+name: Validate card studio
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  static-and-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: node tests/data.mjs
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python -u tests/browser.py
+        env:
+          CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: card-studio-browser-results
+          path: ${{ runner.temp }}/card-studio-artifacts

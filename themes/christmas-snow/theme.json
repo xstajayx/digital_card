@@ -1,0 +1,28 @@
+{
+  "id": "christmas-snow",
+  "occasionId": "christmas",
+  "occasion": "Christmas",
+  "name": "A winter’s hush",
+  "greeting": "Merry Christmas",
+  "group": "Seasonal",
+  "symbol": "❄",
+  "style": "winter",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "May your days be cosy, your heart be light, and your home be filled with the people and things you love.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#edf2fa",
+    "ink": "#3a4d68",
+    "accent": "#8bacc7",
+    "accent2": "#b8c5de",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "snow"
+  },
+  "defaultFontId": "quicksand"
+}

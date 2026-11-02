@@ -1,9 +1,28 @@
 {
   "id": "anniversary",
-  "name": "Anniversary",
-  "occasion": "Happy Anniversary",
-  "defaults": {"to": "You Two", "message": "Wishing you many more years of love, laughter, and sweet memories.", "from": "Cheers to love"},
-  "palette": {"paper": "#fff7f1", "ink": "#3a2a24", "accent": "#ff6b6b", "accent2": "#f7b267", "gold": "#ffd166"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": true, "sparkles": true, "revealType": "hearts", "frameDecor": "hearts", "overlayIntensity": 0.8, "decorType": "hearts", "decorDensity": 16}
+  "occasionId": "anniversary",
+  "occasion": "Anniversary",
+  "name": "Still, always you",
+  "greeting": "Happy Anniversary",
+  "group": "Love & family",
+  "symbol": "∞",
+  "style": "arch",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "Another year of choosing each other. Wishing you a lifetime of laughter, little adventures and love.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#fcf0e8",
+    "ink": "#563c35",
+    "accent": "#bc8c72",
+    "accent2": "#ddbe9b",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "sparkles"
+  },
+  "defaultFontId": "playfair"
 }

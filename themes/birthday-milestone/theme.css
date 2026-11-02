@@ -1,0 +1,13 @@
+/* A golden chapter: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: linear-gradient(
+    135deg,
+    transparent 30%,
+    color-mix(in srgb, var(--gold) 12%, transparent) 50%,
+    transparent 70%
+  );
+}
+.card-root::before {
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 14px;
+}

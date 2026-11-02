@@ -1,256 +1,278 @@
 import { sanitizeGiftUrl } from "../engine/sanitize.js";
-import { ILLUSTRATIONS } from "../engine/illustrations.js";
-import { greetingFor, loadThemes } from "../engine/card-data.js";
-export { loadThemes };
-const MAX_SHARE_URL_CHARS = 12000;
-const textValue = (value) => String(value || "");
-const normalizeBirthdayNumber = (value) =>
-  value === ""
-    ? ""
-    : String(Math.max(1, Math.min(120, Math.round(Number(value) || 1))));
-const loadStickersForTheme = async (id) => ILLUSTRATIONS[id] || [];
-const base64UrlEncode = (str) =>
-  btoa(unescape(encodeURIComponent(str)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-const buildViewerUrl = (encoded) =>
-  new URL("view.html?d=" + encoded, location.href).href;
-async function buildShareUrlAsync(current) {
-  const safeGiftUrl = current.giftEnabled
-    ? sanitizeGiftUrl(current.giftUrl || "")
-    : "";
-  const birthdayNumber = current.birthdayNumberEnabled
-    ? normalizeBirthdayNumber(current.birthdayNumber)
-    : "";
-  const stickerValid = current.stickers.some((s) => s.id === current.stickerId);
-  const payload = {
-    v: 2,
-    textSize: current.textSize,
-    themeId: current.theme.id,
-    to: current.to || "",
-    message: textValue(current.message),
-    from: current.from || "",
-    watermark: !!current.watermark,
-    giftUrl: safeGiftUrl,
-    fontId: current.fontId || "fredoka",
-    birthdayNumber: birthdayNumber || "",
-    birthdayNumberEnabled: !!current.birthdayNumberEnabled,
-    paperOverride: current.paperOverride || "",
-    inkOverride: current.inkOverride || "",
-    stickerId: stickerValid ? current.stickerId : "",
+import { ILLUSTRATIONS, illustrationUrl } from "../engine/illustrations.js";
+import {
+  birthdayNumber,
+  cardContent,
+  contrastRatio,
+  validateCard,
+} from "../engine/card-data.js";
+import { buildShareUrl } from "../engine/share-codec.js";
+import { bindShareActions } from "./share-actions.js";
+const $ = (id) => document.getElementById(id);
+const labels = [
+  "",
+  "Choose design →",
+  "Write a message →",
+  "Personalise →",
+  "Preview & share →",
+];
+const palettes = [
+  ["Garden", "#eef4e9", "#374c3c"],
+  ["Blush", "#fff0f1", "#592f3d"],
+  ["Moonlight", "#f0edfa", "#35304e"],
+  ["Honey", "#fff3dc", "#57432b"],
+  ["Ink", "#263d39", "#fff6e9"],
+];
+const button = (className, label) => {
+  const node = document.createElement("button");
+  node.type = "button";
+  node.className = className;
+  if (label) node.textContent = label;
+  return node;
+};
+const selection = (container, value, key) =>
+  container
+    .querySelectorAll("button")
+    .forEach((node) =>
+      node.setAttribute("aria-pressed", String(node.dataset[key] === value)),
+    );
+
+export function createUI({ state, preview }) {
+  let step = 1,
+    filter = "All",
+    search = "",
+    designKey = "",
+    stickerKey = "",
+    summaryKey = "",
+    revision = 0;
+  const themes = state.get().themes;
+  const occasions = [
+    ...new Map(themes.map((theme) => [theme.occasionId, theme])).values(),
+  ];
+  const fields = {
+    toInput: "to",
+    messageInput: "message",
+    fromInput: "from",
+    giftInput: "giftUrl",
+    birthdayNumberInput: "birthdayNumber",
+    paperColorInput: "paperOverride",
+    inkColorInput: "inkOverride",
   };
-
-  const encoded = base64UrlEncode(JSON.stringify(payload));
-  const url = buildViewerUrl(encoded);
-  if (url.length > MAX_SHARE_URL_CHARS)
-    throw new Error("Share link is too long. Shorten message or gift URL.");
-  return { url };
-}
-
-export function createUI({ state, preview, elements }) {
-  const {
-    toInput,
-    messageInput,
-    fromInput,
-    fontSelect,
-    watermarkToggle,
-    giftToggle,
-    giftInput,
-    giftField,
-    birthdayNumberToggle,
-    birthdayNumberInput,
-    birthdayNumberField,
-    paperColorInput,
-    inkColorInput,
-    resetColorsButton,
-    themeGallery,
-    stickerGallery,
-    replayButton,
-    replayButtonInline,
-    shareLinkButton,
-    shareWhatsappButton,
-    exportStatus,
-  } = elements;
-
-  let stickerThemeVersion = 0;
-  let loadedStickerThemeId = "";
-
-  function setStatus(msg) {
-    if (exportStatus) exportStatus.textContent = msg || "";
-  }
-
-  function renderThemes(current) {
-    themeGallery.innerHTML = "";
-    current.themes.forEach((theme) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `theme-tile${current.theme?.id === theme.id ? " is-active" : ""}`;
-      button.textContent = theme.name;
-      button.addEventListener("click", async () => {
-        const stickers = await loadStickersForTheme(theme.id);
-        loadedStickerThemeId = theme.id;
-        state.set({
-          theme,
-          stickers,
-          stickerId: "",
-          to: textValue(theme.defaults?.to || ""),
-          message: textValue(theme.defaults?.message || ""),
-          from: textValue(theme.defaults?.from || ""),
-          paperOverride: "",
-          inkOverride: "",
-        });
-      });
-      themeGallery.appendChild(button);
+  function goTo(next, focus = true) {
+    step = Math.max(1, Math.min(5, next));
+    $("studio").dataset.step = String(step);
+    document.querySelectorAll("[data-panel]").forEach((panel) => {
+      panel.hidden = Number(panel.dataset.panel) !== step;
     });
-  }
-
-  function renderStickerGallery(current) {
-    stickerGallery.innerHTML = "";
-
-    const noneTile = document.createElement("button");
-    noneTile.type = "button";
-    noneTile.className = `sticker-tile none-option${!current.stickerId ? " is-active" : ""}`;
-    noneTile.textContent = "None";
-    noneTile.addEventListener("click", () => state.set({ stickerId: "" }));
-    stickerGallery.appendChild(noneTile);
-
-    current.stickers.forEach((sticker) => {
-      const tile = document.createElement("button");
-      tile.type = "button";
-      tile.className = `sticker-tile${current.stickerId === sticker.id ? " is-active" : ""}`;
-      tile.title = sticker.label;
-
-      const img = document.createElement("img");
-      img.alt = sticker.label;
-      img.src = `./stickers/${current.theme?.id}/${sticker.asset}`;
-      img.loading = "lazy";
-
-      const label = document.createElement("span");
-      label.textContent = sticker.label;
-
-      tile.appendChild(img);
-      tile.appendChild(label);
-      tile.addEventListener("click", () =>
-        state.set({ stickerId: sticker.id }),
-      );
-      stickerGallery.appendChild(tile);
+    document.querySelectorAll(".steps button").forEach((node) => {
+      if (Number(node.dataset.step) === step)
+        node.setAttribute("aria-current", "step");
+      else node.removeAttribute("aria-current");
     });
-  }
-
-  function updateBirthdayUI(current) {
-    const isBirthdayTheme = String(current.theme?.id || "").startsWith(
-      "birthday",
-    );
-    const showBirthdayControls =
-      isBirthdayTheme || current.birthdayNumberEnabled;
-    birthdayNumberToggle.checked = !!current.birthdayNumberEnabled;
-    birthdayNumberField.style.display = showBirthdayControls ? "" : "none";
-    birthdayNumberInput.value = current.birthdayNumber || "";
-  }
-
-  async function ensureStickers(current) {
-    if (!current.theme) return;
-    if (loadedStickerThemeId === current.theme.id) return;
-    if (Array.isArray(current.stickers) && current.stickers.length) {
-      loadedStickerThemeId = current.theme.id;
-      return;
+    $("backStep").disabled = step === 1;
+    $("nextStep").hidden = step === 5;
+    $("nextStep").textContent = labels[step] || "";
+    $("stepProgress").textContent = `Step ${step} of 5`;
+    if (focus) {
+      document
+        .querySelector(`[data-panel="${step}"] h2`)
+        .focus({ preventScroll: true });
+      $("studio").scrollIntoView({ block: "start", behavior: "instant" });
     }
-    const version = ++stickerThemeVersion;
-    const stickers = await loadStickersForTheme(current.theme.id);
-    if (version !== stickerThemeVersion) return;
-    const valid = stickers.some((s) => s.id === current.stickerId);
-    loadedStickerThemeId = current.theme.id;
-    state.set({ stickers, stickerId: valid ? current.stickerId : "" });
+    // A hidden mobile preview acquires its real viewport on step 5.
+    if (step === 5)
+      requestAnimationFrame(() => preview.checkFit().catch(() => {}));
   }
-
-  function updatePreview(current) {
-    if (!current.theme) return;
-    const validSticker = current.stickers.some(
-      (s) => s.id === current.stickerId,
-    )
-      ? current.stickerId
-      : "";
-    preview.setTheme(current.theme);
-    preview.setContent({
-      textSize: current.textSize,
-      recipient: current.to || "Friend",
-      headline: greetingFor(
-        current.theme,
-        current.to,
-        current.birthdayNumberEnabled,
-        current.birthdayNumber,
-      ),
-      message: current.message,
-      from: current.from,
-      giftUrl: current.giftEnabled
-        ? sanitizeGiftUrl(current.giftUrl || "")
-        : "",
-      fontId: current.fontId,
-      birthdayNumber: current.birthdayNumberEnabled
-        ? normalizeBirthdayNumber(current.birthdayNumber)
-        : "",
-      paperOverride: current.paperOverride || "",
-      inkOverride: current.inkOverride || "",
-      mode: "share",
-      stickerId: validSticker,
-      themeId: current.theme.id,
-    });
-    preview.setWatermark(current.watermark);
-  }
-
-  toInput.addEventListener("input", (e) =>
-    state.set({ to: textValue(e.target.value) }),
-  );
-  messageInput.addEventListener("input", (e) =>
-    state.set({ message: textValue(e.target.value) }),
-  );
-  fromInput.addEventListener("input", (e) =>
-    state.set({ from: textValue(e.target.value) }),
-  );
-  fontSelect.addEventListener("change", (e) =>
-    state.set({ fontId: e.target.value }),
-  );
-  watermarkToggle.addEventListener("change", (e) =>
-    state.set({ watermark: e.target.checked }),
-  );
-
-  giftToggle.addEventListener("change", (e) => {
-    const enabled = e.target.checked;
-    state.set({
-      giftEnabled: enabled,
-      giftUrl: enabled ? state.get().giftUrl : "",
-    });
-  });
-  giftInput.addEventListener("input", (e) =>
-    state.set({ giftUrl: e.target.value }),
-  );
-
-  birthdayNumberToggle.addEventListener("change", (e) =>
-    state.set({ birthdayNumberEnabled: e.target.checked }),
-  );
-  birthdayNumberInput.addEventListener("input", (e) =>
-    state.set({ birthdayNumber: normalizeBirthdayNumber(e.target.value) }),
-  );
-
-  paperColorInput.addEventListener("input", (e) =>
-    state.set({ paperOverride: e.target.value }),
-  );
-  inkColorInput.addEventListener("input", (e) =>
-    state.set({ inkOverride: e.target.value }),
-  );
-  resetColorsButton.addEventListener("click", () =>
-    state.set({ paperOverride: "", inkOverride: "" }),
-  );
-
   document
-    .getElementById("textSize")
-    .addEventListener("change", (e) =>
-      state.set({ textSize: Number(e.target.value) }),
-    );
-  document.getElementById("resetDesignButton").addEventListener("click", () =>
+    .querySelectorAll(".steps button")
+    .forEach((node) => (node.onclick = () => goTo(Number(node.dataset.step))));
+  document
+    .querySelectorAll("[data-go]")
+    .forEach((node) => (node.onclick = () => goTo(Number(node.dataset.go))));
+  $("backStep").onclick = () => goTo(step - 1);
+  $("nextStep").onclick = () => goTo(step + 1);
+  $("previewJump").onclick = () => goTo(5);
+
+  function chooseTheme(theme) {
+    const current = state.get();
+    if (theme.id === current.theme.id) return;
+    const copy = {};
+    for (const key of ["to", "message", "from"]) {
+      if (current[key] === current.theme.defaults[key])
+        copy[key] = theme.defaults[key];
+    }
     state.set({
-      fontId: "fredoka",
+      ...copy,
+      theme,
+      stickerId: "",
+      paperOverride: "",
+      inkOverride: "",
+      fontId: current.fontChosen
+        ? current.fontId
+        : theme.defaultFontId || "fredoka",
+      birthdayNumberEnabled: theme.birthday
+        ? current.birthdayNumberEnabled
+        : false,
+    });
+  }
+  function renderOccasions() {
+    const fragment = document.createDocumentFragment();
+    for (const theme of occasions) {
+      const node = button("occasion-tile");
+      node.dataset.occasion = theme.occasionId;
+      node.style.setProperty("--tile-paper", theme.palette.paper);
+      node.style.setProperty("--tile-ink", theme.palette.ink);
+      const symbol = document.createElement("span");
+      symbol.className = "occasion-symbol";
+      symbol.ariaHidden = "true";
+      symbol.textContent = theme.symbol;
+      const label = document.createElement("span");
+      label.textContent = theme.occasion;
+      node.append(symbol, label);
+      node.onclick = () =>
+        chooseTheme(themes.find((t) => t.occasionId === theme.occasionId));
+      fragment.append(node);
+    }
+    $("occasionGallery").replaceChildren(fragment);
+    for (const name of [
+      "All",
+      "Celebrate",
+      "Love & family",
+      "Everyday",
+      "Seasonal",
+    ]) {
+      const node = button("filter-button", name);
+      node.dataset.filter = name;
+      node.setAttribute("aria-pressed", String(name === filter));
+      node.onclick = () => {
+        filter = name;
+        selection($("occasionFilters"), filter, "filter");
+        filterOccasions();
+      };
+      $("occasionFilters").append(node);
+    }
+  }
+  function filterOccasions() {
+    let count = 0;
+    $("occasionGallery")
+      .querySelectorAll("button")
+      .forEach((node) => {
+        const occasion = occasions.find(
+          (t) => t.occasionId === node.dataset.occasion,
+        );
+        node.hidden =
+          !(filter === "All" || occasion.group === filter) ||
+          !occasion.occasion.toLocaleLowerCase().includes(search);
+        if (!node.hidden) count++;
+      });
+    $("noOccasions").hidden = count !== 0;
+  }
+  $("occasionSearch").oninput = (event) => {
+    search = event.target.value.trim().toLocaleLowerCase();
+    filterOccasions();
+  };
+  function renderDesigns(current) {
+    const fragment = document.createDocumentFragment();
+    const designs = themes.filter(
+      (theme) => theme.occasionId === current.theme.occasionId,
+    );
+    $("designDescription").textContent =
+      `${current.theme.occasion} · ${designs.length === 1 ? "A design made for this moment." : "Same lovely occasion. Two different moods."}`;
+    for (const theme of designs) {
+      const node = button("theme-tile");
+      node.dataset.theme = theme.id;
+      node.setAttribute("aria-label", theme.name);
+      const mini = document.createElement("span");
+      mini.className = "mini-card";
+      mini.dataset.style = theme.style;
+      mini.ariaHidden = "true";
+      mini.style.setProperty("--tile-paper", theme.palette.paper);
+      mini.style.setProperty("--tile-ink", theme.palette.ink);
+      const symbol = document.createElement("span");
+      symbol.className = "mini-symbol";
+      symbol.textContent = theme.symbol;
+      const title = document.createElement("strong");
+      title.textContent = theme.greeting;
+      const small = document.createElement("small");
+      small.textContent = "A little something, just for you.";
+      mini.append(symbol, title, small);
+      const label = document.createElement("span");
+      label.className = "design-name";
+      label.textContent = theme.name;
+      const tick = document.createElement("span");
+      tick.className = "design-check";
+      tick.ariaHidden = "true";
+      tick.textContent = "✓";
+      label.append(tick);
+      node.append(mini, label);
+      node.onclick = () => chooseTheme(theme);
+      fragment.append(node);
+    }
+    $("themeGallery").replaceChildren(fragment);
+  }
+  function renderIllustrations(items) {
+    const fragment = document.createDocumentFragment();
+    const none = button("sticker-tile none-option");
+    none.dataset.sticker = "";
+    const icon = document.createElement("span");
+    icon.className = "none-icon";
+    icon.ariaHidden = "true";
+    icon.textContent = "∅";
+    none.append(icon, document.createTextNode("None"));
+    none.onclick = () => state.set({ stickerId: "" });
+    fragment.append(none);
+    for (const item of items) {
+      const node = button("sticker-tile");
+      node.dataset.sticker = item.id;
+      const image = document.createElement("img");
+      image.src = illustrationUrl(item);
+      image.alt = "";
+      image.width = 67;
+      image.height = 55;
+      const label = document.createElement("span");
+      label.textContent = item.label;
+      node.append(image, label);
+      node.onclick = () => state.set({ stickerId: item.id });
+      fragment.append(node);
+    }
+    $("stickerGallery").replaceChildren(fragment);
+  }
+  palettes.forEach(([name, paper, ink]) => {
+    const node = button("palette-preset");
+    node.setAttribute("aria-label", `${name} colours`);
+    node.dataset.paper = paper;
+    node.dataset.ink = ink;
+    const swatch = document.createElement("span");
+    swatch.ariaHidden = "true";
+    swatch.style.setProperty("--swatch-paper", paper);
+    swatch.style.setProperty("--swatch-ink", ink);
+    node.append(swatch);
+    node.onclick = () => state.set({ paperOverride: paper, inkOverride: ink });
+    $("palettePresets").append(node);
+  });
+  Object.entries(fields).forEach(([id, key]) =>
+    $(id).addEventListener("input", (event) =>
+      state.set({ [key]: event.target.value }),
+    ),
+  );
+  $("fontSelect").onchange = (event) =>
+    state.set({ fontId: event.target.value, fontChosen: true });
+  $("textSize").onchange = (event) =>
+    state.set({ textSize: Number(event.target.value) });
+  for (const [id, key] of [
+    ["watermarkToggle", "watermark"],
+    ["giftToggle", "giftEnabled"],
+    ["birthdayNumberToggle", "birthdayNumberEnabled"],
+  ])
+    $(id).onchange = (event) => state.set({ [key]: event.target.checked });
+  $("suggestMessage").onclick = () =>
+    state.set({ message: state.get().theme.defaults.message });
+  $("resetColorsButton").onclick = () =>
+    state.set({ paperOverride: "", inkOverride: "" });
+  $("resetDesignButton").onclick = () => {
+    state.set({
+      fontId: state.get().theme.defaultFontId || "fredoka",
+      fontChosen: false,
       textSize: 18,
       paperOverride: "",
       inkOverride: "",
@@ -260,90 +282,143 @@ export function createUI({ state, preview, elements }) {
       giftEnabled: false,
       giftUrl: "",
       watermark: true,
-    }),
-  );
-  const replay = () => preview.play();
-  replayButton.addEventListener("click", replay);
-  replayButtonInline.addEventListener("click", replay);
+    });
+    $("exportStatus").textContent =
+      "Design reset. Your occasion, design, names and message are kept.";
+  };
+  $("replayButton").onclick = () => preview.play();
+  $("quickShareButton").onclick = () => $("nativeShareButton").click();
+  renderOccasions();
 
-  shareLinkButton.addEventListener("click", async () => {
-    try {
-      if (!(await preview.checkFit()))
-        throw new Error(
-          "Content does not fit. Choose smaller text or edit your message before sharing.",
-        );
-      if (
-        state.get().giftEnabled &&
-        state.get().giftUrl &&
-        !sanitizeGiftUrl(state.get().giftUrl)
-      )
-        throw new Error(
-          "Use a valid HTTPS gift URL without username or password.",
-        );
-      const { url } = await buildShareUrlAsync(state.get());
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-        setStatus("Share link copied ✅");
-      } else {
-        setStatus(url);
-      }
-    } catch (err) {
-      setStatus(err.message || "Could not create share link.");
+  state.subscribe((current, changed) => {
+    revision++;
+    const theme = current.theme,
+      items = ILLUSTRATIONS[theme.id] || [];
+    if (theme.occasionId !== designKey) {
+      designKey = theme.occasionId;
+      renderDesigns(current);
     }
-  });
-
-  shareWhatsappButton.addEventListener("click", async () => {
-    try {
-      if (!(await preview.checkFit()))
-        throw new Error(
-          "Content does not fit. Choose smaller text or edit your message before sharing.",
-        );
-      if (
-        state.get().giftEnabled &&
-        state.get().giftUrl &&
-        !sanitizeGiftUrl(state.get().giftUrl)
-      )
-        throw new Error(
-          "Use a valid HTTPS gift URL without username or password.",
-        );
-      const { url } = await buildShareUrlAsync(state.get());
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 🎉 ${url}`)}`,
-        "_blank",
-        "noopener,noreferrer",
+    const nextStickers = JSON.stringify(items);
+    if (nextStickers !== stickerKey) {
+      stickerKey = nextStickers;
+      renderIllustrations(items);
+    }
+    if (changed.includes("theme")) {
+      selection($("occasionGallery"), theme.occasionId, "occasion");
+      selection($("themeGallery"), theme.id, "theme");
+    }
+    if (changed.includes("theme") || changed.includes("stickerId"))
+      selection($("stickerGallery"), current.stickerId, "sticker");
+    // Do not assign unchanged values: preserve selection, caret and input composition.
+    for (const [id, key] of Object.entries(fields))
+      if (changed.includes(key) && $(id).value !== current[key])
+        $(id).value = current[key];
+    $("fontSelect").value = current.fontId;
+    $("textSize").value = current.textSize;
+    $("watermarkToggle").checked = current.watermark;
+    $("giftToggle").checked = current.giftEnabled;
+    $("giftField").hidden = !current.giftEnabled;
+    const badGift =
+      current.giftEnabled &&
+      current.giftUrl &&
+      !sanitizeGiftUrl(current.giftUrl);
+    $("giftError").textContent = badGift
+      ? "Use an HTTPS link without a username or password."
+      : "";
+    $("giftInput").setAttribute("aria-invalid", String(!!badGift));
+    $("birthdayControls").hidden = !theme.birthday;
+    $("birthdayNumberToggle").checked = current.birthdayNumberEnabled;
+    $("birthdayNumberField").hidden = !current.birthdayNumberEnabled;
+    const badAge =
+      current.birthdayNumberEnabled && !birthdayNumber(current.birthdayNumber);
+    $("birthdayError").textContent = badAge
+      ? "Enter a whole number from 1 to 120, or turn off the birthday number."
+      : "";
+    $("birthdayNumberInput").setAttribute("aria-invalid", String(!!badAge));
+    const paper = current.paperOverride || theme.palette.paper,
+      ink = current.inkOverride || theme.palette.ink;
+    if ($("paperColorInput").value !== paper)
+      $("paperColorInput").value = paper;
+    if ($("inkColorInput").value !== ink) $("inkColorInput").value = ink;
+    const ratio = contrastRatio(paper, ink);
+    $("contrastStatus").className = ratio < 4.5 ? "warning" : "helper";
+    $("contrastStatus").textContent =
+      ratio < 4.5
+        ? `Low contrast (${ratio.toFixed(1)}:1). Try a darker text or lighter background.`
+        : `Easy to read · ${ratio.toFixed(1)}:1 contrast`;
+    $("palettePresets")
+      .querySelectorAll("button")
+      .forEach((node) =>
+        node.setAttribute(
+          "aria-pressed",
+          String(node.dataset.paper === paper && node.dataset.ink === ink),
+        ),
       );
-      setStatus("Opening WhatsApp…");
-    } catch (err) {
-      setStatus(err.message || "Could not share to WhatsApp.");
+    $("messageRemaining").textContent =
+      `${Array.from(current.message).length.toLocaleString()} characters · paragraphs preserved · fit checked in the preview`;
+    const summary = [
+      `For ${current.to || "someone special"}`,
+      `${theme.occasion} · ${theme.name}`,
+      `From ${current.from || "you"}`,
+    ];
+    if (JSON.stringify(summary) !== summaryKey) {
+      summaryKey = JSON.stringify(summary);
+      $("cardSummary").replaceChildren();
+      for (const text of summary) {
+        const p = document.createElement("p");
+        p.textContent = text;
+        $("cardSummary").append(p);
+      }
+    }
+    const content = cardContent(current);
+    $("fullMessageText").textContent =
+      `${content.headline}\n\n${content.message}\n\n${content.from}`;
+    preview.update(content);
+    if (changed.length < 10) {
+      $("exportStatus").textContent = "";
+      $("shareFallback").hidden = true;
     }
   });
-
-  state.subscribe((current) => {
-    document.getElementById("textSize").value = current.textSize || 18;
-    renderThemes(current);
-    renderStickerGallery(current);
-    giftField.style.display = current.giftEnabled ? "" : "none";
-    updateBirthdayUI(current);
-
-    toInput.value = current.to || "";
-    messageInput.value = current.message || "";
-    fromInput.value = current.from || "";
-    fontSelect.value = current.fontId || "fredoka";
-    watermarkToggle.checked = !!current.watermark;
-    giftToggle.checked = !!current.giftEnabled;
-    giftInput.value = current.giftUrl || "";
-
-    const basePaper = current.theme?.palette?.paper || "#fff7f2";
-    const baseInk = current.theme?.palette?.ink || "#2b2622";
-    paperColorInput.value = current.paperOverride || basePaper;
-    inkColorInput.value = current.inkOverride || baseInk;
-
-    const remaining = Array.from(current.message || "").length;
-    const counter = document.getElementById("messageRemaining");
-    if (counter)
-      counter.textContent = `${remaining} characters · paragraphs preserved`;
-
-    updatePreview(current);
-    ensureStickers(current);
+  bindShareActions({
+    buttons: {
+      copy: $("shareLinkButton"),
+      native: $("nativeShareButton"),
+      whatsapp: $("shareWhatsappButton"),
+    },
+    status: $("exportStatus"),
+    fallback: $("shareFallback"),
+    linkInput: $("shareUrl"),
+    mirrors: [$("quickShareButton")],
+    async getUrl() {
+      const before = revision,
+        current = state.get();
+      if (
+        current.giftEnabled &&
+        current.giftUrl &&
+        !sanitizeGiftUrl(current.giftUrl)
+      )
+        throw new Error(
+          "Use a valid HTTPS gift link without username or password.",
+        );
+      if (
+        current.birthdayNumberEnabled &&
+        !birthdayNumber(current.birthdayNumber)
+      )
+        throw new Error(
+          "Enter a birthday number from 1 to 120, or turn it off.",
+        );
+      if (!(await preview.checkFit()))
+        throw new Error(
+          "Content does not fit. Choose smaller text or shorten the message before sharing.",
+        );
+      const card = validateCard({ ...cardContent(current), v: 3 }, themes);
+      const url = await buildShareUrl(card);
+      if (before !== revision)
+        throw new Error(
+          "Your card changed while preparing the link. Please share again.",
+        );
+      return url;
+    },
   });
+  goTo(1, false);
 }

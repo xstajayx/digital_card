@@ -1,250 +1,225 @@
-export const ILLUSTRATIONS = {
-  "birthday-balloons": [
-    {
-      id: "cake-pink.png",
-      label: "Birthday cake · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "cake-yellow.png",
-      label: "Birthday cake · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "cake-blue.png",
-      label: "Birthday cake · 3",
-      asset: "illustration-3.svg",
-    },
-    {
-      id: "cake-purple.png",
-      label: "Birthday cake · 4",
-      asset: "illustration-4.svg",
-    },
+// Local, transparent original vectors. Legacy payload IDs resolve only through this catalogue.
+const COLLECTIONS = {
+  birthday: [
+    ["pink-cake", "Pink candle cake"],
+    ["blue-cake", "Blue candle cake"],
+    ["yellow-cake", "Yellow candle cake"],
+    ["purple-cake", "Purple candle cake"],
+    ["balloons", "Pastel balloons"],
+    ["party-hat", "Striped party hat"],
+  ],
+  kids: [
+    ["balloons", "Pastel balloons"],
+    ["party-hat", "Striped party hat"],
+    ["bear", "Birthday bear"],
+    ["pink-cake", "Pink candle cake"],
   ],
   love: [
-    {
-      id: "heart-red.png",
-      label: "Heart · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "heart-pink.png",
-      label: "Heart · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "heart-purple.png",
-      label: "Heart · 3",
-      asset: "illustration-3.svg",
-    },
-    {
-      id: "kiss-black.png",
-      label: "Heart · 4",
-      asset: "illustration-4.svg",
-    },
+    ["red-heart", "Ruby heart"],
+    ["pink-heart", "Blush heart"],
+    ["purple-heart", "Lavender heart"],
+    ["kiss", "Kiss mark"],
+    ["rose", "Single rose"],
   ],
   christmas: [
-    {
-      id: "tree-green.png",
-      label: "Christmas tree · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "bauble-gold.png",
-      label: "Christmas tree · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "snowflake-white.png",
-      label: "Christmas tree · 3",
-      asset: "illustration-3.svg",
-    },
+    ["tree", "Decorated fir tree"],
+    ["present", "Ribbon-wrapped present"],
+    ["snowflake", "Winter snowflake"],
+    ["bauble", "Rose gold bauble"],
   ],
-  "thank-you": [
-    {
-      id: "bouquet-pastel.png",
-      label: "Thank-you flower · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "ribbon-soft.png",
-      label: "Thank-you flower · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "sparkles-gold.png",
-      label: "Thank-you flower · 3",
-      asset: "illustration-3.svg",
-    },
+  flowers: [
+    ["flower", "Blush daisy"],
+    ["bouquet", "Garden bouquet"],
+    ["pink-heart", "Blush heart"],
   ],
-  congrats: [
-    {
-      id: "trophy-gold.png",
-      label: "Celebration star · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "stars-blue.png",
-      label: "Celebration star · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "confetti-pop.png",
-      label: "Celebration star · 3",
-      asset: "illustration-3.svg",
-    },
+  thanks: [
+    ["bouquet", "Garden bouquet"],
+    ["ribbon", "Appreciation ribbon"],
+    ["stars", "Wishing stars"],
   ],
-  "kids-party": [
-    {
-      id: "balloons-rainbow.png",
-      label: "Party balloon · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "hat-party.png",
-      label: "Party balloon · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "animal-bear.png",
-      label: "Party balloon · 3",
-      asset: "illustration-3.svg",
-    },
+  dad: [
+    ["tie", "Blue striped tie"],
+    ["mug", "Favourite mug"],
+    ["trophy", "Golden trophy"],
   ],
-  "mothers-day": [
-    {
-      id: "flowers-rose.png",
-      label: "Mother’s Day flower · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "heart-soft.png",
-      label: "Mother’s Day flower · 2",
-      asset: "illustration-2.svg",
-    },
+  baby: [
+    ["pram", "Pastel pram"],
+    ["bottle", "Mint baby bottle"],
+    ["stars", "Dreamy stars"],
+    ["bear", "Little teddy"],
   ],
-  "fathers-day": [
-    {
-      id: "tie-blue.png",
-      label: "Father’s Day cup · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "mug-classic.png",
-      label: "Father’s Day cup · 2",
-      asset: "illustration-2.svg",
-    },
-  ],
-  "new-baby": [
-    {
-      id: "pram-soft.png",
-      label: "Baby bottle · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "bottle-mint.png",
-      label: "Baby bottle · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "stars-baby.png",
-      label: "Baby bottle · 3",
-      asset: "illustration-3.svg",
-    },
-  ],
-  "get-well": [
-    {
-      id: "bandage-red.png",
-      label: "Get-well flower · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "tea-cup.png",
-      label: "Get-well flower · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "heart-heal.png",
-      label: "Get-well flower · 3",
-      asset: "illustration-3.svg",
-    },
-  ],
-  sorry: [
-    {
-      id: "heart-small.png",
-      label: "Apology flower · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "note-soft.png",
-      label: "Apology flower · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "flower-soft.png",
-      label: "Apology flower · 3",
-      asset: "illustration-3.svg",
-    },
-  ],
-  "thinking-of-you": [
-    {
-      id: "cloud-soft.png",
-      label: "Thinking-of-you envelope · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "heart-soft.png",
-      label: "Thinking-of-you envelope · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "envelope-soft.png",
-      label: "Thinking-of-you envelope · 3",
-      asset: "illustration-3.svg",
-    },
+  wedding: [
+    ["rings", "Golden wedding rings"],
+    ["bouquet", "Garden bouquet"],
+    ["pink-heart", "Blush heart"],
   ],
   graduation: [
-    {
-      id: "cap-black.png",
-      label: "Graduation cap · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "diploma-white.png",
-      label: "Graduation cap · 2",
-      asset: "illustration-2.svg",
-    },
-    {
-      id: "stars-gold.png",
-      label: "Graduation cap · 3",
-      asset: "illustration-3.svg",
-    },
+    ["cap", "Graduation cap"],
+    ["diploma", "Rolled diploma"],
+    ["stars", "Wishing stars"],
   ],
-  anniversary: [
-    {
-      id: "heart-red.png",
-      label: "Anniversary heart · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "kiss-pink.png",
-      label: "Anniversary heart · 2",
-      asset: "illustration-2.svg",
-    },
+  congrats: [
+    ["trophy", "Golden trophy"],
+    ["stars", "Celebration stars"],
+    ["fireworks", "Celebration burst"],
   ],
-  "good-luck": [
-    {
-      id: "star-gold.png",
-      label: "Lucky star · 1",
-      asset: "illustration-1.svg",
-    },
-    {
-      id: "clover-green.png",
-      label: "Lucky star · 2",
-      asset: "illustration-2.svg",
-    },
+  well: [
+    ["bandage", "Healing bandage"],
+    ["tea", "Warm cup of tea"],
+    ["pink-heart", "Caring heart"],
+  ],
+  sorry: [
+    ["pink-heart", "Gentle heart"],
+    ["envelope", "A heartfelt note"],
+    ["flower", "Blush daisy"],
+  ],
+  thinking: [
+    ["cloud", "Soft blue cloud"],
+    ["pink-heart", "Caring heart"],
+    ["envelope", "A heartfelt note"],
+  ],
+  luck: [
+    ["stars", "Lucky stars"],
+    ["clover", "Four-leaf clover"],
+  ],
+  friendship: [
+    ["sun", "Little sunshine"],
+    ["envelope", "A note for you"],
+    ["bouquet", "Garden bouquet"],
+  ],
+  newyear: [
+    ["fireworks", "New Year fireworks"],
+    ["stars", "Midnight stars"],
+    ["present", "A little present"],
+  ],
+  easter: [
+    ["eggs", "Painted Easter eggs"],
+    ["flower", "Spring daisy"],
+    ["sun", "Spring sunshine"],
+  ],
+  general: [
+    ["sun", "Little sunshine"],
+    ["envelope", "A note for you"],
+    ["flower", "Blush daisy"],
   ],
 };
+const THEME_COLLECTIONS = {
+  "birthday-balloons": "birthday",
+  "birthday-midnight": "birthday",
+  "kids-party": "kids",
+  "birthday-milestone": "birthday",
+  love: "love",
+  "love-letters": "love",
+  "valentines-day": "love",
+  anniversary: "love",
+  wedding: "wedding",
+  engagement: "wedding",
+  "mothers-day": "flowers",
+  "fathers-day": "dad",
+  "new-baby": "baby",
+  "thank-you": "thanks",
+  congrats: "congrats",
+  graduation: "graduation",
+  "good-luck": "luck",
+  "get-well": "well",
+  "thinking-of-you": "thinking",
+  sorry: "sorry",
+  friendship: "friendship",
+  christmas: "christmas",
+  "christmas-snow": "christmas",
+  "new-year": "newyear",
+  easter: "easter",
+  "just-because": "general",
+};
+const LEGACY = {
+  "birthday-balloons": {
+    "cake-pink.png": "pink-cake",
+    "cake-yellow.png": "yellow-cake",
+    "cake-blue.png": "blue-cake",
+    "cake-purple.png": "purple-cake",
+  },
+  "kids-party": {
+    "balloons-rainbow.png": "balloons",
+    "hat-party.png": "party-hat",
+    "animal-bear.png": "bear",
+  },
+  love: {
+    "heart-red.png": "red-heart",
+    "heart-pink.png": "pink-heart",
+    "heart-purple.png": "purple-heart",
+    "kiss-black.png": "kiss",
+  },
+  christmas: {
+    "tree-green.png": "tree",
+    "bauble-gold.png": "bauble",
+    "snowflake-white.png": "snowflake",
+  },
+  "thank-you": {
+    "bouquet-pastel.png": "bouquet",
+    "ribbon-soft.png": "ribbon",
+    "sparkles-gold.png": "stars",
+  },
+  congrats: {
+    "trophy-gold.png": "trophy",
+    "stars-blue.png": "stars",
+    "confetti-pop.png": "fireworks",
+  },
+  "mothers-day": {
+    "flowers-rose.png": "bouquet",
+    "heart-soft.png": "pink-heart",
+  },
+  "fathers-day": {
+    "tie-blue.png": "tie",
+    "mug-classic.png": "mug",
+  },
+  "new-baby": {
+    "pram-soft.png": "pram",
+    "bottle-mint.png": "bottle",
+    "stars-baby.png": "stars",
+  },
+  "get-well": {
+    "bandage-red.png": "bandage",
+    "tea-cup.png": "tea",
+    "heart-heal.png": "pink-heart",
+  },
+  sorry: {
+    "heart-small.png": "pink-heart",
+    "note-soft.png": "envelope",
+    "flower-soft.png": "flower",
+  },
+  "thinking-of-you": {
+    "cloud-soft.png": "cloud",
+    "heart-soft.png": "pink-heart",
+    "envelope-soft.png": "envelope",
+  },
+  graduation: {
+    "cap-black.png": "cap",
+    "diploma-white.png": "diploma",
+    "stars-gold.png": "stars",
+  },
+  anniversary: {
+    "heart-red.png": "red-heart",
+    "kiss-pink.png": "kiss",
+  },
+  "good-luck": {
+    "star-gold.png": "stars",
+    "clover-green.png": "clover",
+  },
+};
+export const ILLUSTRATIONS = Object.fromEntries(
+  Object.entries(THEME_COLLECTIONS).map(([theme, collection]) => [
+    theme,
+    COLLECTIONS[collection].map(([id, label]) => ({
+      id,
+      label,
+      asset: `library/${id}.svg`,
+    })),
+  ]),
+);
 export function illustration(themeId, id) {
-  return (ILLUSTRATIONS[themeId] || []).find((item) => item.id === id);
+  const canonical = LEGACY[themeId]?.[id] || id;
+  return (ILLUSTRATIONS[themeId] || []).find((item) => item.id === canonical);
+}
+export function illustrationUrl(item) {
+  return new URL(`../stickers/${item.asset}`, import.meta.url).href;
 }

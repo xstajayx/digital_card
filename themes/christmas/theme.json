@@ -1,36 +1,28 @@
 {
   "id": "christmas",
-  "name": "Christmas",
+  "occasionId": "christmas",
   "occasion": "Christmas",
+  "name": "Forest & wishes",
+  "greeting": "Merry Christmas",
+  "group": "Seasonal",
+  "symbol": "♧",
+  "style": "forest",
+  "birthday": false,
+  "milestone": false,
   "defaults": {
-    "to": "Noah",
-    "message": "Warm wishes, cozy lights, and a heart full of joy this holiday season.",
-    "from": "Season's greetings \ud83c\udf84"
+    "to": "Friend",
+    "message": "May your days be cosy, your heart be light, and your home be filled with the people and things you love.",
+    "from": "With love"
   },
   "palette": {
-    "paper": "#f5f8f2",
-    "ink": "#1f2b20",
-    "accent": "#c0392b",
-    "accent2": "#2ecc71",
-    "gold": "#f1c40f"
-  },
-  "timing": {
-    "balloonsMs": 3200,
-    "insideDelayMs": 2100,
-    "headlineDelayMs": 2400,
-    "subDelayMs": 2800,
-    "fromDelayMs": 3000,
-    "fxStartMs": 2500,
-    "fxStopMs": 8500
+    "paper": "#264b3d",
+    "ink": "#fff4dc",
+    "accent": "#9eb797",
+    "accent2": "#d0b878",
+    "gold": "#e7ae43"
   },
   "features": {
-    "balloonCurtain": true,
-    "confetti": false,
-    "sparkles": true,
-    "revealType": "snow",
-    "frameDecor": "snow",
-    "overlayIntensity": 0.85,
-    "decorType": "snow",
-    "decorDensity": 16
-  }
+    "opening": "snow"
+  },
+  "defaultFontId": "playfair"
 }

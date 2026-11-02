@@ -1,0 +1,28 @@
+{
+  "id": "just-because",
+  "occasionId": "just-because",
+  "occasion": "Just Because",
+  "name": "Little lovely things",
+  "greeting": "A little hello",
+  "group": "Everyday",
+  "symbol": "✉",
+  "style": "sunshine",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "No occasion needed. Just sending a little happiness your way, because you make the world a nicer place.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f9efe4",
+    "ink": "#55433a",
+    "accent": "#c99c80",
+    "accent2": "#abbdac",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "fade"
+  },
+  "defaultFontId": "quicksand"
+}

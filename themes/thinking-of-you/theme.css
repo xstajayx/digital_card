@@ -1,1 +1,13 @@
-.card-root { background: linear-gradient(160deg, rgba(247,240,255,.96), rgba(233,247,255,.96)); }
+/* A note of comfort: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 27px,
+    color-mix(in srgb, var(--ink) 4%, transparent) 27px,
+    color-mix(in srgb, var(--ink) 4%, transparent) 28px
+  );
+}
+.headline {
+  font-weight: 500;
+}

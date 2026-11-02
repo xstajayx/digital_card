@@ -1,0 +1,28 @@
+{
+  "id": "wedding",
+  "occasionId": "wedding",
+  "occasion": "Wedding",
+  "name": "Together in bloom",
+  "greeting": "Happily ever after",
+  "group": "Love & family",
+  "symbol": "♧",
+  "style": "botanical",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "May your life together be filled with small joys, great adventures and a love that keeps growing.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f5f4e8",
+    "ink": "#39493f",
+    "accent": "#859a7a",
+    "accent2": "#c8ba8d",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "sparkles"
+  },
+  "defaultFontId": "playfair"
+}

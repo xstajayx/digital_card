@@ -1,36 +1,28 @@
 {
   "id": "kids-party",
-  "name": "Kids Party",
-  "occasion": "Kids Party",
+  "occasionId": "kids-birthday",
+  "occasion": "Kids Birthday",
+  "name": "Little big party",
+  "greeting": "Happy Birthday",
+  "group": "Celebrate",
+  "symbol": "☆",
+  "style": "confetti",
+  "birthday": true,
+  "milestone": false,
   "defaults": {
-    "to": "Leo",
-    "message": "Let the fun begin! Wishing you a day packed with games, snacks, and laughter!",
-    "from": "Your party crew \ud83c\udf88"
+    "to": "Friend",
+    "message": "A whole day of cake, wishes and wonderful surprises. Keep being your brilliant, magical self!",
+    "from": "With love"
   },
   "palette": {
-    "paper": "#eef7ff",
-    "ink": "#1b2340",
-    "accent": "#ff6f61",
-    "accent2": "#4ac7ff",
-    "gold": "#ffd166"
-  },
-  "timing": {
-    "balloonsMs": 2600,
-    "insideDelayMs": 1800,
-    "headlineDelayMs": 2100,
-    "subDelayMs": 2450,
-    "fromDelayMs": 2650,
-    "fxStartMs": 2200,
-    "fxStopMs": 8000
+    "paper": "#fff3d6",
+    "ink": "#453949",
+    "accent": "#d6917c",
+    "accent2": "#a9c8c1",
+    "gold": "#e7ae43"
   },
   "features": {
-    "balloonCurtain": true,
-    "confetti": true,
-    "sparkles": true,
-    "revealType": "confetti",
-    "frameDecor": "balloons",
-    "overlayIntensity": 0.9,
-    "decorType": "balloons",
-    "decorDensity": 16
-  }
+    "opening": "confetti"
+  },
+  "defaultFontId": "fredoka"
 }

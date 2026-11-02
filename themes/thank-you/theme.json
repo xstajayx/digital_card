@@ -1,36 +1,28 @@
 {
   "id": "thank-you",
-  "name": "Thank You",
+  "occasionId": "thank-you",
   "occasion": "Thank You",
+  "name": "Kindness in bloom",
+  "greeting": "Thank you",
+  "group": "Everyday",
+  "symbol": "❀",
+  "style": "botanical",
+  "birthday": false,
+  "milestone": false,
   "defaults": {
-    "to": "Avery",
-    "message": "Your kindness meant the world. Thank you for being amazing and always showing up.",
-    "from": "Gratefully \ud83d\udc99"
+    "to": "Friend",
+    "message": "Your kindness made a bigger difference than you know.\n\nThank you for showing up, being thoughtful, and being you.",
+    "from": "With love"
   },
   "palette": {
-    "paper": "#f4f8f6",
-    "ink": "#1f2a2a",
-    "accent": "#5ab8a1",
-    "accent2": "#7ea9ff",
-    "gold": "#f0c674"
-  },
-  "timing": {
-    "balloonsMs": 3200,
-    "insideDelayMs": 2100,
-    "headlineDelayMs": 2400,
-    "subDelayMs": 2800,
-    "fromDelayMs": 3000,
-    "fxStartMs": 2600,
-    "fxStopMs": 8400
+    "paper": "#eef4e9",
+    "ink": "#374c3c",
+    "accent": "#95aa86",
+    "accent2": "#cbb78f",
+    "gold": "#e7ae43"
   },
   "features": {
-    "balloonCurtain": true,
-    "confetti": false,
-    "sparkles": true,
-    "revealType": "stars",
-    "frameDecor": "stars",
-    "overlayIntensity": 0.55,
-    "decorType": "stars",
-    "decorDensity": 16
-  }
+    "opening": "flowers"
+  },
+  "defaultFontId": "nunito"
 }

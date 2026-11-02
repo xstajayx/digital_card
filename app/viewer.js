@@ -1,52 +1,52 @@
-import { validateCard, loadThemes, greetingFor } from "../engine/card-data.js";
+import { validateCard, loadThemes, cardContent } from "../engine/card-data.js";
+import { decodeCard } from "../engine/share-codec.js";
 import { createCardController } from "../engine/preview.js";
-const status = document.getElementById("status");
+import { bindShareActions } from "./share-actions.js";
+const $ = (id) => document.getElementById(id);
 async function init() {
   try {
-    const d = new URLSearchParams(location.search).get("d");
-    if (!d || d.length > 40000 || !/^[A-Za-z0-9_-]+$/.test(d))
-      throw new Error("Invalid or missing card data.");
-    const b64 = d.replace(/-/g, "+").replace(/_/g, "/");
-    const bytes = Uint8Array.from(
-      atob(b64 + "=".repeat((4 - (b64.length % 4)) % 4)),
-      (c) => c.charCodeAt(0),
-    );
-    const card = validateCard(
-      JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)),
-      await loadThemes(),
-    );
-    const preview = await createCardController(
-      document.getElementById("viewerFrame"),
-    );
-    preview.setTheme(card.theme);
-    preview.setContent({
-      ...card,
-      recipient: card.to || "Friend",
-      headline: greetingFor(
-        card.theme,
-        card.to,
-        !!card.birthdayNumber,
-        card.birthdayNumber,
-      ),
+    const payload =
+      new URLSearchParams(location.hash.slice(1)).get("c") ||
+      new URLSearchParams(location.search).get("d");
+    if (!payload) throw new Error("The card link is missing its message.");
+    const [raw, themes] = await Promise.all([
+      decodeCard(payload),
+      loadThemes(),
+    ]);
+    const card = validateCard(raw, themes),
+      content = cardContent(card);
+    $("cardPresentation").hidden = false;
+    const preview = await createCardController($("viewerFrame"));
+    preview.update(content);
+    $("fullMessageText").textContent =
+      `${content.headline}\n\n${card.message}\n\n${card.from}`;
+    await preview.checkFit();
+    $("recipientSubtitle").textContent = card.to
+      ? `A little something for ${card.to}.`
+      : "Sent with love. Opened with a smile.";
+    $("replayButton").onclick = () => preview.play();
+    bindShareActions({
+      buttons: {
+        copy: $("copyButton"),
+        native: $("shareButton"),
+        whatsapp: $("whatsappButton"),
+      },
+      getUrl: async () => location.href,
+      status: $("status"),
+      fallback: $("shareFallback"),
+      linkInput: $("shareUrl"),
     });
-    preview.setWatermark(card.watermark);
-    document.getElementById("replayButton").onclick = () => preview.play();
-    document.getElementById("copyButton").onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(location.href);
-        status.textContent = "Link copied!";
-      } catch {
-        status.textContent = "Copy this page address from your browser.";
-      }
-    };
-    document.getElementById("shareButton").onclick = () =>
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent("You’ve got a card 🎉 " + location.href)}`,
-        "_blank",
-        "noopener,noreferrer",
+  } catch (error) {
+    $("cardPresentation").hidden = true;
+    $("cardError").hidden = false;
+    $("recipientIntro").hidden = true;
+    const known =
+      /^(Invalid |This card |The card |Unsupported |Please open|Card data|The design)/.test(
+        error.message,
       );
-  } catch (err) {
-    status.textContent = err.message;
+    $("errorReason").textContent = known
+      ? error.message
+      : "The link may be incomplete or contain damaged card data.";
   }
 }
 init();

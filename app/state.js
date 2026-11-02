@@ -1,6 +1,6 @@
-export function createState() {
+export function createState(initial = {}) {
   const listeners = new Set();
-  const state = {
+  let state = {
     themes: [],
     theme: null,
     to: "",
@@ -9,7 +9,6 @@ export function createState() {
     fontId: "fredoka",
     textSize: 18,
     watermark: true,
-    mode: "share",
     giftEnabled: false,
     giftUrl: "",
     birthdayNumberEnabled: false,
@@ -17,24 +16,22 @@ export function createState() {
     paperOverride: "",
     inkOverride: "",
     stickerId: "",
-    stickers: [],
+    fontChosen: false,
+    ...initial,
   };
-
-  function notify() {
-    listeners.forEach((listener) => listener({ ...state }));
-  }
-
   return {
-    get() {
-      return { ...state };
-    },
+    get: () => ({ ...state }),
     set(partial) {
-      Object.assign(state, partial);
-      notify();
+      const changed = Object.keys(partial).filter(
+        (key) => !Object.is(state[key], partial[key]),
+      );
+      if (!changed.length) return;
+      state = { ...state, ...partial };
+      listeners.forEach((listener) => listener({ ...state }, changed));
     },
     subscribe(listener) {
       listeners.add(listener);
-      listener({ ...state });
+      listener({ ...state }, Object.keys(state));
       return () => listeners.delete(listener);
     },
   };

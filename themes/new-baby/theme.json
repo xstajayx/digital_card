@@ -1,9 +1,28 @@
 {
   "id": "new-baby",
-  "name": "New Baby",
-  "occasion": "Welcome Baby",
-  "defaults": {"to": "Little One", "message": "Welcome to the world, tiny star. Wishing your family joy and cuddles.", "from": "With love"},
-  "palette": {"paper": "#f4fbff", "ink": "#274050", "accent": "#7ac7ff", "accent2": "#ffb4d9", "gold": "#ffd670"},
-  "timing": {"balloonsMs": 3000, "insideDelayMs": 2000, "headlineDelayMs": 2200, "subDelayMs": 2550, "fromDelayMs": 2750, "fxStartMs": 2400, "fxStopMs": 8200},
-  "features": {"balloonCurtain": true, "confetti": false, "sparkles": true, "revealType": "balloons", "frameDecor": "balloons", "overlayIntensity": 0.8, "decorType": "balloons", "decorDensity": 16}
+  "occasionId": "new-baby",
+  "occasion": "New Baby",
+  "name": "Hello, little star",
+  "greeting": "Welcome, little one",
+  "group": "Love & family",
+  "symbol": "☾",
+  "style": "celestial",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "Hello, tiny wonder. May your world be full of warmth, cuddles and the sweetest little discoveries.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#eff4f8",
+    "ink": "#3c4b60",
+    "accent": "#a5b9ce",
+    "accent2": "#d9c5a4",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "stars"
+  },
+  "defaultFontId": "quicksand"
 }

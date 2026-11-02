@@ -6,8 +6,14 @@ window.addEventListener("message", (event) => {
     event.data?.type !== "card-fit"
   )
     return;
-  const status = document.getElementById("fitStatus");
-  status.textContent = event.data.valid
+  const valid = event.data.valid === true;
+  document.getElementById("fitStatus").textContent = valid
     ? ""
-    : "Content does not fit this card. Choose smaller text (minimum 14px), or edit your message. All text is preserved; scroll the card to review it.";
+    : event.data.error ||
+      "This message needs more room. Choose smaller text (minimum 14px) or shorten it. All the words are preserved below.";
+  const full = document.getElementById("fullMessage");
+  if (full) {
+    full.hidden = valid;
+    full.open = !valid;
+  }
 });

@@ -1,0 +1,28 @@
+{
+  "id": "love-letters",
+  "occasionId": "love",
+  "occasion": "Love",
+  "name": "Love letters",
+  "greeting": "With all my love",
+  "group": "Love & family",
+  "symbol": "♡",
+  "style": "letter",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "You make the ordinary days feel extraordinary.\n\nSo lucky to have you, today and always.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#f8f1e3",
+    "ink": "#543c39",
+    "accent": "#c08b77",
+    "accent2": "#d2b99b",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "hearts"
+  },
+  "defaultFontId": "pacifico"
+}

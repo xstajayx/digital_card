@@ -1,0 +1,28 @@
+{
+  "id": "new-year",
+  "occasionId": "new-year",
+  "occasion": "New Year",
+  "name": "Midnight magic",
+  "greeting": "Happy New Year",
+  "group": "Seasonal",
+  "symbol": "✧",
+  "style": "celestial",
+  "birthday": false,
+  "milestone": false,
+  "defaults": {
+    "to": "Friend",
+    "message": "Here’s to fresh starts, unexpected joys and the courage to follow a new dream. Wishing you a wonderful year.",
+    "from": "With love"
+  },
+  "palette": {
+    "paper": "#292b44",
+    "ink": "#f7ead0",
+    "accent": "#a18ab9",
+    "accent2": "#c9b385",
+    "gold": "#e7ae43"
+  },
+  "features": {
+    "opening": "confetti"
+  },
+  "defaultFontId": "playfair"
+}

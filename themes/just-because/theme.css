@@ -1,0 +1,8 @@
+/* Little lovely things: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern: radial-gradient(
+    circle at 100% 0,
+    color-mix(in srgb, var(--accent) 25%, transparent) 0 17%,
+    transparent 17.4%
+  );
+}

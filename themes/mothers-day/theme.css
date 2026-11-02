@@ -1,1 +1,14 @@
-.card-root { background: linear-gradient(160deg, rgba(255,240,246,.96), rgba(244,230,255,.96)); }
+/* A garden of love: decorative layers inherit the editable palette. */
+.card-root {
+  --surface-pattern:
+    radial-gradient(
+      ellipse at 0 0,
+      color-mix(in srgb, var(--accent2) 18%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 100% 100%,
+      color-mix(in srgb, var(--accent) 17%, transparent),
+      transparent 45%
+    );
+}
