@@ -1,0 +1,444 @@
+/* Physical cards use the existing message renderer; no scaled-down text canvas. */
+.card-root[data-physical="true"] {
+  background: #eae9e2;
+  background-image: radial-gradient(#9a9b8d14 0.7px, transparent 0.7px);
+  background-size: 5px 5px;
+}
+.card-root[data-physical="true"]::before,
+.card-root[data-physical="true"] > .edge-decor {
+  display: none;
+}
+.physical-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  --inside-paper: #fff7e7;
+  --inside-ink: #453a33;
+  --envelope-paper: #f6e9d6;
+  --envelope-accent: #d6b482;
+  --envelope-ink: #654d38;
+}
+.physical-stage {
+  position: absolute;
+  inset: 10px 12px 82px;
+  perspective: 1300px;
+  overflow: clip;
+  isolation: isolate;
+}
+.paper-book {
+  position: absolute;
+  inset: 12px 5px 18px;
+  transform: translate(-14%, 110px) scale(0.56);
+  transform-origin: center;
+  transform-style: preserve-3d;
+  z-index: 2;
+  filter: drop-shadow(0 14px 12px #493e302b);
+}
+.is-extracted .paper-book {
+  transform: translateX(-25%);
+}
+.is-extracted .paper-book.is-open {
+  transform: none;
+}
+.physical-scene[data-state="envelope"] .paper-book {
+  visibility: hidden;
+}
+.physical-scene[data-state="unsealing"] .paper-book {
+  clip-path: inset(0 0 70% 0);
+}
+.paper-left,
+.paper-right,
+.paper-cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: 1px solid #b8ac9644;
+  border-radius: 4px;
+  background: var(--inside-paper);
+  box-shadow:
+    1px 1px #b9ac92,
+    2px 2px #e6dfcf,
+    3px 3px #b9ac92;
+}
+.paper-left {
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--inside-ink);
+  background-image: linear-gradient(90deg, transparent 85%, #76664e13);
+}
+.paper-right {
+  right: 0;
+  background-image: linear-gradient(90deg, #76664e18, transparent 9%);
+  overflow: hidden;
+}
+.paper-left-art,
+.paper-inside-art {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  opacity: 0.85;
+}
+.paper-cover {
+  right: 0;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+  transform-origin: left;
+  transform-style: preserve-3d;
+  color: var(--ink);
+  font: inherit;
+  z-index: 3;
+  box-shadow:
+    inset 0 0 0 2px #ffffff33,
+    2px 2px #9b8d76,
+    3px 4px 6px #312a2a33;
+}
+.paper-cover:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.paper-front-face,
+.paper-inside-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 20px;
+  overflow: hidden;
+}
+.paper-front-face {
+  background-color: var(--paper);
+  background-image: var(--surface-pattern, none);
+  box-shadow:
+    inset 0 0 0 10px #ffffff22,
+    inset 12px 0 10px -12px #493d3855;
+}
+.paper-inside-face {
+  background: var(--inside-paper);
+  transform: rotateY(180deg);
+  box-shadow: inset -12px 0 15px -15px #493d3877;
+}
+.paper-cover-title {
+  font: 500 30px/1.25 var(--cover-font, "Playfair Display", serif);
+  white-space: pre-wrap;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  flex: 0 0 auto;
+}
+.paper-cover-art {
+  height: 30%;
+  min-height: 65px;
+  max-height: 150px;
+  width: 90%;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.paper-cover-name {
+  font:
+    1rem/1.4 Nunito,
+    sans-serif;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.paper-cover-ornament {
+  font: 24px Georgia;
+  color: inherit;
+  flex: 0 0 auto;
+}
+.paper-cover-brand {
+  font:
+    0.6rem/1.4 Nunito,
+    sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  flex: 0 0 auto;
+}
+.is-open .paper-cover {
+  transform: rotateY(-178deg);
+  pointer-events: none;
+}
+.paper-right > .card {
+  padding: 24px 20px 18px;
+  gap: 10px;
+  background: transparent;
+  color: var(--inside-ink);
+  height: 100%;
+  box-shadow: inset 10px 0 14px -14px #473a3877;
+}
+.paper-right .text-panel {
+  gap: 12px;
+  justify-content: center;
+}
+.paper-right .headline {
+  font: 500 var(--message-size) / 1.5 var(--card-font);
+  text-align: left;
+}
+.paper-right .message {
+  text-align: left;
+  line-height: 1.65;
+}
+.paper-right .from {
+  text-align: left;
+  line-height: 1.8;
+}
+.paper-right .watermark {
+  font-size: 0.55rem;
+  color: var(--inside-ink);
+}
+[data-paper="linen"] .paper-right,
+[data-paper="linen"] .paper-inside-face {
+  background-image:
+    repeating-linear-gradient(0deg, #775f4510 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, #775f4509 0 1px, transparent 1px 5px);
+}
+[data-paper="kraft"] .paper-right,
+[data-paper="kraft"] .paper-inside-face {
+  background-image: repeating-linear-gradient(
+    15deg,
+    #7455310a 0 1px,
+    transparent 1px 5px
+  );
+}
+[data-paper="textured"] .paper-right,
+[data-paper="textured"] .paper-inside-face {
+  background-image: radial-gradient(#816f491a 0.65px, transparent 0.9px);
+  background-size: 3px 4px;
+}
+.paper-envelope-back,
+.paper-envelope-front,
+.paper-envelope-flap {
+  position: absolute;
+  left: calc(50% - 110px);
+  top: calc(50% - 65px);
+  width: 220px;
+  height: 145px;
+  border-radius: 4px;
+}
+.paper-envelope-back {
+  background: var(--envelope-accent);
+  z-index: 0;
+  box-shadow: 0 20px 24px #493e3033;
+}
+.paper-envelope-front {
+  appearance: none;
+  border: 1px solid #88725a33;
+  background:
+    linear-gradient(32deg, var(--envelope-paper) 49.5%, transparent 50%),
+    linear-gradient(-32deg, var(--envelope-paper) 49.5%, transparent 50%);
+  color: var(--envelope-ink);
+  z-index: 4;
+  cursor: pointer;
+  padding: 80px 16px 10px;
+}
+.paper-envelope-front:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.paper-envelope-tag {
+  font:
+    0.85rem/1.3 Nunito,
+    sans-serif;
+  max-height: 45px;
+  overflow: hidden;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.paper-envelope-flap {
+  clip-path: polygon(0 0, 100% 0, 50% 65%);
+  background: linear-gradient(
+    160deg,
+    var(--envelope-paper),
+    var(--envelope-accent)
+  );
+  transform-origin: top;
+  z-index: 5;
+  pointer-events: none;
+  backface-visibility: visible;
+}
+.paper-envelope-seal {
+  position: absolute;
+  z-index: 6;
+  top: 50px;
+  left: calc(50% - 19px);
+  width: 38px;
+  height: 38px;
+  background: #974452;
+  border-radius: 47% 45% 44% 50%;
+  color: #ffe2cf;
+  box-shadow:
+    inset 0 0 0 3px #ffffff22,
+    0 2px 5px #0003;
+  font: 24px/38px Georgia;
+  pointer-events: none;
+}
+.paper-envelope-front .paper-envelope-seal {
+  top: 48px;
+}
+.is-extracted .paper-envelope-back,
+.is-extracted .paper-envelope-front,
+.is-extracted .paper-envelope-flap {
+  visibility: hidden;
+}
+.paper-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3px;
+  color: #34483b;
+}
+.paper-controls button,
+.paper-reader button {
+  min-height: 44px;
+  font:
+    700 0.75rem Nunito,
+    sans-serif;
+  border: 1px solid #acb6a6;
+  background: #fffdf6;
+  color: #34483b;
+  border-radius: 24px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.paper-controls button:focus-visible,
+.paper-envelope-front:focus-visible,
+.paper-cover:focus-visible {
+  outline: 3px solid #a85b43;
+  outline-offset: 3px;
+}
+.paper-controls .paper-read {
+  border-color: transparent;
+  background: transparent;
+  text-decoration: underline;
+}
+.paper-reader {
+  max-width: 95%;
+  width: 580px;
+  max-height: 94%;
+  border: 1px solid #c8bb9f;
+  border-radius: 10px;
+  padding: 24px;
+  background: #fffaf0;
+  color: #40372f;
+  font:
+    1.125rem/1.8 Nunito,
+    sans-serif;
+  overflow: auto;
+}
+.paper-reader::backdrop {
+  background: #31382b99;
+}
+.paper-reader-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-top: 20px;
+}
+@media (max-width: 500px) {
+  .paper-book {
+    inset: 12px 8px 16px;
+  }
+  .paper-left {
+    display: none;
+  }
+  .paper-right,
+  .paper-cover {
+    width: 100%;
+  }
+  .paper-front-face {
+    padding: 28px;
+  }
+  .paper-right > .card {
+    padding: 24px;
+  }
+  .paper-stage {
+    perspective: 900px;
+  }
+  .paper-controls button {
+    font-size: 0.7rem;
+    padding-inline: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .physical-scene * {
+    transition: none !important;
+  }
+}
+
+.physical-stage > .paper-envelope-seal {
+  top: calc(50% - 17px);
+  left: calc(50% - 19px);
+}
+.is-extracted .paper-envelope-seal {
+  visibility: hidden;
+}
+@media (max-width: 500px) {
+  .paper-book {
+    transform: translateY(110px) scale(0.56);
+  }
+  .is-extracted .paper-book {
+    transform: none;
+  }
+}
+
+.paper-right .gift-button {
+  color: var(--inside-ink);
+  background: var(--inside-paper);
+}
+
+.paper-cover-title {
+  max-width: 100%;
+}
+
+.paper-too-long {
+  display: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 28px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--inside-ink);
+  font:
+    1rem/1.7 Nunito,
+    sans-serif;
+}
+.card-root[data-physical="true"][data-fits="false"] .paper-too-long {
+  display: flex;
+}
+/* Keep the reading controls in the iframe viewport even for very long letters. */
+.paper-reader {
+  position: fixed;
+  inset: 12px;
+  width: calc(100% - 24px);
+  max-width: none;
+  height: calc(100% - 24px);
+  max-height: none;
+  margin: 0;
+  overflow: auto;
+  box-sizing: border-box;
+}
+.paper-reader-close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.paper-book:not(.is-open) .paper-left {
+  visibility: hidden;
+}
+/* Once the flap is open, the emerging cover passes in front of it. */
+.physical-scene[data-state="extracting"] .paper-envelope-flap {
+  z-index: 1;
+}

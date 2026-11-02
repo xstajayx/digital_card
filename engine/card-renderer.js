@@ -1,3 +1,4 @@
+import { createPhysicalCard } from "./physical-card.js";
 import { createOpening } from "./openings/controller.js";
 import { illustration, illustrationUrl } from "./illustrations.js";
 import { sanitizeGiftUrl } from "./sanitize.js";
@@ -67,7 +68,15 @@ function stopAnimations() {
   animations = [];
 }
 const openingController = createOpening(root);
+const physical = createPhysicalCard(root, card, () => revealEffects());
+window.physicalStage = (stage) => physical.preview(stage);
 function replay() {
+  if (physical.enabled) {
+    openingController.reset("none", () => {});
+    stopAnimations();
+    physical.reset();
+    return;
+  }
   if (
     !openingController.reset(
       data.openingConfig?.type || data.features?.opening,
@@ -83,20 +92,22 @@ function revealEffects() {
   stopAnimations();
   root.dataset.replays = String(Number(root.dataset.replays || 0) + 1);
   if (
+    (physical.enabled && !data.physicalConfig.effects) ||
     motion.matches ||
     root.dataset.fits !== "true" ||
     typeof card.animate !== "function"
   )
     return;
-  animations.push(
-    card.animate(
-      [
-        { opacity: 0, transform: "scale(.98)" },
-        { opacity: 1, transform: "scale(1)" },
-      ],
-      { duration: 650, easing: "cubic-bezier(.2,.7,.3,1)" },
-    ),
-  );
+  if (!physical.enabled)
+    animations.push(
+      card.animate(
+        [
+          { opacity: 0, transform: "scale(.98)" },
+          { opacity: 1, transform: "scale(1)" },
+        ],
+        { duration: 650, easing: "cubic-bezier(.2,.7,.3,1)" },
+      ),
+    );
   const type = selectedEffect(data);
   $("openingEffects")
     .querySelectorAll(".particle")
@@ -179,6 +190,7 @@ function selectedEffect(card) {
 window.setCardData = (next) => {
   if (!/^[a-z0-9-]+$/.test(next.themeId)) return;
   const changedTheme = next.themeId !== data.themeId;
+  const changedPhysical = !!next.physicalConfig !== !!data.physicalConfig;
   const changedOpening = next.openingConfig?.type !== data.openingConfig?.type;
   const changedEffect = selectedEffect(next) !== selectedEffect(data);
   data = next;
@@ -200,7 +212,7 @@ window.setCardData = (next) => {
         ? selectedEffect(data)
         : "fade",
     );
-  if (changedOpening) pendingOpening = true;
+  if (changedOpening || changedPhysical) pendingOpening = true;
   openingController.configure(
     data.openingConfig || {},
     data.recipient,
@@ -232,6 +244,8 @@ window.setCardData = (next) => {
     setText("giftDomain", new URL(gift).hostname.replace(/^www\./, ""));
   } else $("giftButton").removeAttribute("href");
   $("watermark").hidden = !data.watermark;
+  physical.update(data);
+  if (physical.enabled) root.dataset.font = data.physicalConfig.handwriting;
   queueFit();
 };
 function sizes(size, preferred) {
@@ -266,6 +280,10 @@ function fits() {
 async function measure(generation) {
   await themeReady;
   await document.fonts.load(getComputedStyle($("message")).font);
+  if (physical.enabled) {
+    await document.fonts.load(getComputedStyle($("from")).font);
+    await physical.readyFonts();
+  }
   await document.fonts.ready;
   if (generation !== version) return;
   if (themeError) throw new Error("Design stylesheet unavailable.");
@@ -275,13 +293,26 @@ async function measure(generation) {
   let size = preferred;
   sizes(size, preferred);
   while (!fits() && size > 14) sizes(--size, preferred);
-  const valid = fits();
+  const valid = fits() && (!physical.enabled || physical.fitCover());
   root.dataset.fits = String(valid);
   root.dataset.ready = "true";
   root.dataset.fitSize = String(size);
   root.dataset.measuredVersion = String(generation);
   $("overflowNotice").hidden = valid;
-  parent.postMessage({ type: "card-fit", valid, size }, location.origin);
+  parent.postMessage(
+    {
+      type: "card-fit",
+      valid,
+      size,
+      ...(physical.enabled && !valid
+        ? {
+            error:
+              "The cover or inside page needs more room. Shorten the cover greeting or message, or choose smaller text. Read comfortably preserves every word.",
+          }
+        : {}),
+    },
+    location.origin,
+  );
   if (pendingOpening) {
     pendingOpening = false;
     replay();

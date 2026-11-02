@@ -403,3 +403,78 @@ test("email and SMS drafts preserve complete links and never invoke delivery", (
   assert.equal(query.get("bcc"), null);
   assert.ok(decodeURIComponent(smsDraft(url)).includes(url));
 });
+
+import {
+  PAPERS,
+  defaultPhysical,
+  validatePhysical,
+} from "../engine/physical-schema.js";
+test("v5 folded document round-trips separate cover/inside fields and v4 stays unchanged", async () => {
+  const card = {
+    ...sample,
+    v: 5,
+    openingConfig: defaultOpening("envelope"),
+    physicalConfig: {
+      ...defaultPhysical(),
+      coverGreeting: "A little hello, Maya 💌",
+      coverArt: "purple-cake",
+      insideArt: "blue-cake",
+      paper: "linen",
+    },
+  };
+  for (const compress of [false, true]) {
+    const payload = await encodeCard(card, { compress });
+    assert.match(payload, /^5[uz]\./);
+    const decoded = await decodeCard(payload);
+    assert.deepEqual(decoded, card);
+    assert.deepEqual(
+      validateCard(decoded, themes).physicalConfig,
+      card.physicalConfig,
+    );
+  }
+  const v4 = { ...sample, v: 4, openingConfig: defaultOpening() };
+  assert.deepEqual(await decodeCard(await encodeCard(v4)), v4);
+});
+test("all six paper surfaces have readable ink and physical artwork/fields are strictly validated", () => {
+  for (const colors of Object.values(PAPERS))
+    assert.ok(contrastRatio(...colors) >= 4.5);
+  for (const partial of [
+    { paper: "url(x)" },
+    { coverGreeting: {} },
+    { coverGreeting: "x".repeat(161) },
+    { coverArt: "https://evil.example/a.svg" },
+    { insideArt: "../../secret.svg" },
+    { handwriting: "evil" },
+    { signature: "evil" },
+    { effects: "yes" },
+  ])
+    assert.throws(() =>
+      validatePhysical({ ...defaultPhysical(), ...partial }, sample.themeId),
+    );
+  assert.equal(
+    validatePhysical(
+      { ...defaultPhysical(), insideArt: "", coverArt: "none" },
+      sample.themeId,
+    ).coverArt,
+    "none",
+  );
+});
+test("folded documents require a valid envelope and sensible message limits", async () => {
+  const card = {
+    ...sample,
+    v: 5,
+    openingConfig: defaultOpening(),
+    physicalConfig: defaultPhysical(),
+  };
+  for (const openingConfig of [
+    null,
+    defaultOpening("gift-box"),
+    defaultOpening("none"),
+  ]) {
+    assert.throws(() => validateCard({ ...card, openingConfig }, themes));
+    await assert.rejects(encodeCard({ ...card, openingConfig }));
+  }
+  assert.throws(() =>
+    validateCard({ ...card, message: "x".repeat(6001) }, themes),
+  );
+});

@@ -3,9 +3,13 @@ window.addEventListener("message", (event) => {
   if (
     event.origin !== location.origin ||
     event.source !== frame?.contentWindow ||
-    event.data?.type !== "card-fit"
+    !["card-fit", "card-reader-open"].includes(event.data?.type)
   )
     return;
+  if (event.data.type === "card-reader-open") {
+    frame.scrollIntoView({ block: "start", behavior: "instant" });
+    return;
+  }
   const valid = event.data.valid === true;
   document.getElementById("fitStatus").textContent = valid
     ? ""

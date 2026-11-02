@@ -104,6 +104,15 @@ export function createUI({ state, preview }) {
     state.set({
       ...copy,
       theme,
+      ...(current.physicalConfig
+        ? {
+            physicalConfig: {
+              ...current.physicalConfig,
+              coverArt: "",
+              insideArt: "default",
+            },
+          }
+        : {}),
       stickerId: "",
       paperOverride: "",
       inkOverride: "",
@@ -274,6 +283,7 @@ export function createUI({ state, preview }) {
       fontId: state.get().theme.defaultFontId || "fredoka",
       fontChosen: false,
       openingConfig: null,
+      physicalConfig: null,
       textSize: 18,
       paperOverride: "",
       inkOverride: "",
@@ -417,7 +427,10 @@ export function createUI({ state, preview }) {
           "Content does not fit. Choose smaller text or shorten the message before sharing.",
         );
       const card = validateCard(
-        { ...cardContent(current), v: current.openingConfig ? 4 : 3 },
+        {
+          ...cardContent(current),
+          v: current.physicalConfig ? 5 : current.openingConfig ? 4 : 3,
+        },
         themes,
       );
       const url = await buildShareUrl(card);

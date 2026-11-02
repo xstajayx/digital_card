@@ -22,7 +22,7 @@ export function bindDrafts(state) {
         KEY,
         JSON.stringify({
           ...content,
-          v: s.openingConfig ? 4 : 3,
+          v: s.physicalConfig ? 5 : s.openingConfig ? 4 : 3,
           themeId: theme.id,
         }),
       );
@@ -40,6 +40,7 @@ export function bindDrafts(state) {
       state.set({
         ...card,
         openingConfig: card.openingConfig || null,
+        physicalConfig: card.physicalConfig || null,
         birthdayNumberEnabled: !!card.birthdayNumber,
         giftEnabled: raw.giftEnabled === true && !!card.giftUrl,
         fontChosen: true,

@@ -1,3 +1,5 @@
+import { validatePhysical } from "./physical-schema.js";
+import { defaultOpening } from "./openings/config.js";
 import { validateOpening } from "./openings/config.js";
 import { sanitizeGiftUrl } from "./sanitize.js";
 import { illustration } from "./illustrations.js";
@@ -23,7 +25,7 @@ export function ordinal(value) {
 export function validateCard(raw, themes) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw))
     throw new Error("Invalid card data.");
-  if (raw.v != null && ![1, 2, 3, 4].includes(raw.v))
+  if (raw.v != null && ![1, 2, 3, 4, 5].includes(raw.v))
     throw new Error("This card version is not supported yet.");
   const theme = themes.find((t) => t.id === raw.themeId);
   if (!theme) throw new Error("This card design is unavailable.");
@@ -39,10 +41,15 @@ export function validateCard(raw, themes) {
     typeof raw[key] === "string" && /^#[0-9a-f]{6}$/i.test(raw[key])
       ? raw[key]
       : "";
+  if (raw.v === 5 && validateOpening(raw.openingConfig).type !== "envelope")
+    throw new Error("Folded cards require an envelope.");
   return {
     v: raw.v || 1,
-    ...(raw.v === 4
+    ...(raw.v >= 4
       ? { openingConfig: validateOpening(raw.openingConfig) }
+      : {}),
+    ...(raw.v === 5
+      ? { physicalConfig: validatePhysical(raw.physicalConfig, theme.id) }
       : {}),
     theme,
     themeId: theme.id,
@@ -74,6 +81,20 @@ export function cardContent(current) {
   return {
     ...current,
     themeId: current.theme.id,
+    coverDefault: greetingFor(
+      current.theme,
+      "",
+      current.birthdayNumberEnabled ?? !!current.birthdayNumber,
+      current.birthdayNumber,
+    ),
+    ...(current.physicalConfig
+      ? {
+          openingConfig: {
+            ...(current.openingConfig || defaultOpening()),
+            type: "envelope",
+          },
+        }
+      : {}),
     recipient: current.to,
     headline: greetingFor(
       current.theme,
