@@ -97,3 +97,7 @@ Opening, wrapping palette, seal and celebration can now be chosen independently 
 ## Physical folded-card release
 
 Personalise now offers an opt-in paper-card journey: an addressed envelope extracts the actual illustrated cover, which opens to a separate handwritten inside page. Choose cover/inside art, cover greeting, six paper surfaces and signature style. Use close/reopen, full Replay, Skip or Read comfortably. Narrow layouts show a full-width reading page. New paper cards use validated v5 links and drafts; all v1–v4 paths remain available. Run `python3 -u tests/physical.py` in addition to the existing four commands. See [the physical-card delivery and compatibility notes](docs/PHYSICAL_CARD_DELIVERY.md). No backend, upload, paid service or DNS change is required.
+
+## Responsive layout regression checks
+
+Run `python3 -u tests/responsive.py` alongside the existing suites. It checks all five steps and public pages at 320–1440px plus landscape sizes, control/container bounds, 200% text, focus/footer clearance and iframe actions. Optional `RESPONSIVE_BASELINE_REF=d66832f` captures the historical clipped-control reproduction when that commit is available. See [the measured mobile-layout fixes and screenshots](docs/RESPONSIVE_FIX.md).
