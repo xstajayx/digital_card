@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#faf7f1" />
+    <title>My Occasions · Silent Hello</title>
+    <link rel="icon" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="./assets/fonts.css" />
+    <link rel="stylesheet" href="./assets/app.css" />
+    <link rel="stylesheet" href="./assets/shop.css" />
+    <link rel="stylesheet" href="./assets/occasions.css" />
+  </head>
+  <body class="occasions-page">
+    <a class="skip-link" href="#myOccasions">Skip to occasions</a>
+    <header class="shop-nav">
+      <a class="wordmark" href="./"
+        >Silent Hello<span>A LITTLE MESSAGE. A BIG SMILE.</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="./#catalogue">Find a card</a
+        ><a href="./occasions.html" aria-current="page">My Occasions</a
+        ><a href="./studio.html">Create a card</a>
+      </nav>
+    </header>
+    <main id="myOccasions" class="occasions-main">
+      <section class="occasions-intro" aria-labelledby="occasionsTitle">
+        <p class="eyebrow">LITTLE DATES. LOVELY CONNECTIONS.</p>
+        <h1 id="occasionsTitle">Keep their day close.</h1>
+        <p>A place for the birthdays and anniversaries you want to remember.</p>
+        <button id="addOccasion" class="button primary" type="button">
+          Add an occasion
+        </button>
+      </section>
+      <aside class="occasion-privacy" aria-label="About your local reminders">
+        <strong>Just on this device, just for you.</strong>
+        <p>
+          Stored only in this browser on this device. No automatic emails,
+          browser notifications or card messages. Clearing browser data removes
+          your occasions; private browsing may not keep them.
+        </p>
+        <p>
+          Download an event to use your calendar. Check imported dates and
+          alerts; support varies by app.
+        </p>
+      </aside>
+      <section aria-labelledby="upcomingTitle">
+        <div class="occasions-list-heading">
+          <h2 id="upcomingTitle">Your upcoming occasions</h2>
+          <label class="occasion-check"
+            ><input id="calendarAlarm" type="checkbox" checked /> Include an
+            advance calendar alert</label
+          >
+        </div>
+        <p id="occasionStatus" role="status" aria-live="polite"></p>
+        <p id="occasionError" class="occasion-error" role="alert"></p>
+        <div id="occasionList" class="occasion-list"></div>
+        <div id="emptyOccasions" class="occasions-empty" hidden>
+          <span aria-hidden="true">♡</span>
+          <h3>A little space for your people.</h3>
+          <p>Add a birthday or anniversary to get started.</p>
+        </div>
+      </section>
+      <section id="pastOccasions" hidden aria-labelledby="pastTitle">
+        <h2 id="pastTitle">Past one-time occasions</h2>
+        <p>
+          These will not repeat. Edit the date or choose annual recurrence to
+          use them again.
+        </p>
+        <div id="pastOccasionList" class="occasion-list"></div>
+      </section>
+      <p class="occasion-note">
+        29 February occasions recur on leap days only. Dates use your device’s
+        local calendar. No account or email subscription is created.
+      </p>
+    </main>
+    <dialog
+      id="deleteOccasionDialog"
+      class="occasion-dialog"
+      aria-labelledby="deleteOccasionTitle"
+    >
+      <h2 id="deleteOccasionTitle">Delete this occasion?</h2>
+      <p id="deleteOccasionName"></p>
+      <p>
+        This removes it from this browser. Any event already imported into your
+        calendar must be deleted there separately.
+      </p>
+      <div class="occasion-form-actions">
+        <button
+          id="cancelDeleteOccasion"
+          class="button"
+          type="button"
+          autofocus
+        >
+          Keep occasion</button
+        ><button id="confirmDeleteOccasion" class="button" type="button">
+          Delete occasion
+        </button>
+      </div>
+    </dialog>
+    <footer class="shop-footer">
+      <a class="wordmark" href="./">Silent Hello</a
+      ><a href="./information.html#privacy">Privacy</a>
+    </footer>
+    <noscript
+      ><p class="noscript">
+        Enable JavaScript to save occasions locally and download calendar
+        events.
+      </p></noscript
+    >
+    <script type="module" src="./app/occasions.js"></script>
+  </body>
+</html>
