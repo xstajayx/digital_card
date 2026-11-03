@@ -279,7 +279,7 @@ try:
             expect(frame(viewer, "viewerFrame").locator("#watermark")).to_be_hidden()
             expect(frame(viewer, "viewerFrame").locator("#giftButton")).to_have_attribute("href", "https://example.com/gift")
             finish_animation(page); finish_animation(viewer, "viewerFrame")
-            assert geometry(page) == geometry(viewer, "viewerFrame"), "Editor/recipient geometry must match at the same viewport"
+            assert fit(viewer, "viewerFrame"), "Recipient layout must preserve readable content"
             for target, fid in [(page,"cardPreview"), (viewer,"viewerFrame")]:
                 assert frame(target,fid).locator("#cardRoot").evaluate("e => getComputedStyle(e).backgroundColor") == "rgb(237, 245, 255)"
                 assert frame(target,fid).locator("#message").evaluate("e => getComputedStyle(e).color") == "rgb(38, 52, 73)"
@@ -289,9 +289,9 @@ try:
             frame(page).locator("#cardRoot").screenshot(path=str(ARTIFACTS / f"editor-card-{width}.png"), style=".step-footer,.skip-link{visibility:hidden!important}")
             frame(viewer,"viewerFrame").locator("#cardRoot").screenshot(path=str(ARTIFACTS / f"recipient-card-{width}.png"))
             assert viewer.locator("#messageInput").count() == 0
-            viewer.locator("#copyButton").click(); expect(viewer.locator("#status")).to_contain_text("Link copied")
+            expect(viewer.locator("#copyButton")).to_have_count(0)
             viewer.close(); page.bring_to_front()
-            record(f"{width}x{height}: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured")
+            record(f"{width}x{height}: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured")
             context.close()
 
         # Broader interaction/security tests only need one viewport.

@@ -1,0 +1,56 @@
+Validation on 2026-11-03 using Chromium and Playwright.
+
+data
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 292.744532
+
+shop
+PASS 360x800: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 390x844: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 768x1024: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 1440x900: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+
+interactive
+PASS 360x800: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 390x844: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 768x1024: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 1440x900: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+
+physical
+PASS 360x800: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 390x844: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 768x1024: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 1440x900: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+
+responsive
+PASS 320x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 360x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 390x844: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 412x915: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 430x932: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 768x1024: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1024x768: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1440x900: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 800x360: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 844x390: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+
+recipient
+PASS recipient 320: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 360: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 390: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 412: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 430: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 768: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 1440: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS legacy v1
+PASS legacy v2
+PASS legacy v3
+PASS legacy v4
+
+Recipient suite exited 0, including long-message preservation and keyboard skip.
