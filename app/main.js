@@ -1,4 +1,5 @@
 import "./responsive.js";
+import { bindPreparedEditor } from "./prepared-editor.js";
 import { bindPhotoEditor } from "./photo-card.js";
 import { bindPhysicalPicker } from "./physical-picker.js";
 import { bindOpeningPicker } from "./opening-picker.js";
@@ -29,6 +30,7 @@ async function init() {
     bindDrafts(state, photos);
     bindOpeningPicker(state);
     bindPhysicalPicker(state, preview);
+    bindPreparedEditor(state, preview, photos);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

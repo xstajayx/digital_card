@@ -1,3 +1,4 @@
+import { bindContactFields } from "./contact-fields.js";
 import { nextDate, saveOccasion } from "../engine/occasions.js";
 // This sender-only module is never imported by the recipient page.
 export function createOccasionDialog(onSaved = () => {}) {
@@ -7,8 +8,8 @@ export function createOccasionDialog(onSaved = () => {}) {
   dialog.setAttribute("aria-describedby", "occasionPrivacy");
   dialog.innerHTML = `<form class="occasion-form">
     <div class="occasion-dialog-heading"><h2 id="occasionDialogTitle">Remember a little moment</h2><button class="button" type="button" data-close aria-label="Close reminder dialog">Close</button></div>
-    <p class="occasion-note" id="occasionPrivacy">Saved in this browser on this device. No automatic emails or card messages.</p>
-    <label>Nickname<input name="nickname" required maxlength="80" autocomplete="off" /></label>
+    <p class="occasion-note" id="occasionPrivacy">Saved in this browser on this device. No unattended preparation or automatic emails. Optional contact details and default greetings stay local.</p>
+    <label>Nickname<input name="nickname" maxlength="80" autocomplete="off" /></label>
     <label>Occasion<select name="kind"><option value="birthday">Birthday</option><option value="anniversary">Anniversary</option></select></label>
     <fieldset><legend>Choose or confirm the occasion date</legend><div class="occasion-date"><label>Day<input name="day" type="number" min="1" max="31" inputmode="numeric" required /></label><label>Month<select name="month" required><option value="">Choose month</option></select></label></div></fieldset>
     <p class="occasion-note">Choose their actual date. 29 February repeats on leap days only.</p>
@@ -22,6 +23,7 @@ export function createOccasionDialog(onSaved = () => {}) {
   const form = dialog.querySelector("form"),
     fields = form.elements,
     error = dialog.querySelector("[data-error]");
+  const assistant = bindContactFields(form);
   for (let month = 1; month <= 12; month++) {
     const option = document.createElement("option");
     option.value = month;
@@ -49,10 +51,12 @@ export function createOccasionDialog(onSaved = () => {}) {
         !annual &&
         editing.month === month &&
         editing.day === day;
+      const enhanced = assistant.value();
       const item = saveOccasion({
         id: editing?.id || crypto.randomUUID(),
         revision: editing?.revision || 0,
-        nickname: fields.nickname.value,
+        nickname: fields.nickname.value.trim() || enhanced.name.slice(0, 80),
+        ...(enhanced.profile ? { profile: enhanced.profile } : {}),
         kind: fields.kind.value,
         month,
         day,
@@ -81,6 +85,7 @@ export function createOccasionDialog(onSaved = () => {}) {
       fields.month.value = item?.month || "";
       fields.annual.checked = item ? item.annual : true;
       fields.reminderDays.value = item?.reminderDays || 7;
+      assistant.open(item);
       dialog.showModal();
       fields.nickname.focus();
     },

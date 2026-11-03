@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>My Prepared Cards · Silent Hello</title>
+    <link rel="icon" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="./assets/fonts.css" />
+    <link rel="stylesheet" href="./assets/app.css" />
+    <link rel="stylesheet" href="./assets/shop.css" />
+    <link rel="stylesheet" href="./assets/occasions.css" />
+    <link rel="stylesheet" href="./assets/assistant.css" />
+  </head>
+  <body class="assistant-page">
+    <a class="skip-link" href="#preparedMain">Skip to prepared cards</a>
+    <header class="shop-nav">
+      <a class="wordmark" href="./"
+        >Silent Hello<span>A LITTLE MESSAGE. A BIG SMILE.</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="./#catalogue">Find a card</a
+        ><a href="./occasions.html">Family & Friends</a
+        ><a href="./prepared.html" aria-current="page">My Prepared Cards</a>
+      </nav>
+    </header>
+    <main id="preparedMain" class="assistant-main">
+      <p class="eyebrow">THOUGHTFULLY PREPARED. STILL YOUR WORDS.</p>
+      <h1>A little hello, ready for you.</h1>
+      <p>
+        Illustrated cards prepared from your saved occasions. Review,
+        personalise and share them when you choose.
+      </p>
+      <aside class="occasion-privacy">
+        <strong>Local demonstration · nothing is sent automatically.</strong>
+        <p>
+          Preparation runs only when you visit this site, in this browser. It
+          cannot run while the browser is closed. Names, dates, optional emails,
+          greetings and card drafts stay on this device. Clearing browser data
+          may remove them. Clipboard sharing does not confirm delivery.
+        </p>
+        <p>
+          Review is required before sharing here, even if you save a different
+          preference for a future delivery service. No account, email
+          verification, notification or recipient email delivery is active.
+        </p>
+      </aside>
+      <section class="assistant-panel" aria-labelledby="settingsTitle">
+        <h2 id="settingsTitle">Your local assistant</h2>
+        <form id="assistantSettings" class="assistant-settings">
+          <label
+            >Your signature (optional)<input
+              id="assistantSender"
+              maxlength="120"
+              autocomplete="name" /></label
+          ><label
+            >Timezone<input
+              id="assistantTimezone"
+              required
+              list="timezones" /><datalist id="timezones">
+              <option value="Europe/London"></option>
+              <option value="America/New_York"></option>
+              <option value="America/Los_Angeles"></option>
+              <option value="Asia/Tokyo"></option>
+              <option value="Australia/Sydney"></option>
+              <option value="UTC"></option></datalist></label
+          ><label
+            >Keep past drafts/history<select id="assistantRetention">
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+              <option value="365">365 days</option>
+            </select></label
+          ><label
+            ><input id="assistantDemo" type="checkbox" /> Prepare on visits for
+            enabled contacts</label
+          ><button class="button primary" type="submit">
+            Save assistant settings
+          </button>
+        </form>
+        <p class="occasion-note">
+          Each contact also needs preparation enabled. Default lead time is
+          seven days. At most 20 eligible cards are prepared per visit; use
+          Prepare upcoming to process another batch. Future cards are kept;
+          cancelled and past history follow the retention period.
+        </p>
+        <button id="prepareUpcoming" class="button" type="button">
+          Prepare upcoming
+        </button>
+      </section>
+      <p id="preparedStatus" role="status" aria-live="polite"></p>
+      <p id="preparedError" class="occasion-error" role="alert"></p>
+      <section class="assistant-panel">
+        <h2>Upcoming people and occasions</h2>
+        <div id="assistantUpcoming" class="prepared-list"></div>
+      </section>
+      <section aria-labelledby="cardsTitle">
+        <h2 id="cardsTitle">My Prepared Cards</h2>
+        <p id="preparedEmpty" hidden>
+          No cards yet. Add an occasion or choose Prepare now above.
+        </p>
+        <div id="preparedList" class="prepared-list"></div>
+      </section>
+    </main>
+    <dialog
+      id="preparedPreview"
+      class="prepared-dialog"
+      aria-labelledby="previewTitle"
+    >
+      <button id="closePreparedPreview" class="button" type="button">
+        Close preview
+      </button>
+      <h2 id="previewTitle">Your prepared card</h2>
+      <p id="preparedFitStatus" role="status"></p>
+      <div class="preview-card-frame">
+        <iframe
+          id="preparedFrame"
+          title="Prepared greeting card preview"
+        ></iframe>
+      </div>
+    </dialog>
+    <dialog
+      id="preparedConfirm"
+      class="occasion-dialog"
+      aria-labelledby="confirmTitle"
+    >
+      <h2 id="confirmTitle"></h2>
+      <p id="confirmMessage"></p>
+      <button id="confirmCancel" class="button" type="button" autofocus>
+        Keep card</button
+      ><button id="confirmAction" class="button" type="button">Continue</button>
+    </dialog>
+    <footer class="shop-footer">
+      <a class="wordmark" href="./">Silent Hello</a
+      ><a href="./information.html#privacy">Privacy</a>
+    </footer>
+    <noscript
+      ><p class="noscript">
+        Enable JavaScript to prepare and review local drafts.
+      </p></noscript
+    >
+    <script type="module" src="./app/prepared.js"></script>
+  </body>
+</html>

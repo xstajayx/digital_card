@@ -1,4 +1,5 @@
-// Local calendar dates: no birth year, card text, email address or share URL.
+// Calendar primitives and backwards-compatible occasion storage.
+import { CONTACTS_KEY, validateProfile } from "./contact-profile.js";
 export const STORAGE_KEY = "silent-hello.occasions.v1";
 const kinds = new Set(["birthday", "anniversary"]);
 const encoder = new TextEncoder();
@@ -67,7 +68,14 @@ export function validateOccasion(input) {
     throw new Error("The occasion version is invalid.");
   if (!input.annual && !validDay(input.month, input.day, input.year))
     throw new Error("This one-time occasion needs a valid year.");
-  // Explicit allowlist: unknown fields, including card messages, never persist.
+  if (
+    input.profile?.originYear != null &&
+    !validDay(input.month, input.day, input.profile.originYear)
+  )
+    throw new Error(
+      "That birth/anniversary date does not exist in the chosen year.",
+    );
+  // Unknown fields are not persisted. Greeting preferences are explicitly opt-in.
   return {
     id: input.id,
     nickname: input.nickname.trim(),
@@ -78,6 +86,9 @@ export function validateOccasion(input) {
     year: input.annual ? null : input.year,
     reminderDays: input.reminderDays,
     revision: input.revision,
+    ...(input.profile
+      ? { profile: validateProfile(input.profile, input.nickname) }
+      : {}),
   };
 }
 export function occurrence(input, today = localToday()) {
@@ -100,10 +111,13 @@ function browserStorage(storage) {
   }
 }
 export function readOccasions(storage) {
-  let raw;
+  let raw,
+    extended = false;
   try {
     storage = browserStorage(storage);
-    raw = storage.getItem(STORAGE_KEY);
+    const current = storage.getItem(CONTACTS_KEY);
+    extended = current !== null;
+    raw = extended ? current : storage.getItem(STORAGE_KEY);
   } catch {
     throw new Error(
       "Browser storage is unavailable. Allow local storage to save occasions on this device.",
@@ -113,7 +127,7 @@ export function readOccasions(storage) {
   try {
     const data = JSON.parse(raw);
     if (
-      data.version !== 1 ||
+      data.version !== (extended ? 2 : 1) ||
       !Array.isArray(data.items) ||
       data.items.length > 500
     )
@@ -145,15 +159,34 @@ export function saveOccasion(input, storage) {
     throw new Error(
       "You have 500 occasions. Delete an occasion before adding another.",
     );
-  const saved = { ...item, revision: item.revision + 1 };
+  const saved = {
+    ...item,
+    ...(index >= 0 && items[index].profile && !item.profile
+      ? { profile: items[index].profile }
+      : {}),
+    revision: item.revision + 1,
+  };
   if (index < 0) items.push(saved);
   else items[index] = saved;
-  write(items, storage);
+  writeOccasions(items, storage);
   return saved;
 }
-function write(items, storage) {
+export function writeOccasions(items, storage) {
+  storage = browserStorage(storage);
+  items = items.map(validateOccasion);
+  if (
+    items.length > 500 ||
+    new Set(items.map((i) => i.id)).size !== items.length
+  )
+    throw new Error("Import at most 500 unique occasions.");
   try {
-    storage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, items }));
+    const extended =
+      storage.getItem(CONTACTS_KEY) !== null ||
+      items.some((item) => item.profile);
+    storage.setItem(
+      extended ? CONTACTS_KEY : STORAGE_KEY,
+      JSON.stringify({ version: extended ? 2 : 1, items }),
+    );
   } catch {
     throw new Error(
       "This browser could not save the change. Storage may be full or blocked. Your previous occasions are unchanged.",
@@ -163,10 +196,30 @@ function write(items, storage) {
 export function deleteOccasion(id, storage) {
   storage = browserStorage(storage);
   const items = readOccasions(storage);
-  write(
+  writeOccasions(
     items.filter((i) => i.id !== id),
     storage,
   );
+  // Explicit deletion also removes the migrated person's legacy recovery copy.
+  try {
+    if (storage.getItem(CONTACTS_KEY) !== null) {
+      const raw = storage.getItem(STORAGE_KEY);
+      if (raw !== null) {
+        const backup = JSON.parse(raw);
+        if (backup.version !== 1 || !Array.isArray(backup.items))
+          throw new Error();
+        storage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            version: 1,
+            items: backup.items.filter((item) => item.id !== id),
+          }),
+        );
+      }
+    }
+  } catch {
+    return { recoveryCopyRetained: true };
+  }
 }
 export function escapeText(text) {
   return text

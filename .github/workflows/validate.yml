@@ -19,6 +19,7 @@ jobs:
       - run: node tests/data.mjs
       - run: node tests/occasions.mjs
       - run: node tests/photo.mjs
+      - run: node tests/assistant.mjs
       - run: python -m pip install -r requirements-dev.txt
       - run: python -m playwright install --with-deps chromium
       - run: python -u tests/browser.py
@@ -32,6 +33,7 @@ jobs:
       - run: python -u tests/calendar_ics.py
       - run: python -u tests/occasions.py
       - run: python -u tests/photo.py
+      - run: python -u tests/assistant.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

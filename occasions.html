@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./assets/app.css" />
     <link rel="stylesheet" href="./assets/shop.css" />
     <link rel="stylesheet" href="./assets/occasions.css" />
+    <link rel="stylesheet" href="./assets/assistant.css" />
   </head>
   <body class="occasions-page">
     <a class="skip-link" href="#myOccasions">Skip to occasions</a>
@@ -23,6 +24,7 @@
       <nav aria-label="Main navigation">
         <a href="./#catalogue">Find a card</a
         ><a href="./occasions.html" aria-current="page">My Occasions</a
+        ><a href="./prepared.html">My Prepared Cards</a
         ><a href="./studio.html">Create a card</a>
       </nav>
     </header>
@@ -30,7 +32,10 @@
       <section class="occasions-intro" aria-labelledby="occasionsTitle">
         <p class="eyebrow">LITTLE DATES. LOVELY CONNECTIONS.</p>
         <h1 id="occasionsTitle">Keep their day close.</h1>
-        <p>A place for the birthdays and anniversaries you want to remember.</p>
+        <p>
+          Family, friends and the dates you want to remember. Choose optional
+          card preferences to prepare next year’s greeting.
+        </p>
         <button id="addOccasion" class="button primary" type="button">
           Add an occasion
         </button>
@@ -39,14 +44,38 @@
         <strong>Just on this device, just for you.</strong>
         <p>
           Stored only in this browser on this device. No automatic emails,
-          browser notifications or card messages. Clearing browser data removes
-          your occasions; private browsing may not keep them.
+          browser notifications. Optional contact details and default greetings
+          stay local. Clearing browser data removes your occasions; private
+          browsing may not keep them.
         </p>
         <p>
           Download an event to use your calendar. Check imported dates and
           alerts; support varies by app.
         </p>
       </aside>
+      <section
+        class="assistant-transfer"
+        aria-label="Export and import your occasions"
+      >
+        <button id="exportContacts" class="button" type="button">
+          Export my records
+        </button>
+        <label class="field"
+          >Import my records (JSON, up to 2 MB)<input
+            id="importContacts"
+            type="file"
+            accept="application/json,.json"
+        /></label>
+        <label class="occasion-check"
+          ><input id="replaceContacts" type="checkbox" /> Replace matching IDs
+          when importing; keep other records</label
+        >
+        <p class="occasion-note">
+          Exports contain your optional names, dates, emails and default
+          greetings in plain text. Keep them private. Existing records are not
+          silently replaced.
+        </p>
+      </section>
       <section aria-labelledby="upcomingTitle">
         <div class="occasions-list-heading">
           <h2 id="upcomingTitle">Your upcoming occasions</h2>
@@ -112,5 +141,6 @@
       </p></noscript
     >
     <script type="module" src="./app/occasions.js"></script>
+    <script type="module" src="./app/contact-transfer.js"></script>
   </body>
 </html>
