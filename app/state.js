@@ -18,6 +18,7 @@ export function createState(initial = {}) {
     stickerId: "",
     fontChosen: false,
     openingConfig: null,
+    physicalConfig: null,
     ...initial,
   };
   return {

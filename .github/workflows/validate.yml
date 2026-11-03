@@ -6,6 +6,8 @@ jobs:
   static-and-browser:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,6 +24,7 @@ jobs:
           CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
       - run: python -u tests/shop.py
       - run: python -u tests/interactive.py
+      - run: python -u tests/physical.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

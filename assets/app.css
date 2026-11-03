@@ -1316,3 +1316,21 @@ iframe {
     outline: 2px solid Highlight;
   }
 }
+
+/* A full-size spread on larger screens; one readable page on phones. */
+.preview-card-frame.physical-frame {
+  width: 100%;
+  max-width: 680px !important;
+}
+iframe.is-physical {
+  aspect-ratio: 1/1.05;
+}
+@media (max-width: 500px) {
+  iframe.is-physical {
+    aspect-ratio: 3/5;
+  }
+}
+
+.viewer-wrap.physical-viewer {
+  width: min(100%, 732px);
+}

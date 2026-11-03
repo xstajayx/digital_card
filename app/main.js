@@ -1,3 +1,4 @@
+import { bindPhysicalPicker } from "./physical-picker.js";
 import { bindOpeningPicker } from "./opening-picker.js";
 import { createState } from "./state.js";
 import { createUI } from "./ui.js";
@@ -24,6 +25,7 @@ async function init() {
     createUI({ state, preview });
     bindDrafts(state);
     bindOpeningPicker(state);
+    bindPhysicalPicker(state, preview);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

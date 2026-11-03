@@ -34,9 +34,20 @@ export async function createCardController(iframe) {
   }
   return {
     update(card) {
+      iframe.classList.toggle("is-physical", !!card.physicalConfig);
+      if (iframe.id === "viewerFrame")
+        document
+          .querySelector(".viewer-wrap")
+          ?.classList.toggle("physical-viewer", !!card.physicalConfig);
+      iframe.parentElement.classList.toggle(
+        "physical-frame",
+        !!card.physicalConfig,
+      );
       queued = {
         headline: card.headline,
         openingConfig: card.openingConfig || null,
+        physicalConfig: card.physicalConfig || null,
+        coverDefault: card.coverDefault || card.theme.greeting,
         recipient: card.recipient,
         message: card.message,
         from: card.from,
@@ -58,6 +69,10 @@ export async function createCardController(iframe) {
     async checkFit() {
       flush();
       return iframe.contentWindow.checkFit();
+    },
+    physicalStage(stage) {
+      flush();
+      iframe.contentWindow.physicalStage?.(stage);
     },
     play() {
       flush();

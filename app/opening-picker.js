@@ -84,9 +84,11 @@ export function bindOpeningPicker(state) {
   state.subscribe((s) => {
     const config = s.openingConfig;
     controls.type.value = config?.type || "theme";
+    controls.type.disabled = !!s.physicalConfig;
     for (const key of ["tone", "wrap", "effect"]) {
       controls[key].value = config?.[key] || defaultOpening()[key];
-      controls[key].disabled = !config;
+      controls[key].disabled =
+        !config || (key === "wrap" && !!s.physicalConfig);
     }
     checkbox.checked = config?.seal ?? true;
     checkbox.disabled = !config;

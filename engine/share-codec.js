@@ -1,3 +1,4 @@
+import { validatePhysical } from "./physical-schema.js";
 import { validateOpening } from "./openings/config.js";
 // v1/v2: base64url JSON in ?d=. v3: compact array, optionally deflated, in #c=.
 // The fragment keeps personal text out of HTTP requests and server access logs.
@@ -77,15 +78,24 @@ function expand(data) {
   };
 }
 export async function encodeCard(card, { compress = true } = {}) {
+  if (card.v === 5 && validateOpening(card.openingConfig).type !== "envelope")
+    throw new Error("Folded cards require an envelope.");
   const bytes = new TextEncoder().encode(
     JSON.stringify(
-      card.v === 4
-        ? [4, compact(card), validateOpening(card.openingConfig)]
-        : compact(card),
+      card.v === 5
+        ? [
+            5,
+            compact(card),
+            validateOpening(card.openingConfig),
+            validatePhysical(card.physicalConfig, card.themeId),
+          ]
+        : card.v === 4
+          ? [4, compact(card), validateOpening(card.openingConfig)]
+          : compact(card),
     ),
   );
   if (bytes.length > MAX_BYTES) throw new Error("Card data is too large.");
-  const version = card.v === 4 ? 4 : 3;
+  const version = card.v === 5 ? 5 : card.v === 4 ? 4 : 3;
   let payload = `${version}u.${encode64(bytes)}`;
   if (compress && typeof CompressionStream !== "undefined") {
     try {
@@ -105,7 +115,7 @@ export async function encodeCard(card, { compress = true } = {}) {
 export async function decodeCard(payload) {
   let bytes,
     modern = false;
-  if (/^[34][uz]\./.test(payload)) {
+  if (/^[345][uz]\./.test(payload)) {
     modern = true;
     bytes = decode64(payload.slice(3));
     if (payload[1] === "z") {
@@ -122,6 +132,20 @@ export async function decodeCard(payload) {
   const value = JSON.parse(
     new TextDecoder("utf-8", { fatal: true }).decode(bytes),
   );
+  if (modern && payload[0] === "5") {
+    if (!Array.isArray(value) || value.length !== 4 || value[0] !== 5)
+      throw new Error("Invalid folded card data.");
+    const base = expand(value[1]),
+      openingConfig = validateOpening(value[2]);
+    if (openingConfig.type !== "envelope")
+      throw new Error("Folded cards require an envelope.");
+    return {
+      ...base,
+      v: 5,
+      openingConfig,
+      physicalConfig: validatePhysical(value[3], base.themeId),
+    };
+  }
   if (modern && payload[0] === "4") {
     if (!Array.isArray(value) || value.length !== 3 || value[0] !== 4)
       throw new Error("Invalid v4 card data.");
