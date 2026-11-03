@@ -1,6 +1,6 @@
 import { validateCard } from "../engine/card-data.js";
 const KEY = "silent-hello-draft-v1";
-export function bindDrafts(state) {
+export function bindDrafts(state, photos) {
   const bar = document.createElement("div");
   bar.className = "draft-tools";
   const status = document.createElement("p");
@@ -14,8 +14,12 @@ export function bindDrafts(state) {
     bar.append(b);
     return b;
   };
-  make("Save draft", () => {
+  make("Save draft", async () => {
     try {
+      if (photos?.active) {
+        status.textContent = await photos.saveDraft();
+        return;
+      }
       const s = state.get();
       const { themes, theme, ...content } = s;
       localStorage.setItem(
@@ -28,15 +32,17 @@ export function bindDrafts(state) {
       );
       status.textContent =
         "Draft saved on this browser. Anyone using this browser may access it.";
-    } catch {
-      status.textContent =
-        "Browser storage unavailable or full. Your current card is still editable.";
+    } catch (error) {
+      status.textContent = photos?.active
+        ? error.message
+        : "Browser storage unavailable or full. Your current card is still editable.";
     }
   });
   make("Restore draft", () => {
     try {
       const raw = JSON.parse(localStorage.getItem(KEY));
       const card = validateCard(raw, state.get().themes);
+      photos?.illustrated();
       state.set({
         ...card,
         openingConfig: card.openingConfig || null,
@@ -51,12 +57,18 @@ export function bindDrafts(state) {
         "No usable local draft found. Your current card was kept.";
     }
   });
-  make("Delete draft", () => {
+  make("Delete draft", async () => {
     try {
+      if (photos?.active) {
+        status.textContent = await photos.deleteDraft();
+        return;
+      }
       localStorage.removeItem(KEY);
       status.textContent = "Saved draft deleted. Your current card is kept.";
-    } catch {
-      status.textContent = "Browser storage is unavailable.";
+    } catch (error) {
+      status.textContent = photos?.active
+        ? error.message
+        : "Browser storage is unavailable.";
     }
   });
   bar.append(status);

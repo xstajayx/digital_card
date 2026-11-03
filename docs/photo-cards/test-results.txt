@@ -1,0 +1,185 @@
+Personalised photo cards — executed validation, 2026-11-03
+Base: origin/main 4ec1514, merged PR #35.
+Result: all twelve test suites passed on their final runs. Unit totals: 17 card/data + 9 occasions + 5 photo = 31. Full browser suite: 24 check groups across all four viewports.
+Artifacts: CARD_ARTIFACT_DIR=/workspace/photo-validation. Chromium and Playwright run locally; no messages, infrastructure, payments or DNS changes were activated.
+Development icalendar is installed in /tmp/silent-hello-test-deps in this read-only runtime. PYTHONPATH=/tmp/silent-hello-test-deps was used for Python suites. Photo fixtures use only the standard library and browser raster encoders; no new test image dependency.
+
+node tests/data.mjs
+Exit: 0
+✔ catalogue has 23 occasions, 28 unique designs and all legacy theme IDs (1.690873ms)
+✔ all metadata, palettes and local assets are usable (6.230766ms)
+✔ all legacy illustration identifiers migrate to the right object (0.425888ms)
+✔ birthday ordinals and age bounds, including kids and milestones (0.793286ms)
+✔ gift sanitization blocks credentials, non-HTTPS and oversized links (0.421316ms)
+✔ all six fonts, text sizes, colour overrides and safe defaults validate (1.36055ms)
+✔ bad fields, unknown versions/designs and over-limit text are rejected (0.913607ms)
+✔ v3 raw and compressed links preserve all fields and Unicode (36.942171ms)
+✔ v1/v2 base64url JSON links and disabled-compression fallback work (0.675744ms)
+✔ malformed, invalid UTF-8 and decompression bombs fail within bounds (24.179607ms)
+✔ no-op state changes do not notify and unsubscribe works (2.320975ms)
+✔ no GIF/export dependencies or unsafe dynamic HTML are introduced (3.395245ms)
+✔ v4 opening configuration round-trips without changing the v3 array (14.058768ms)
+✔ email and SMS drafts preserve complete links and never invoke delivery (0.727759ms)
+✔ v5 folded document round-trips separate cover/inside fields and v4 stays unchanged (7.497904ms)
+✔ all six paper surfaces have readable ink and physical artwork/fields are strictly validated (0.380553ms)
+✔ folded documents require a valid envelope and sensible message limits (0.690336ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 114.107164
+
+node tests/occasions.mjs
+Exit: 0
+✔ birthdays and anniversaries save an explicit allowlist, never card messages (4.374913ms)
+✔ edit versions reject conflicts and deleted records; unrelated records survive (1.100398ms)
+✔ storage failure and corrupt/unsupported records are not overwritten (0.890071ms)
+✔ valid day/month, leap centuries and strict types (0.560475ms)
+✔ next occurrence uses local calendar day, today and December rollover (0.847919ms)
+✔ 29 February skips non-leap years including 2100, without inventing a birthday (0.32874ms)
+✔ one-time occasions expire and annual occasions advance (0.768904ms)
+✔ RFC calendar contains stable UID, all-day exclusive dates, recurrence and optional alarm (4.76863ms)
+✔ UTF-8 folding respects 75 octets without splitting codepoints; text cannot inject properties (1.13875ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26.819639
+
+node tests/photo.mjs
+Exit: 0
+✔ actual JPEG header is inspected; MIME, SVG, GIF and corrupt data rejected (1.91134ms)
+✔ truncated JPEG marker runs produce a clear format error, never a buffer exception (1.857503ms)
+✔ image budgets reject empty files, huge dimensions and invalid PNG headers (0.385481ms)
+✔ crop geometry covers frame at every rotation and permits only bounded zoom/positions (1.018503ms)
+✔ photo editing settings whitelist only local presentation fields (0.202416ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17.46149
+
+python -u tests/calendar_ics.py
+Exit: 0
+PASS independent icalendar parse/serialize/parse: UTF-8 escapes, all-day dates, exclusive end, UID, leap-century recurrence, optional alarms and one-time anniversary
+
+python -u tests/browser.py
+Exit: 0
+PASS 360x800: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 360x800: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 360x800: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 360x800: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 360x800: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 390x844: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 390x844: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 390x844: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 390x844: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 390x844: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 768x1024: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 768x1024: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 768x1024: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 768x1024: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 768x1024: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 1440x900: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 1440x900: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 1440x900: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 1440x900: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 1440x900: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS native sharing, duplicate prevention, WhatsApp construction/popup fallback, cancellation, clipboard fallback, keyboard and rapid theme switching
+PASS v1/v2 migration, legacy artwork aliases, HTML/path/URL injection rejection, invalid/missing/future-version error states
+PASS reduced-motion preference stops running animations; 200% text scaling preserves readable text or explicit full-message fallback
+PASS no JavaScript console/page errors, failed local requests, or missing assets
+PASS 24 browser check groups. Screenshots: /workspace/photo-validation
+
+python -u tests/shop.py
+Exit: 0
+PASS 360x800: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 390x844: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 768x1024: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 1440x900: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+
+python -u tests/interactive.py
+Exit: 0
+PASS 360x800: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 390x844: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 768x1024: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 1440x900: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+
+python -u tests/physical.py
+Exit: 0
+PASS 360x800: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 390x844: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 768x1024: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 1440x900: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+
+python -u tests/responsive.py
+Exit: 0
+PASS 320x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 360x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 390x844: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 412x915: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 430x932: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 768x1024: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1024x768: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1440x900: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 800x360: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 844x390: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+
+python -u tests/recipient.py
+Exit: 0
+PASS recipient 320: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 360: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 390: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 412: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 430: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 768: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 1440: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS legacy v1
+PASS legacy v2
+PASS legacy v3
+PASS legacy v4
+PASS long message, full signature, keyboard skip and no page errors
+
+python -u tests/occasions.py
+Exit: 0
+PASS 320px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 360px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 390px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 412px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 430px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 768px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 1440px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS sender prepare/share, nickname prefill with blank date, no card text stored, failure handling, conflict handling, shop navigation and recipient isolation
+
+python -u tests/photo.py
+Exit: 0
+PASS 320px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 360px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 390px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 412px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 430px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 768px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 1440px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS format spoof/GIF rejection, real PNG/WebP, pointer/keyboard crop, full cover greeting zone, all share transports blocked, remove, missing draft and storage failure
+
+Supplementary capture: python docs/photo-cards/capture.py
+Exit: 0
+PASS upright photo showcases: cover and handwritten inside, mobile page views and desktop spread, current text-fit checks and complete long-message reading fallback
+
+Runtime and coverage notes:
+- The environment restarted after an initial browser run had passed mobile/tablet. Desktop/common checks were resumed, then the complete original browser.py suite was run again uninterrupted and passed all 24 groups. Final results above use that complete run.
+- Actual screenshots exposed the native reverse cover face occluding the stationary left page. The local adapter now mirrors the processed photograph on the existing reverse face, following the native artwork structure; strengthened photo tests and fresh captures pass. The shared folded/opening renderer was not modified.
+- An initial showcase request used a stale local server after the restart. The committed capture script starts its own quiet temporary server and passed. The capture also checks the complete long-photo-message reading fallback.
+- The data-test media prohibition was intentionally updated for one sender-only raster picker. Its dynamic-HTML guard explicitly audits PR #35's constant, non-interpolated reminder dialog. Reminder runtime files are unchanged.
+- Real iOS/Safari/Android devices and persistent media delivery were not tested. Headless Chromium emulates the recorded mobile/tablet/desktop sizes. Photo sharing is deliberately blocked; there is no backend/bucket/API key.
+- Protected recipient, renderer, shared preview, schema, codec and reminder runtime: git diff --exit-code origin/main returned 0.
+- These are local results. New photo tests are included in CI; remote CI status is not claimed.

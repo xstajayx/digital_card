@@ -1,4 +1,5 @@
 import "./responsive.js";
+import { bindPhotoEditor } from "./photo-card.js";
 import { bindPhysicalPicker } from "./physical-picker.js";
 import { bindOpeningPicker } from "./opening-picker.js";
 import { createState } from "./state.js";
@@ -23,8 +24,9 @@ async function init() {
       stickerId: theme.id === "birthday-balloons" ? "pink-cake" : "",
       fontId: theme.defaultFontId || "fredoka",
     });
+    const photos = bindPhotoEditor(state, preview);
     createUI({ state, preview });
-    bindDrafts(state);
+    bindDrafts(state, photos);
     bindOpeningPicker(state);
     bindPhysicalPicker(state, preview);
   } catch (error) {
