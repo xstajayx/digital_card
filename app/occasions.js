@@ -1,4 +1,9 @@
 import {
+  prepareContact,
+  purgePreparedContact,
+} from "../engine/card-assistant.js";
+import { loadThemes } from "../engine/card-data.js";
+import {
   STORAGE_KEY,
   readOccasions,
   occurrence,
@@ -24,10 +29,20 @@ let pendingDelete = null;
 $("cancelDeleteOccasion").onclick = () => $("deleteOccasionDialog").close();
 $("confirmDeleteOccasion").onclick = () => {
   try {
-    deleteOccasion(pendingDelete.id);
+    const removal = deleteOccasion(pendingDelete.id);
+    let cleanupWarning = !!removal?.recoveryCopyRetained;
+    try {
+      purgePreparedContact(pendingDelete.id);
+    } catch {
+      cleanupWarning = true;
+    }
     $("deleteOccasionDialog").close();
     render();
-    status("Occasion deleted from this browser.");
+    status(
+      cleanupWarning
+        ? "Occasion removed. A recovery copy could not be cleared. Export your wanted records, then clear this site’s browser data to remove recovery data."
+        : "Occasion deleted from this browser, including its recovery copy and prepared cards.",
+    );
     $("addOccasion").focus();
   } catch (e) {
     $("deleteOccasionDialog").close();
@@ -77,6 +92,22 @@ function row(item, next) {
         error(e.message);
       }
     });
+  if (next)
+    button("Prepare card now", async () => {
+      try {
+        const themes = await loadThemes();
+        const entry = prepareContact(item, themes, { force: true });
+        location.href = "./prepared.html#card=" + encodeURIComponent(entry.id);
+      } catch (e) {
+        error(e.message);
+      }
+    });
+  if (item.profile) {
+    const extra = document.createElement("p");
+    extra.className = "occasion-note";
+    extra.textContent = `${item.profile.recipientName} · ${item.profile.automation ? "Local preparation enabled" : "Preparation off"}${item.profile.originYear ? " · Start year " + item.profile.originYear : ""}`;
+    info.append(extra);
+  }
   button("Edit", () => editor.open({ item }));
   button("Delete", () => {
     pendingDelete = item;
@@ -111,6 +142,12 @@ function render() {
     );
     $("pastOccasions").hidden = !past.length;
     $("emptyOccasions").hidden = !!upcoming.length;
+    const editId = new URLSearchParams(location.hash.slice(1)).get("edit");
+    if (editId) {
+      const item = items.find((i) => i.id === editId);
+      history.replaceState(null, "", location.pathname);
+      if (item) editor.open({ item });
+    }
     status(
       `${upcoming.length} upcoming ${upcoming.length === 1 ? "occasion" : "occasions"}.`,
     );

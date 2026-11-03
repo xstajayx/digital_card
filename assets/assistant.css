@@ -1,0 +1,186 @@
+.contact-preferences {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.contact-preferences summary {
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.contact-preferences label {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+}
+.contact-preferences label:has(input[type="checkbox"]) {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.contact-preferences input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.contact-preferences textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+.assistant-transfer {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  margin: 20px 0;
+}
+.assistant-main {
+  max-width: 1060px !important;
+  padding: 32px var(--space) 60px;
+}
+.assistant-main h1 {
+  font:
+    500 clamp(2rem, 5vw, 3rem) / 1.2 "Playfair Display",
+    serif;
+}
+.assistant-panel {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fffdf8;
+  margin: 20px 0;
+}
+.assistant-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.assistant-settings label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+.assistant-settings input,
+.assistant-settings select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+.assistant-settings label:has([type="checkbox"]) {
+  display: flex;
+  align-items: center;
+}
+.assistant-settings input[type="checkbox"] {
+  width: 20px;
+  min-height: 20px;
+}
+.prepared-list {
+  display: grid;
+  gap: 16px;
+}
+.prepared-card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fffdf8;
+  min-width: 0;
+}
+.prepared-card h3 {
+  font:
+    500 1.4rem/1.3 "Playfair Display",
+    serif;
+  overflow-wrap: anywhere;
+}
+.prepared-card p {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.prepared-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.prepared-actions .button {
+  font-size: 0.8rem;
+  min-height: 44px;
+  padding: 10px 14px;
+}
+.prepared-state {
+  font-size: 0.75rem;
+  color: #214c3e;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.prepared-dialog {
+  width: min(720px, calc(100% - 24px));
+  max-width: min(720px, calc(100% - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #faf7f1;
+}
+.prepared-dialog::backdrop {
+  background: #243b3380;
+}
+.prepared-dialog .preview-card-frame {
+  margin-top: 16px;
+}
+.prepared-editor-bar {
+  padding: 16px;
+  border: 1px solid #c7d6c9;
+  background: #edf3e9;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+.prepared-editor-bar .button {
+  margin-right: 12px;
+}
+@media (max-width: 600px) {
+  .assistant-main {
+    padding: 24px 16px 40px;
+  }
+  .assistant-settings {
+    grid-template-columns: 1fr;
+  }
+  .assistant-panel {
+    padding: 16px;
+  }
+  .assistant-page .shop-nav {
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+  .assistant-page .shop-nav nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+  }
+  .assistant-page .shop-footer {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .prepared-dialog {
+    padding: 12px;
+  }
+}
+
+.prepared-dialog iframe {
+  max-width: 100%;
+  margin: 0;
+}

@@ -1,3 +1,4 @@
+import { assertPreparedShareable } from "./prepared-editor.js";
 import { assertPhotoShareable } from "./photo-card.js";
 import { sanitizeGiftUrl } from "../engine/sanitize.js";
 import { ILLUSTRATIONS, illustrationUrl } from "../engine/illustrations.js";
@@ -410,6 +411,7 @@ export function createUI({ state, preview }) {
     mirrors: [$("quickShareButton")],
     async getUrl() {
       assertPhotoShareable(state);
+      assertPreparedShareable(state);
       const before = revision,
         current = state.get();
       if (
@@ -444,6 +446,7 @@ export function createUI({ state, preview }) {
           "Your card changed while preparing the link. Please share again.",
         );
       assertPhotoShareable(state);
+      assertPreparedShareable(state);
       offerOccasion(current);
       return url;
     },
