@@ -8,6 +8,7 @@ import {
 } from "../engine/card-data.js";
 import { buildShareUrl } from "../engine/share-codec.js";
 import { bindShareActions } from "./share-actions.js";
+import { offerOccasion } from "./occasion-dialog.js";
 const $ = (id) => document.getElementById(id);
 const labels = [
   "",
@@ -303,6 +304,8 @@ export function createUI({ state, preview }) {
 
   state.subscribe((current, changed) => {
     revision++;
+    $("rememberOccasionPrompt").hidden = true;
+    $("occasionSavedStatus").textContent = "";
     document.querySelector(".transport-link")?.remove();
     const theme = current.theme,
       items = ILLUSTRATIONS[theme.id] || [];
@@ -438,6 +441,7 @@ export function createUI({ state, preview }) {
         throw new Error(
           "Your card changed while preparing the link. Please share again.",
         );
+      offerOccasion(current);
       return url;
     },
   });
