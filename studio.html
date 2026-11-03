@@ -18,10 +18,11 @@
     <link rel="stylesheet" href="./assets/occasions.css" />
     <link rel="stylesheet" href="./assets/photo-editor.css" />
     <link rel="stylesheet" href="./assets/assistant.css" />
-    <title>Silent Hello · Card Studio</title>
+    <title>Create your card · Silent Hello</title>
     <link rel="stylesheet" href="./assets/shop.css" />
+    <link rel="stylesheet" href="./assets/creator.css" />
   </head>
-  <body>
+  <body class="creator-page">
     <a class="skip-link" href="#studio">Skip to card studio</a>
     <header class="site-header">
       <a class="brand" href="./" aria-label="Silent Hello home">
@@ -44,42 +45,22 @@
         ></span>
         <span
           ><strong>Silent Hello</strong
-          ><span class="brand-subtitle">THE DIGITAL CARD STUDIO</span></span
+          ><span class="brand-subtitle">MORE THAN A MESSAGE</span></span
         >
       </a>
       <div class="header-actions">
         <span class="header-note"
-          ><span class="status-dot"></span> A little more personal</span
+          ><span class="status-dot"></span> A proper card, made personal</span
         ><button class="button small" id="previewJump" type="button">
           Preview card <span aria-hidden="true">→</span>
         </button>
       </div>
     </header>
     <main>
-      <section class="intro" aria-labelledby="introTitle">
-        <div>
-          <p class="eyebrow">
-            <span aria-hidden="true">✦</span> SMALL GESTURE. BIG FEELING.
-          </p>
-          <h1 id="introTitle">
-            A little card.<br /><em>A lovely feeling.</em>
-          </h1>
-          <p class="intro-copy">
-            For the big days, the small wins, and the just-becauses.<br
-              class="desktop-only"
-            />
-            Make it theirs. Fill it with love. Send a little joy.
-          </p>
-        </div>
-        <div class="intro-aside">
-          <span class="handwritten" aria-hidden="true"
-            >Made by you,<br />felt by them. <span>↙</span></span
-          >
-          <p>
-            No sign-up. No stamps.<br />Just your words, beautifully delivered.
-          </p>
-        </div>
-      </section>
+      <div class="creator-intro">
+        <a href="./">← All cards</a>
+        <h1>Create your card</h1>
+      </div>
       <section
         class="studio"
         id="studio"
@@ -89,14 +70,16 @@
         <div class="editor-panel">
           <nav class="steps" aria-label="Card creation steps">
             <button type="button" data-step="1" aria-current="step">
-              <span>1</span>Occasion
+              <span>1</span>Choose card
             </button>
-            <button type="button" data-step="2"><span>2</span>Design</button>
+            <button type="button" data-step="2">
+              <span>2</span>Front cover
+            </button>
             <button type="button" data-step="3"><span>3</span>Message</button>
-            <button type="button" data-step="4">
-              <span>4</span>Personalise
+            <button type="button" data-step="4"><span>4</span>Style</button>
+            <button type="button" data-step="5">
+              <span>5</span>Preview &amp; send
             </button>
-            <button type="button" data-step="5"><span>5</span>Share</button>
           </nav>
           <div class="step-content">
             <section
@@ -104,11 +87,7 @@
               data-panel="1"
               aria-labelledby="occasionTitle"
             >
-              <p class="eyebrow">01 / THE REASON TO SMILE</p>
-              <h2 id="occasionTitle" tabindex="-1">What’s the occasion?</h2>
-              <p class="section-copy">
-                There’s always a good reason to send a little love.
-              </p>
+              <h2 id="occasionTitle" tabindex="-1">Choose your card</h2>
               <label class="search-field"
                 ><span class="sr-only">Find an occasion</span
                 ><span aria-hidden="true">⌕</span
@@ -133,16 +112,8 @@
               <p id="noOccasions" class="helper" hidden>
                 No matches. Try “Birthday” or choose another category.
               </p>
-            </section>
-            <section
-              class="step-panel"
-              data-panel="2"
-              aria-labelledby="designTitle"
-              hidden
-            >
-              <p class="eyebrow">02 / A LITTLE PERSONALITY</p>
-              <h2 id="designTitle" tabindex="-1">Find their kind of lovely.</h2>
-              <p id="designDescription" class="section-copy"></p>
+              <h3 class="design-subheading">Choose a design</h3>
+              <p id="designDescription" class="helper"></p>
               <div
                 id="themeGallery"
                 class="design-grid"
@@ -152,17 +123,46 @@
             </section>
             <section
               class="step-panel"
+              data-panel="2"
+              aria-labelledby="designTitle"
+              hidden
+            >
+              <h2 id="designTitle" tabindex="-1">Personalise the front</h2>
+              <div id="coverFields"></div>
+              <fieldset id="birthdayControls" class="age-control">
+                <legend class="sr-only">Birthday age</legend>
+                <input
+                  id="birthdayNumberToggle"
+                  type="checkbox"
+                  hidden
+                  tabindex="-1"
+                  aria-hidden="true"
+                /><label id="birthdayNumberField" class="field"
+                  ><span>Age on card (optional)</span
+                  ><input
+                    id="birthdayNumberInput"
+                    type="number"
+                    min="1"
+                    max="120"
+                    step="1"
+                    placeholder="Leave blank"
+                    aria-describedby="birthdayError" /><small
+                    id="birthdayError"
+                    class="warning"
+                    role="status"
+                  ></small
+                ></label>
+              </fieldset>
+            </section>
+            <section
+              class="step-panel"
               data-panel="3"
               aria-labelledby="messageTitle"
               hidden
             >
-              <p class="eyebrow">03 / WORDS FROM THE HEART</p>
-              <h2 id="messageTitle" tabindex="-1">
-                Only you could write this.
-              </h2>
-              <p class="section-copy">A little note can mean a whole lot.</p>
+              <h2 id="messageTitle" tabindex="-1">Write your message</h2>
               <label class="field"
-                ><span>To <small>their name</small></span
+                ><span>To</span
                 ><input
                   id="toInput"
                   maxlength="120"
@@ -183,7 +183,7 @@
                 ></label
               >
               <label class="field"
-                ><span>From <small>your sign-off</small></span
+                ><span>From</span
                 ><input
                   id="fromInput"
                   maxlength="160"
@@ -191,31 +191,16 @@
                   autocomplete="off"
               /></label>
               <button id="suggestMessage" type="button" class="text-button">
-                Use this occasion’s suggested message →
+                Suggest a message
               </button>
-              <p class="helper">
-                Replaces the message only. Your names stay as they are.
-              </p>
-              <fieldset id="birthdayControls" class="soft-box">
-                <legend>One more candle?</legend>
-                <label class="toggle"
-                  ><input id="birthdayNumberToggle" type="checkbox" />Add a
-                  birthday number</label
-                ><label id="birthdayNumberField" class="field" hidden
-                  ><span>Birthday number <small>1–120</small></span
-                  ><input
-                    id="birthdayNumberInput"
-                    type="number"
-                    min="1"
-                    max="120"
-                    step="1"
-                    placeholder="21" /><small
-                    id="birthdayError"
-                    class="warning"
-                    role="status"
-                  ></small
-                ></label>
-              </fieldset>
+              <button
+                id="undoSuggestion"
+                class="text-button"
+                type="button"
+                hidden
+              >
+                Undo suggestion
+              </button>
             </section>
             <section
               class="step-panel"
@@ -223,16 +208,10 @@
               aria-labelledby="personaliseTitle"
               hidden
             >
-              <p class="eyebrow">04 / THE FINISHING TOUCHES</p>
-              <h2 id="personaliseTitle" tabindex="-1">
-                Make it feel like them.
-              </h2>
-              <p class="section-copy">
-                A favourite colour. A playful detail. A little more you.
-              </p>
+              <h2 id="personaliseTitle" tabindex="-1">Make it yours</h2>
               <div class="field-pair">
                 <label class="field"
-                  ><span>Lettering</span
+                  ><span>Text style</span
                   ><select id="fontSelect">
                     <option value="fredoka">Fredoka · playful</option>
                     <option value="pacifico">Pacifico · handwritten</option>
@@ -252,7 +231,7 @@
                 >
               </div>
               <fieldset class="picker-section">
-                <legend>Colour story</legend>
+                <legend>Colours</legend>
                 <div
                   id="palettePresets"
                   class="palette-presets"
@@ -281,10 +260,8 @@
                 </button>
               </fieldset>
               <fieldset class="picker-section">
-                <legend>A little illustration</legend>
-                <p class="helper">
-                  A finishing touch, always below your words.
-                </p>
+                <legend>Illustrations</legend>
+
                 <div
                   id="stickerGallery"
                   class="sticker-grid"
@@ -294,7 +271,7 @@
               </fieldset>
               <details class="extras">
                 <summary>
-                  Something extra <span aria-hidden="true">＋</span>
+                  More options <span aria-hidden="true">＋</span>
                 </summary>
                 <div class="extras-content">
                   <label class="toggle"
@@ -339,17 +316,13 @@
               aria-labelledby="shareTitle"
               hidden
             >
-              <p class="eyebrow">05 / READY TO MAKE THEIR DAY</p>
-              <h2 id="shareTitle" tabindex="-1">Your words. Their smile.</h2>
-              <p class="section-copy">
-                Give it one last look, then send it on its way.
-              </p>
+              <h2 id="shareTitle" tabindex="-1">Your card is ready</h2>
               <div id="cardSummary" class="card-summary"></div>
               <div class="edit-shortcuts">
                 <button class="text-button" type="button" data-go="3">
                   Edit message →</button
                 ><button class="text-button" type="button" data-go="4">
-                  Finishing touches →
+                  Edit style →
                 </button>
               </div>
               <div class="privacy-note">
@@ -369,7 +342,7 @@
             ><span id="stepProgress" class="helper" role="status"
               >Step 1 of 5</span
             ><button id="nextStep" class="button primary" type="button">
-              Choose design →</button
+              Continue →</button
             ><button
               id="quickShareButton"
               class="button primary quick-share"
@@ -379,91 +352,117 @@
             </button>
           </div>
         </div>
-        <aside
-          class="preview-block"
-          id="preview"
-          aria-labelledby="previewTitle"
-        >
-          <div class="preview-heading">
-            <div>
-              <span class="status-dot"></span>
-              <h2 id="previewTitle">A little preview</h2>
-            </div>
-            <button id="replayButton" class="text-button" type="button">
-              <span aria-hidden="true">↻</span> Replay
-            </button>
-          </div>
-          <div class="preview-stage">
-            <div class="preview-card-frame">
-              <iframe
-                id="cardPreview"
-                title="Your animated greeting card preview"
-              ></iframe>
-            </div>
-            <p class="stage-caption">
-              <span aria-hidden="true">✧</span> A little moment, made by you.
-            </p>
-          </div>
-          <p id="fitStatus" class="fit-status" role="status"></p>
-          <details id="fullMessage" class="full-message" hidden>
-            <summary>Read the full card text</summary>
-            <div id="fullMessageText"></div>
-          </details>
-          <div class="share-panel">
-            <div class="share-heading">
-              <h3>Send a little joy</h3>
-              <span>Always free. Always personal.</span>
-            </div>
-            <div class="recipient-actions">
-              <button id="emailShareButton" class="button" type="button">
-                Email draft</button
-              ><button id="smsShareButton" class="button" type="button">
-                SMS draft
+        <dialog id="creatorPreviewDialog" open role="presentation">
+          <aside
+            class="preview-block"
+            id="preview"
+            aria-labelledby="previewTitle"
+          >
+            <div class="preview-heading">
+              <div>
+                <span class="status-dot"></span>
+                <h2 id="previewTitle">Your card</h2>
+              </div>
+              <button id="replayButton" class="text-button" type="button">
+                <span aria-hidden="true">↻</span> Replay
               </button>
             </div>
-            <p class="helper">
-              Native sharing opens your device’s app choices. Choose Snapchat if
-              offered, or copy the link. App delivery is not confirmed.
-            </p>
-            <div class="share-actions">
-              <button id="shareLinkButton" class="button" type="button">
-                Copy link <span aria-hidden="true">→</span></button
-              ><button
-                id="nativeShareButton"
-                class="button primary"
+            <div class="preview-stage">
+              <div class="preview-card-frame">
+                <iframe
+                  id="cardPreview"
+                  title="Your animated greeting card preview"
+                ></iframe>
+              </div>
+              <p class="stage-caption">
+                <span aria-hidden="true">✧</span> A little moment, made by you.
+              </p>
+            </div>
+            <p id="fitStatus" class="fit-status" role="status"></p>
+            <details id="fullMessage" class="full-message" hidden>
+              <summary>Read the full card text</summary>
+              <div id="fullMessageText"></div>
+            </details>
+            <div class="share-panel">
+              <div class="share-heading">
+                <h3>Share your card</h3>
+                <span>Always free. Always personal.</span>
+              </div>
+              <div class="recipient-actions">
+                <button id="emailShareButton" class="button" type="button">
+                  Email draft</button
+                ><button id="smsShareButton" class="button" type="button">
+                  SMS draft
+                </button>
+              </div>
+              <p class="helper">
+                Native sharing opens your device’s app choices. Choose Snapchat
+                if offered, or copy the link. App delivery is not confirmed.
+              </p>
+              <div class="share-actions">
+                <button id="shareLinkButton" class="button" type="button">
+                  Copy link <span aria-hidden="true">→</span></button
+                ><button
+                  id="nativeShareButton"
+                  class="button primary"
+                  type="button"
+                >
+                  Share card <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <button
+                id="shareWhatsappButton"
+                class="text-button whatsapp"
                 type="button"
               >
-                Share card <span aria-hidden="true">→</span>
+                Send with WhatsApp →
               </button>
+              <p
+                id="exportStatus"
+                class="export-status"
+                role="status"
+                aria-live="polite"
+              ></p>
+              <label id="shareFallback" class="field manual-link" hidden
+                ><span>Your card link <small>select and copy</small></span
+                ><input id="shareUrl" readonly aria-label="Card link to copy"
+              /></label>
+              <div
+                id="rememberOccasionPrompt"
+                class="remember-occasion-prompt"
+                hidden
+              >
+                <button
+                  id="rememberOccasionButton"
+                  class="text-button"
+                  type="button"
+                >
+                  Remember this occasion next year?
+                </button>
+                <button
+                  id="dismissOccasionButton"
+                  class="text-button"
+                  type="button"
+                  aria-label="Dismiss occasion suggestion"
+                >
+                  Not now
+                </button>
+                <p class="occasion-note">
+                  <a href="./occasions.html">My Occasions</a> · Saved on this
+                  device. No automatic emails.
+                </p>
+              </div>
+              <p
+                id="occasionSavedStatus"
+                class="occasion-note"
+                role="status"
+              ></p>
+              <p class="helper share-note">
+                The whole card travels in the link. Keep it intact.
+              </p>
             </div>
-            <button
-              id="shareWhatsappButton"
-              class="text-button whatsapp"
-              type="button"
-            >
-              Send with WhatsApp →
-            </button>
-            <p
-              id="exportStatus"
-              class="export-status"
-              role="status"
-              aria-live="polite"
-            ></p>
-            <label id="shareFallback" class="field manual-link" hidden
-              ><span>Your card link <small>select and copy</small></span
-              ><input id="shareUrl" readonly aria-label="Card link to copy"
-            /></label>
-            <div id="rememberOccasionPrompt" class="remember-occasion-prompt" hidden>
-              <button id="rememberOccasionButton" class="text-button" type="button">Remember this occasion next year?</button>
-              <button id="dismissOccasionButton" class="text-button" type="button" aria-label="Dismiss occasion suggestion">Not now</button>
-              <p class="occasion-note"><a href="./occasions.html">My Occasions</a> · Saved on this device. No automatic emails.</p>
-            </div>
-            <p id="occasionSavedStatus" class="occasion-note" role="status"></p>
-            <p class="helper share-note">
-              The whole card travels in the link. Keep it intact.
-            </p>
-          </div>
-        </aside>
+          </aside>
+        </dialog>
       </section>
     </main>
     <footer class="site-footer">

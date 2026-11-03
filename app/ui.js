@@ -14,9 +14,9 @@ import { offerOccasion } from "./occasion-dialog.js";
 const $ = (id) => document.getElementById(id);
 const labels = [
   "",
-  "Choose design →",
+  "Continue →",
   "Write a message →",
-  "Personalise →",
+  "Choose a style →",
   "Preview & share →",
 ];
 const palettes = [
@@ -57,7 +57,7 @@ export function createUI({ state, preview }) {
     messageInput: "message",
     fromInput: "from",
     giftInput: "giftUrl",
-    birthdayNumberInput: "birthdayNumber",
+
     paperColorInput: "paperOverride",
     inkColorInput: "inkOverride",
   };
@@ -83,8 +83,14 @@ export function createUI({ state, preview }) {
       $("studio").scrollIntoView({ block: "start", behavior: "instant" });
     }
     // A hidden mobile preview acquires its real viewport on step 5.
-    if (step === 5)
+    if (step === 5) {
+      if (state.get().physicalConfig) preview.physicalStage("envelope");
       requestAnimationFrame(() => preview.checkFit().catch(() => {}));
+    } else if (state.get().physicalConfig) {
+      preview.physicalStage(
+        step === 2 ? "cover" : step >= 3 ? "inside" : "envelope",
+      );
+    }
   }
   document
     .querySelectorAll(".steps button")
@@ -100,7 +106,7 @@ export function createUI({ state, preview }) {
     const current = state.get();
     if (theme.id === current.theme.id) return;
     const copy = {};
-    for (const key of ["to", "message", "from"]) {
+    for (const key of ["message"]) {
       if (current[key] === current.theme.defaults[key])
         copy[key] = theme.defaults[key];
     }
@@ -188,8 +194,7 @@ export function createUI({ state, preview }) {
     const designs = themes.filter(
       (theme) => theme.occasionId === current.theme.occasionId,
     );
-    $("designDescription").textContent =
-      `${current.theme.occasion} · ${designs.length === 1 ? "A design made for this moment." : "Same lovely occasion. Two different moods."}`;
+    $("designDescription").textContent = current.theme.occasion;
     for (const theme of designs) {
       const node = button("theme-tile");
       node.dataset.theme = theme.id;
@@ -222,6 +227,15 @@ export function createUI({ state, preview }) {
     }
     $("themeGallery").replaceChildren(fragment);
   }
+  function chooseIllustration(id) {
+    const s = state.get();
+    state.set({
+      stickerId: id,
+      ...(s.physicalConfig
+        ? { physicalConfig: { ...s.physicalConfig, coverArt: id || "none" } }
+        : {}),
+    });
+  }
   function renderIllustrations(items) {
     const fragment = document.createDocumentFragment();
     const none = button("sticker-tile none-option");
@@ -231,7 +245,7 @@ export function createUI({ state, preview }) {
     icon.ariaHidden = "true";
     icon.textContent = "∅";
     none.append(icon, document.createTextNode("None"));
-    none.onclick = () => state.set({ stickerId: "" });
+    none.onclick = () => chooseIllustration("");
     fragment.append(none);
     for (const item of items) {
       const node = button("sticker-tile");
@@ -244,7 +258,7 @@ export function createUI({ state, preview }) {
       const label = document.createElement("span");
       label.textContent = item.label;
       node.append(image, label);
-      node.onclick = () => state.set({ stickerId: item.id });
+      node.onclick = () => chooseIllustration(item.id);
       fragment.append(node);
     }
     $("stickerGallery").replaceChildren(fragment);
@@ -259,7 +273,10 @@ export function createUI({ state, preview }) {
     swatch.style.setProperty("--swatch-paper", paper);
     swatch.style.setProperty("--swatch-ink", ink);
     node.append(swatch);
-    node.onclick = () => state.set({ paperOverride: paper, inkOverride: ink });
+    node.onclick = () => {
+      state.set({ paperOverride: paper, inkOverride: ink });
+      if (state.get().physicalConfig) preview.physicalStage("cover");
+    };
     $("palettePresets").append(node);
   });
   Object.entries(fields).forEach(([id, key]) =>
@@ -267,8 +284,28 @@ export function createUI({ state, preview }) {
       state.set({ [key]: event.target.value }),
     ),
   );
-  $("fontSelect").onchange = (event) =>
-    state.set({ fontId: event.target.value, fontChosen: true });
+  $("fontSelect").onchange = (event) => {
+    const fontId = event.target.value,
+      s = state.get();
+    state.set({
+      fontId,
+      fontChosen: true,
+      ...(s.physicalConfig
+        ? {
+            physicalConfig: {
+              ...s.physicalConfig,
+              handwriting: fontId,
+              signature: fontId,
+            },
+          }
+        : {}),
+    });
+  };
+  $("birthdayNumberInput").oninput = (event) =>
+    state.set({
+      birthdayNumber: event.target.value,
+      birthdayNumberEnabled: event.target.value !== "",
+    });
   $("textSize").onchange = (event) =>
     state.set({ textSize: Number(event.target.value) });
   for (const [id, key] of [
@@ -277,16 +314,30 @@ export function createUI({ state, preview }) {
     ["birthdayNumberToggle", "birthdayNumberEnabled"],
   ])
     $(id).onchange = (event) => state.set({ [key]: event.target.checked });
-  $("suggestMessage").onclick = () =>
+  let previousMessage = "";
+  $("suggestMessage").onclick = () => {
+    previousMessage = state.get().message;
     state.set({ message: state.get().theme.defaults.message });
+    $("undoSuggestion").hidden = false;
+  };
+  $("undoSuggestion").onclick = () => {
+    state.set({ message: previousMessage });
+    $("undoSuggestion").hidden = true;
+  };
   $("resetColorsButton").onclick = () =>
     state.set({ paperOverride: "", inkOverride: "" });
   $("resetDesignButton").onclick = () => {
     state.set({
       fontId: state.get().theme.defaultFontId || "fredoka",
       fontChosen: false,
-      openingConfig: null,
-      physicalConfig: null,
+      openingConfig: state.get().openingConfig,
+      physicalConfig: state.get().physicalConfig
+        ? {
+            ...state.get().physicalConfig,
+            handwriting: state.get().theme.defaultFontId || "fredoka",
+            signature: state.get().theme.defaultFontId || "fredoka",
+          }
+        : null,
       textSize: 18,
       paperOverride: "",
       inkOverride: "",
@@ -324,8 +375,18 @@ export function createUI({ state, preview }) {
       selection($("occasionGallery"), theme.occasionId, "occasion");
       selection($("themeGallery"), theme.id, "theme");
     }
-    if (changed.includes("theme") || changed.includes("stickerId"))
-      selection($("stickerGallery"), current.stickerId, "sticker");
+    selection(
+      $("stickerGallery"),
+      current.physicalConfig
+        ? current.physicalConfig.coverArt === "none"
+          ? ""
+          : current.physicalConfig.coverArt ||
+            current.stickerId ||
+            items[0]?.id ||
+            ""
+        : current.stickerId,
+      "sticker",
+    );
     // Do not assign unchanged values: preserve selection, caret and input composition.
     for (const [id, key] of Object.entries(fields))
       if (changed.includes(key) && $(id).value !== current[key])
@@ -345,11 +406,13 @@ export function createUI({ state, preview }) {
     $("giftInput").setAttribute("aria-invalid", String(!!badGift));
     $("birthdayControls").hidden = !theme.birthday;
     $("birthdayNumberToggle").checked = current.birthdayNumberEnabled;
-    $("birthdayNumberField").hidden = !current.birthdayNumberEnabled;
+    $("birthdayNumberField").hidden = false;
+    if ($("birthdayNumberInput").value !== String(current.birthdayNumber))
+      $("birthdayNumberInput").value = current.birthdayNumber;
     const badAge =
       current.birthdayNumberEnabled && !birthdayNumber(current.birthdayNumber);
     $("birthdayError").textContent = badAge
-      ? "Enter a whole number from 1 to 120, or turn off the birthday number."
+      ? "Enter a whole number from 1 to 120, or leave blank."
       : "";
     $("birthdayNumberInput").setAttribute("aria-invalid", String(!!badAge));
     const paper = current.paperOverride || theme.palette.paper,
@@ -361,8 +424,8 @@ export function createUI({ state, preview }) {
     $("contrastStatus").className = ratio < 4.5 ? "warning" : "helper";
     $("contrastStatus").textContent =
       ratio < 4.5
-        ? `Low contrast (${ratio.toFixed(1)}:1). Try a darker text or lighter background.`
-        : `Easy to read · ${ratio.toFixed(1)}:1 contrast`;
+        ? "Choose a darker text or lighter background for easier reading."
+        : "";
     $("palettePresets")
       .querySelectorAll("button")
       .forEach((node) =>
@@ -372,7 +435,7 @@ export function createUI({ state, preview }) {
         ),
       );
     $("messageRemaining").textContent =
-      `${Array.from(current.message).length.toLocaleString()} characters · paragraphs preserved · fit checked in the preview`;
+      `${Array.from(current.message).length.toLocaleString()} characters`;
     const summary = [
       `For ${current.to || "someone special"}`,
       `${theme.occasion} · ${theme.name}`,
@@ -451,5 +514,5 @@ export function createUI({ state, preview }) {
       return url;
     },
   });
-  goTo(1, false);
+  goTo(new URLSearchParams(location.search).has("design") ? 2 : 1, false);
 }

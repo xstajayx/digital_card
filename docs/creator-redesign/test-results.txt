@@ -1,0 +1,281 @@
+Executed creator validation
+Base: origin/main fff4bfd (merged PR #37, #36 and #35).
+Branch: feat/creator-ux-redesign.
+
+FINAL OUTCOME
+45 Node tests passed (17 data, 9 occasions, 5 photo, 11 assistant, 3 creator).
+All 10 existing Python regression suites passed after the fixes/updates below.
+New creator Python suite passed at 320/360/390/412/430/768/1024/1440px and 844x390 landscape, including 200% text.
+Final focused creator run passed at 390/1024/1440, including all 28 designs, artwork removal/replacement, matching envelope colours, immediate palette preview and preservation of historical example names.
+Responsive suite additionally covered 800x360 landscape, expanded controls, touch targets, simulated keyboard viewports and doubled text.
+No real messages sent. Sharing providers were intercepted.
+
+BASELINE
+The four original Node suites ran before implementation. The ten original Python suites ran against an immutable archive of exact main at /tmp/creator-baseline/digital_card, so edits could not contaminate the baseline. All passed.
+
+COMMANDS EXECUTED
+node tests/data.mjs
+node tests/occasions.mjs
+node tests/photo.mjs
+node tests/assistant.mjs
+node tests/creator.mjs
+
+Each Python command used PYTHONPATH=/tmp/silent-hello-test-deps and CARD_ARTIFACT_DIR=/workspace/creator-validation/final:
+python -u tests/browser.py
+python -u tests/shop.py
+python -u tests/interactive.py
+python -u tests/physical.py
+python -u tests/responsive.py
+python -u tests/recipient.py
+python -u tests/calendar_ics.py
+python -u tests/occasions.py
+python -u tests/photo.py
+python -u tests/assistant.py
+python -u tests/creator.py
+CREATOR_WIDTH=390,1024,1440 python -u tests/creator.py
+
+Before screenshots: CREATOR_ROOT=/tmp/creator-baseline/digital_card CREATOR_BEFORE=1 python -u tests/creator.py
+Also executed node --check for all changed JS modules, python -m py_compile tests/*.py, git diff --check, an HTMLParser check for duplicate studio IDs/missing local paths, and a protected-file diff against main. All returned success.
+
+INTERMEDIATE FAILURES AND RESOLUTION
+- Tablet modal fitting exposed the shop's generic 280px dialog iframe cap. A creator-scoped rule removes that restriction. Preview stays mounted; opening the modal no longer reparents/reloads the iframe.
+- Initial browser replay assertion caught an unintended replay on step navigation. Navigation now uses the existing stage API; explicit Replay keeps its original behavior.
+- Tests were updated to open the new Drafts/More options disclosures, use the visual font picker and optional age field, and select retained standard presentation explicitly for legacy renderer geometry. Hidden redundant quick-share mirror checks still exercise the share guard programmatically; the visible native share action is checked separately.
+- One parallel browser run timed out during a click, and a photo run timed out in the unchanged unfolding animation. Complete isolated reruns were performed; no animation code or test timeouts were weakened.
+- Desktop photo assertions assumed the outer viewport always implied a two-page iframe. They now use actual iframe width, matching the existing engine. Narrow embedded previews expose photo/message switching; wide previews check page separation. Container queries keep narrow physical previews portrait-shaped.
+- Final complete browser run: all 24 groups passed. Final complete photo run: all seven sizes and format/storage/share checks passed.
+
+Protected sources unchanged: view.html, app/viewer.js, assets/recipient.css, engine/card-data.js, engine/share-codec.js, engine/card-renderer.js, engine/physical-card.css, app/photo-card.js, app/photo-image.js, app/photo-drafts.js, engine/occasions.js.
+The physical renderer changes are limited to optional cover-name text and mappings for existing fonts; its opening/animation code is unchanged.
+
+ACTUAL BASELINE EXIT STATUS
+data-node=0
+occasions-node=0
+photo-node=0
+assistant-node=0
+browser=0
+shop=0
+interactive=0
+physical=0
+responsive=0
+recipient=0
+calendar_ics=0
+occasions=0
+photo=0
+assistant=0
+
+=== data-node ===
+✔ catalogue has 23 occasions, 28 unique designs and all legacy theme IDs (2.009857ms)
+✔ all metadata, palettes and local assets are usable (6.19417ms)
+✔ all legacy illustration identifiers migrate to the right object (0.581584ms)
+✔ birthday ordinals and age bounds, including kids and milestones (1.032159ms)
+✔ gift sanitization blocks credentials, non-HTTPS and oversized links (0.30623ms)
+✔ all six fonts, text sizes, colour overrides and safe defaults validate (1.199969ms)
+✔ bad fields, unknown versions/designs and over-limit text are rejected (1.057733ms)
+✔ v3 raw and compressed links preserve all fields and Unicode (41.101165ms)
+✔ v1/v2 base64url JSON links and disabled-compression fallback work (1.745058ms)
+✔ malformed, invalid UTF-8 and decompression bombs fail within bounds (28.615388ms)
+✔ no-op state changes do not notify and unsubscribe works (0.429918ms)
+✔ no GIF/export dependencies or unsafe dynamic HTML are introduced (12.808852ms)
+✔ v4 opening configuration round-trips without changing the v3 array (18.603287ms)
+✔ email and SMS drafts preserve complete links and never invoke delivery (1.57949ms)
+✔ v5 folded document round-trips separate cover/inside fields and v4 stays unchanged (8.261025ms)
+✔ all six paper surfaces have readable ink and physical artwork/fields are strictly validated (0.882881ms)
+✔ folded documents require a valid envelope and sensible message limits (0.911171ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140.665006
+
+=== occasions-node ===
+✔ birthdays and anniversaries save an explicit allowlist, never card messages (4.264543ms)
+✔ edit versions reject conflicts and deleted records; unrelated records survive (1.19981ms)
+✔ storage failure and corrupt/unsupported records are not overwritten (0.739229ms)
+✔ valid day/month, leap centuries and strict types (0.542975ms)
+✔ next occurrence uses local calendar day, today and December rollover (1.221287ms)
+✔ 29 February skips non-leap years including 2100, without inventing a birthday (0.706199ms)
+✔ one-time occasions expire and annual occasions advance (1.302733ms)
+✔ RFC calendar contains stable UID, all-day exclusive dates, recurrence and optional alarm (4.402282ms)
+✔ UTF-8 folding respects 75 octets without splitting codepoints; text cannot inject properties (4.028935ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 30.574591
+
+=== photo-node ===
+✔ actual JPEG header is inspected; MIME, SVG, GIF and corrupt data rejected (4.630422ms)
+✔ truncated JPEG marker runs produce a clear format error, never a buffer exception (7.878846ms)
+✔ image budgets reject empty files, huge dimensions and invalid PNG headers (1.442481ms)
+✔ crop geometry covers frame at every rotation and permits only bounded zoom/positions (5.753491ms)
+✔ photo editing settings whitelist only local presentation fields (0.5598ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41.965366
+
+=== assistant-node ===
+✔ non-destructive v1 migration: defaults off, legacy year is not a birth year, IDs and calendars preserved (20.243108ms)
+✔ milestone birthday example and every required birthday milestone select real designs (7.721525ms)
+✔ missing year never invents age; anniversary numbers and preferences are respected (7.377565ms)
+✔ profile validation rejects invalid year/email/template/physical opening combinations (1.890554ms)
+✔ timezone and leap-day occurrence are calendar based; no non-leap invented dates (80.914031ms)
+✔ local due generation requires both opt-ins, obeys lead time and is idempotent by contact/year (7.8846ms)
+✔ date/preference edits invalidate approval and preserve manually edited text until explicit regeneration (10.479763ms)
+✔ deleted contacts cannot prepare or continue a queued card; sent and cancellation states are safe (4.53456ms)
+✔ deleting a prepared card suppresses automatic recreation; explicit manual preparation can restore it (3.631119ms)
+✔ contact exports/imports are bounded, atomic, deduplicated and require explicit replacement (2.89453ms)
+✔ corrupt or full stores retain existing data; retention keeps future cards and clears old history (5.947876ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 183.254875
+
+=== creator-node ===
+✔ historical v5 physical documents keep absence of coverName and original font settings (1.986015ms)
+✔ optional cover name is explicit, bounded text; all real fonts round-trip in v5 (96.501978ms)
+✔ default cover greeting has no recipient name; custom greeting and age are independent (0.365564ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.331931
+
+=== browser ===
+PASS 360x800: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 360x800: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 360x800: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 360x800: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 360x800: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 390x844: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 390x844: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 390x844: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 390x844: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 390x844: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 768x1024: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 768x1024: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 768x1024: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 768x1024: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 768x1024: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS 1440x900: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 1440x900: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 1440x900: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 1440x900: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 1440x900: compact share URL, viewer preserves fit/colours/font/artwork/gift/watermark; screenshots captured
+PASS native sharing, duplicate prevention, WhatsApp construction/popup fallback, cancellation, clipboard fallback, keyboard and rapid theme switching
+PASS v1/v2 migration, legacy artwork aliases, HTML/path/URL injection rejection, invalid/missing/future-version error states
+PASS reduced-motion preference stops running animations; 200% text scaling preserves readable text or explicit full-message fallback
+PASS no JavaScript console/page errors, failed local requests, or missing assets
+PASS 24 browser check groups. Screenshots: /workspace/creator-validation/final
+
+=== shop ===
+PASS 360x800: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 390x844: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 768x1024: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 1440x900: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+
+=== interactive ===
+PASS 360x800: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 390x844: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 768x1024: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 1440x900: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+
+=== physical ===
+PASS 360x800: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 390x844: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 768x1024: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 1440x900: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+
+=== responsive ===
+PASS 320x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 360x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 390x844: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 412x915: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 430x932: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 768x1024: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1024x768: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1440x900: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 800x360: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 844x390: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+
+=== recipient ===
+PASS recipient 320: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 360: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 390: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 412: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 430: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 768: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 1440: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS legacy v1
+PASS legacy v2
+PASS legacy v3
+PASS legacy v4
+PASS long message, full signature, keyboard skip and no page errors
+
+=== calendar_ics ===
+PASS independent icalendar parse/serialize/parse: UTF-8 escapes, all-day dates, exclusive end, UID, leap-century recurrence, optional alarms and one-time anniversary
+
+=== occasions ===
+PASS 320px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 360px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 390px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 412px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 430px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 768px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS 1440px: birthday/anniversary CRUD, persistence, explicit date/validation, leap day, chronological order, keyboard dialog, delete/Escape, parsed calendar downloads/optional alarm, no overflow
+PASS sender prepare/share, nickname prefill with blank date, no card text stored, failure handling, conflict handling, shop navigation and recipient isolation
+
+=== photo ===
+PASS 320px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 360px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 390px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 412px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 430px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 768px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS 1440px photo: upload/crop/zoom/reposition/rotation, square gold cover, attached book/open/close/replay, memory inside pages, reduced motion/touch/keyboard, no text overlap, IndexedDB recovery/metadata stripping, design switch, v5 traditional sharing and recipient isolation
+PASS format spoof/GIF rejection, real PNG/WebP, pointer/keyboard crop, full cover greeting zone, all share transports blocked, remove, missing draft and storage failure
+
+=== assistant ===
+PASS 320px: v1/v2 preservation, preferences, year/email, private export, local due preparation/milestone, duplicate prevention, physical preview, existing-editor edits, approval/share gate, v5 recipient, sent history, contact deletion and no overflow
+PASS 390px: v1/v2 preservation, preferences, year/email, private export, local due preparation/milestone, duplicate prevention, physical preview, existing-editor edits, approval/share gate, v5 recipient, sent history, contact deletion and no overflow
+PASS 768px: v1/v2 preservation, preferences, year/email, private export, local due preparation/milestone, duplicate prevention, physical preview, existing-editor edits, approval/share gate, v5 recipient, sent history, contact deletion and no overflow
+PASS 1440px: v1/v2 preservation, preferences, year/email, private export, local due preparation/milestone, duplicate prevention, physical preview, existing-editor edits, approval/share gate, v5 recipient, sent history, contact deletion and no overflow
+PASS anniversary years/template, malformed import preservation and explicit conflict replacement
+PASS actual storefront on-visit generation, repeat-visit deduplication, date-change regeneration and deleted-contact suppression
+
+=== creator all viewports ===
+PASS 320x800: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 360x800: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 390x844: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 412x915: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 430x932: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 768x1024: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 1024x768: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 1440x900: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 844x390: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS all 28 existing designs: folded cover/inside fitting, real art and no example-name leakage
+
+=== creator final focused ===
+PASS 390x844: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 1024x768: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS 1440x900: five steps, shop entry, default folded/matching envelope, opt-in editable cover name, greeting/ordinals, six actual fonts, palette/effects/art, same-frame modal and focus return, suggestion undo, local draft, v5 share/recipient, keyboard, 200% text and no clipping
+PASS all 28 existing designs: folded cover/inside fitting, real art and no example-name leakage
+PASS design switches preserve names even when they match a historical example name

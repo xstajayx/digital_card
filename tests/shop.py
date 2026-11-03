@@ -1,4 +1,5 @@
 """Additive storefront, draft and interactive-opening regressions."""
+from editor_controls import legacy, drafts
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 import threading
@@ -26,14 +27,14 @@ try:
    pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(28)
    assert pg.evaluate('document.documentElement.scrollWidth<=innerWidth')
    pg.screenshot(path=str(artifacts/f'shop-{width}.png'),full_page=True)
-   pg.goto(base+'studio.html?design=birthday-envelope');expect(pg.locator('.occasion-tile')).to_have_count(23)
+   pg.goto(base+'studio.html?design=birthday-envelope');expect(pg.locator('.occasion-tile')).to_have_count(23);legacy(pg);drafts(pg)
    pg.locator('.steps [data-step="5"]').click();f=pg.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready')
    f.get_by_role('button',name='Open your card',exact=True).focus();pg.keyboard.press('Enter');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','complete')
    pg.locator('#replayButton').click();expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');f.get_by_role('button',name='Skip opening').click();expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','complete')
-   pg.locator('.steps [data-step="3"]').click();pg.locator('#messageInput').fill('Remember this little hello.');pg.get_by_role('button',name='Save draft',exact=True).click();pg.reload();expect(pg.locator('.occasion-tile')).to_have_count(23)
+   pg.locator('.steps [data-step="3"]').click();pg.locator('#messageInput').fill('Remember this little hello.');pg.get_by_role('button',name='Save draft',exact=True).click();pg.reload();expect(pg.locator('.occasion-tile')).to_have_count(23);legacy(pg);drafts(pg)
    pg.get_by_role('button',name='Restore draft',exact=True).click();pg.locator('.steps [data-step="3"]').click();expect(pg.locator('#messageInput')).to_have_value('Remember this little hello.')
    pg.get_by_role('button',name='Delete draft',exact=True).click();assert pg.evaluate("localStorage.getItem('silent-hello-draft-v1')") is None
-   pg.goto(base+'studio.html?design=christmas-gift');expect(pg.locator('.occasion-tile')).to_have_count(23);pg.locator('.steps [data-step="5"]').click();pg.emulate_media(reduced_motion='reduce');f=pg.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');f.get_by_role('button',name='Open your card',exact=True).click();expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','complete')
+   pg.goto(base+'studio.html?design=christmas-gift');expect(pg.locator('.occasion-tile')).to_have_count(23);legacy(pg);drafts(pg);pg.locator('.steps [data-step="5"]').click();pg.emulate_media(reduced_motion='reduce');f=pg.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');f.get_by_role('button',name='Open your card',exact=True).click();expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','complete')
    payload=pg.evaluate("""async()=>{const {encodeCard}=await import('./engine/share-codec.js');return encodeCard({themeId:'christmas-gift',to:'Friend',message:'A shared surprise',from:'Me',fontId:'nunito',textSize:18,watermark:true})}""")
    pg.goto(base+'view.html#c='+payload);vf=pg.frame_locator('#viewerFrame');expect(vf.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');vf.get_by_role('button',name='Skip opening').click();expect(vf.locator('#message')).to_have_text('A shared surprise');expect(vf.locator('#cardRoot')).to_have_attribute('data-opening-state','complete')
    assert not errors,errors

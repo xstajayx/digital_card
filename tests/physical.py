@@ -1,4 +1,5 @@
 """Physical envelope -> extraction -> cover -> inside, legacy compatibility retained."""
+from editor_controls import advanced, drafts
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 import threading,os,shutil
@@ -9,7 +10,10 @@ class Handler(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start();BASE=f'http://127.0.0.1:{server.server_port}/{ROOT.name}/'
 MESSAGE='A little note, just for you 👩🏽‍🚀.\n\nCafé, 漢字 & all the lovely things.\nHere’s to another wonderful adventure!'
-def step(page,n):page.locator(f'.steps [data-step="{n}"]').click()
+def step(page,n):
+ page.locator(f'.steps [data-step="{n}"]').click()
+ if n==4:advanced(page)
+ drafts(page)
 def fit(page,id='cardPreview'):return page.locator('#'+id).evaluate('async e=>{await new Promise(requestAnimationFrame);return e.contentWindow.checkFit()}')
 def capture(f,name):f.locator('#cardRoot').screenshot(path=str(ART/name),style='.step-footer,.skip-link{visibility:hidden!important}')
 try:
@@ -22,7 +26,7 @@ try:
     page.on('response',lambda r:errors.append(f'{r.status} {r.url}') if r.status>=400 else None)
    context.on('page',observe);page=context.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23)
    step(page,3);page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill(MESSAGE);page.locator('#fromInput').fill('With love, Alex')
-   step(page,4);page.locator('#physicalToggle').check();page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-coverArt').select_option('blue-cake');page.locator('#physical-insideArt').select_option('purple-cake');page.locator('#physical-paper').select_option('linen');step(page,5)
+   step(page,4);page.locator('#physicalToggle').check();step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-coverArt').select_option('blue-cake');step(page,4);page.locator('#physical-insideArt').select_option('purple-cake');page.locator('#physical-paper').select_option('linen');step(page,5)
    f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');assert fit(page)
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');expect(f.locator('.paper-envelope-tag')).to_have_text('For Maya');capture(f,f'envelope-{width}.png')
    f.locator('.paper-book').evaluate('e=>window.originalPaperBook=e');f.locator('.paper-envelope-front').focus()
@@ -38,12 +42,12 @@ try:
    f.locator('.paper-action').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');f.locator('.paper-cover').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','inside')
    f.locator('.paper-read').click();expect(f.locator('.paper-reader')).to_be_visible();expect(f.locator('.paper-reader-text')).to_contain_text(MESSAGE);f.locator('.paper-reader-close').click()
    # Explicit drafts retain separate cover, paper and inside choices.
-   page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(23);page.get_by_role('button',name='Restore draft',exact=True).click();step(page,4);expect(page.locator('#physicalToggle')).to_be_checked();expect(page.locator('#physical-paper')).to_have_value('linen');expect(page.locator('#physical-coverArt')).to_have_value('blue-cake')
+   page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(23);drafts(page);page.get_by_role('button',name='Restore draft',exact=True).click();step(page,4);expect(page.locator('#physicalToggle')).to_be_checked();expect(page.locator('#physical-paper')).to_have_value('linen');step(page,2);expect(page.locator('#physical-coverArt')).to_have_value('blue-cake');step(page,4)
    for paper in ['ivory','linen','white','kraft','pastel','textured']:
     page.locator('#physical-paper').select_option(paper);step(page,5);assert fit(page);expect(f.locator('#cardRoot')).to_have_attribute('data-paper',paper);step(page,4)
    # The cover accepts text only, independently from the inside message.
-   page.locator('#physical-coverGreeting').fill('<img src=x onerror=alert(1)>');step(page,5);assert fit(page);assert f.locator('.paper-cover-title img').count()==0;expect(f.locator('#message')).to_have_text(MESSAGE)
-   step(page,4);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-paper').select_option('linen');step(page,5);assert fit(page)
+   step(page,2);page.locator('#physical-coverGreeting').fill('<img src=x onerror=alert(1)>');step(page,5);assert fit(page);assert f.locator('.paper-cover-title img').count()==0;expect(f.locator('#message')).to_have_text(MESSAGE)
+   step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');step(page,4);page.locator('#physical-paper').select_option('linen');step(page,5);assert fit(page)
    page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('Link copied');url=page.evaluate('navigator.clipboard.readText()');assert '#c=5' in url
    viewer=context.new_page();viewer.goto(url);vf=viewer.frame_locator('#viewerFrame');expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');assert fit(viewer,'viewerFrame');expect(vf.locator('.paper-cover-title')).to_have_text('A birthday full of little wonders')
    viewer.emulate_media(reduced_motion='reduce');vf.locator('.paper-envelope-front').click();expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');vf.locator('.paper-cover').click();expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','inside');expect(vf.locator('#message')).to_have_text(MESSAGE);expect(vf.locator('#from')).to_have_text('With love, Alex');capture(vf,f'recipient-{width}.png');assert viewer.evaluate('document.documentElement.scrollWidth<=innerWidth')

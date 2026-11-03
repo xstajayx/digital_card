@@ -62,11 +62,17 @@ export function bindPhysicalPicker(state, preview) {
     ]),
   );
   field("handwriting", "Inside lettering", [
+    ["fredoka", "Fredoka"],
+    ["poppins", "Poppins"],
+    ["playfair", "Playfair Display"],
     ["quicksand", "Quicksand · light and personal"],
     ["nunito", "Nunito · clear and friendly"],
     ["pacifico", "Pacifico · handwritten"],
   ]);
   field("signature", "Signature style", [
+    ["fredoka", "Fredoka"],
+    ["poppins", "Poppins"],
+    ["quicksand", "Quicksand"],
     ["pacifico", "Pacifico · natural handwriting"],
     ["playfair", "Playfair Display"],
     ["nunito", "Nunito"],
@@ -112,7 +118,9 @@ export function bindPhysicalPicker(state, preview) {
   toggle.onchange = () => {
     const s = state.get();
     state.set({
-      physicalConfig: toggle.checked ? defaultPhysical() : null,
+      physicalConfig: toggle.checked
+        ? { ...defaultPhysical(), coverName: "" }
+        : null,
       ...(toggle.checked
         ? {
             openingConfig: {

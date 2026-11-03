@@ -1,4 +1,5 @@
 """Local photo creator: raster safety, crop, physical pages, drafts and share isolation."""
+from editor_controls import drafts, advanced
 from pathlib import Path
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 import threading,os,shutil,re,struct,base64,json
@@ -20,7 +21,10 @@ JPEG=RAW[:2]+b'\xff\xe1'+struct.pack('>H',len(payload)+2)+payload+RAW[2:]
 
 def upload(page,content=JPEG,mime='image/jpeg',name='portrait.jpg'):
  page.locator('#localPhotoUpload').set_input_files({'name':name,'mimeType':mime,'buffer':content})
-def step(page,n):page.locator(f'.steps [data-step="{n}"]').click()
+def step(page,n):
+ page.locator(f'.steps [data-step="{n}"]').click()
+ drafts(page)
+ advanced(page)
 def crop(page):return page.locator('#photoCropCanvas').evaluate('e=>e.toDataURL()')
 def slide(page,key,value):page.locator('#photo-'+key).evaluate('(e,v)=>{e.value=v;e.dispatchEvent(new Event("input",{bubbles:true}))}',str(value))
 def capture(page,f,name):
@@ -34,6 +38,8 @@ try:
    ctx=browser.new_context(viewport={'width':width,'height':height},has_touch=width<500,permissions=['clipboard-read','clipboard-write']);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23)
    step(page,3);page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill('Here’s to all the adventures still to come.\n\nA little birthday joy, just for you.');page.locator('#fromInput').fill('With love, Alex')
    step(page,4);page.locator('#photo-type').select_option('cover');upload(page);expect(page.locator('#photoStatus')).to_contain_text('preview ready',timeout=20000)
+   if width==390:
+    original=crop(page);page.locator('#cardPreview').evaluate('e=>e.contentWindow.photoModalIdentity="kept"');page.locator('#editingPreview').click();expect(page.locator('#creatorPreviewDialog')).to_be_visible();assert page.locator('#cardPreview').evaluate('e=>e.contentWindow.photoModalIdentity')=='kept';page.locator('#closeCreatorPreview').click();assert crop(page)==original;expect(page.locator('#studio')).to_have_attribute('data-step','4')
    before=crop(page);slide(page,'zoom',2);page.wait_for_function('(before)=>document.querySelector("#photoCropCanvas").toDataURL()!==before',arg=before);zoomed=crop(page);slide(page,'x',.7);slide(page,'y',-.5);page.locator('#photoRotate').focus();page.keyboard.press('Enter');page.wait_for_function('(before)=>document.querySelector("#photoCropCanvas").toDataURL()!==before',arg=zoomed)
    page.locator('#photo-aspect').select_option('square');page.locator('#photo-border').select_option('gold');page.locator('#photo-alt').fill('A portrait of Grace Hopper, test photograph')
    step(page,5);f=page.frame_locator('#cardPreview');root=f.locator('#cardRoot');expect(root).to_have_class(re.compile('local-photo-card'));page.locator('#cardPreview').evaluate('async e=>e.contentWindow.checkFit()');expect(root).to_have_attribute('data-physical-state','envelope');capture(page,f,f'envelope-{width}.png')
@@ -49,7 +55,8 @@ try:
    page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('local previews only');expect(page.locator('#shareFallback')).to_be_hidden()
    step(page,4);page.locator('#photo-type').select_option('memory');page.locator('#photo-layout').select_option('inside');page.locator('#photo-border').select_option('paper');page.locator('#photo-aspect').select_option('portrait')
    step(page,5);page.emulate_media(reduced_motion='reduce');f.locator('.paper-envelope-front').click();expect(root).to_have_attribute('data-physical-state','cover');f.locator('.paper-cover').click();expect(root).to_have_attribute('data-physical-state','inside');assert f.locator('.local-photo-zone').evaluate('e=>e.parentElement.classList.contains("paper-left")');assert f.locator('.local-card-photo-back').get_attribute('src')==f.locator('.local-card-photo').get_attribute('src');assert f.locator('.paper-inside-art').evaluate('e=>getComputedStyle(e).display==="none"')
-   if width<768:
+   # A compact desktop preview can also use the engine's one-page layout.
+   if page.locator('#cardPreview').evaluate('e=>e.clientWidth<=500'):
     page.locator('#photoPage').click();expect(root).to_have_attribute('data-local-page','photo');expect(f.locator('.paper-left')).to_be_visible();assert f.locator('.paper-right').evaluate('e=>e.inert');capture(page,f,f'inside-photo-{width}.png');page.locator('#messagePage').click();assert not f.locator('.paper-right').evaluate('e=>e.inert')
    else:
     a=f.locator('.local-photo-zone').bounding_box();b=f.locator('#message').bounding_box();assert a['x']+a['width']<=b['x']+1
@@ -72,7 +79,8 @@ try:
   page.locator('#photo-layout').select_option('full');step(page,5);f=page.frame_locator('#cardPreview');page.emulate_media(reduced_motion='reduce');f.locator('.paper-envelope-front').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');capture(page,f,'full-cover-390.png');a=f.locator('.local-photo-zone').bounding_box();b=f.locator('.paper-cover-title').bounding_box();assert b['y']>=a['y']+a['height']-1
   page.evaluate('''()=>{window.transports=0;Object.defineProperty(navigator,'share',{configurable:true,value:()=>{transports++;return Promise.resolve()}});window.open=()=>{transports++;return {opener:null,close(){},location:{}}}}''')
   for selector in ['#shareLinkButton','#nativeShareButton','#emailShareButton','#smsShareButton','#shareWhatsappButton','#quickShareButton']:
-   page.locator(selector).click();expect(page.locator('#exportStatus')).to_contain_text('local previews only')
+   # The redundant quick-share mirror is intentionally hidden in the new creator.
+   (page.locator(selector).dispatch_event('click') if selector=='#quickShareButton' else page.locator(selector).click());expect(page.locator('#exportStatus')).to_contain_text('local previews only')
   # A WhatsApp blank window may be reserved by the existing transport, then closed;
   # no card URL or native share payload can be delivered.
   assert page.evaluate('window.transports')<=1

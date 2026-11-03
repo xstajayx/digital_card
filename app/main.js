@@ -1,3 +1,6 @@
+import { bindCreator } from "./creator.js";
+import { defaultPhysical } from "../engine/physical-schema.js";
+import { defaultOpening } from "../engine/openings/config.js";
 import "./responsive.js";
 import { bindPreparedEditor } from "./prepared-editor.js";
 import { bindPhotoEditor } from "./photo-card.js";
@@ -22,6 +25,10 @@ async function init() {
       themes,
       theme,
       ...theme.defaults,
+      to: "",
+      from: "",
+      physicalConfig: { ...defaultPhysical(), coverName: "" },
+      openingConfig: { ...defaultOpening(), tone: "theme" },
       stickerId: theme.id === "birthday-balloons" ? "pink-cake" : "",
       fontId: theme.defaultFontId || "fredoka",
     });
@@ -31,6 +38,7 @@ async function init() {
     bindOpeningPicker(state);
     bindPhysicalPicker(state, preview);
     bindPreparedEditor(state, preview, photos);
+    bindCreator(state, preview);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");
