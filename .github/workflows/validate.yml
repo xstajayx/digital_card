@@ -25,6 +25,7 @@ jobs:
       - run: python -u tests/shop.py
       - run: python -u tests/interactive.py
       - run: python -u tests/physical.py
+      - run: python -u tests/responsive.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

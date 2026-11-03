@@ -1,3 +1,4 @@
+import "./responsive.js";
 import { bindPhysicalPicker } from "./physical-picker.js";
 import { bindOpeningPicker } from "./opening-picker.js";
 import { createState } from "./state.js";

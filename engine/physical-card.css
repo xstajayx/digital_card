@@ -442,3 +442,20 @@
 .physical-scene[data-state="extracting"] .paper-envelope-flap {
   z-index: 1;
 }
+/* Let enlarged/wrapped action rows reserve their own space below the paper. */
+.physical-scene {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 10px 8px;
+}
+.physical-stage {
+  position: relative;
+  inset: auto;
+  min-width: 0;
+  min-height: 0;
+}
+.paper-controls {
+  position: static;
+  min-width: 0;
+}

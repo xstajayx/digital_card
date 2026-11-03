@@ -389,3 +389,32 @@ dialog h2 {
     gap: 16px;
   }
 }
+/* Long labels and enlarged text must wrap inside the existing shop layout. */
+.wordmark {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 100%;
+}
+.shop-nav > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.shop-card,
+.shop-thumbnail,
+.shop-card h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.shop-nav nav a,
+.shop-footer nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+/* Rotation expands with the paper's text height and spills at enlarged text sizes. */
+@media (max-width: 950px) {
+  .hero-paper {
+    transform: none;
+  }
+}
