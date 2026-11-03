@@ -1,3 +1,4 @@
+import { assertPhotoShareable } from "./photo-card.js";
 import { sanitizeGiftUrl } from "../engine/sanitize.js";
 import { ILLUSTRATIONS, illustrationUrl } from "../engine/illustrations.js";
 import {
@@ -408,6 +409,7 @@ export function createUI({ state, preview }) {
     linkInput: $("shareUrl"),
     mirrors: [$("quickShareButton")],
     async getUrl() {
+      assertPhotoShareable(state);
       const before = revision,
         current = state.get();
       if (
@@ -441,6 +443,7 @@ export function createUI({ state, preview }) {
         throw new Error(
           "Your card changed while preparing the link. Please share again.",
         );
+      assertPhotoShareable(state);
       offerOccasion(current);
       return url;
     },

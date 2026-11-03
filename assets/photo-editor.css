@@ -1,0 +1,60 @@
+/* Sender-only photo controls. Existing card/recipient styles are unchanged. */
+.photo-picker {
+  min-width: 0;
+}
+.photo-controls {
+  min-width: 0;
+}
+.photo-crop-canvas {
+  display: block;
+  width: min(100%, 300px);
+  height: auto;
+  margin: 14px auto;
+  background: #fff;
+  border: 8px solid #fffdf8;
+  box-shadow: 0 3px 14px #243b3320;
+  touch-action: none;
+  cursor: grab;
+}
+.photo-controls input[type="file"] {
+  max-width: 100%;
+  font-size: 0.8rem;
+  white-space: normal;
+}
+.photo-controls input[type="range"] {
+  width: 100%;
+  min-height: 44px;
+  accent-color: #214c3e;
+}
+.photo-actions,
+.photo-page-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+.photo-actions .button,
+.photo-page-switch .button {
+  min-height: 44px;
+}
+.photo-page-switch [aria-pressed="true"] {
+  background: #214c3e;
+  color: white;
+}
+.photo-local-notice {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  padding: 12px 14px;
+  border: 1px solid #dac9a4;
+  border-radius: 10px;
+  background: #fbf2df;
+}
+.photo-status {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #214c3e;
+  overflow-wrap: anywhere;
+}
+.photo-status:empty {
+  display: none;
+}

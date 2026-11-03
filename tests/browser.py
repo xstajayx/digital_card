@@ -123,7 +123,8 @@ try:
             page = context.new_page()
             page.goto(BASE+"studio.html")
             expect(page.locator(".occasion-tile")).to_have_count(23)
-            assert page.locator('input[type="file"]').count() == 0
+            assert page.locator('input[type="file"]').count() == 1
+            expect(page.locator('input[type="file"]')).to_have_attribute("accept", "image/jpeg,image/png,image/webp")
             assert not page.get_by_role("button", name="GIF", exact=False).count()
             # Search, category filters and accessible selected-state feedback.
             page.locator("#occasionSearch").fill("wedding")

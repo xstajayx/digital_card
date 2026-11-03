@@ -334,7 +334,7 @@ test("no-op state changes do not notify and unsubscribe works", () => {
   state.set({ message: "Bye" });
   assert.equal(calls, 2);
 });
-test("no photo/GIF controls or unsafe dynamic HTML remain in runtime code", () => {
+test("no GIF/export dependencies or unsafe dynamic HTML are introduced", () => {
   const source =
     read("index.html") +
     ["app", "engine"]
@@ -344,9 +344,14 @@ test("no photo/GIF controls or unsafe dynamic HTML remain in runtime code", () =
           .map((f) => read(`${dir}/${f}`)),
       )
       .join("");
+  // PR #35 uses one audited, constant occasion-dialog template. User values
+  // are assigned through DOM properties, never interpolated into that markup.
+  const templates = [...source.matchAll(/\.innerHTML\s*=\s*`([^`]*)`/g)];
+  assert.equal(templates.length, 1);
+  assert.ok(!templates[0][1].includes("${"));
   assert.doesNotMatch(
-    source,
-    /type="file"|html2canvas|gif\.js|photoInput|photoData|wrapAndClampMessage|\.innerHTML\s*=/,
+    source.replace(templates[0][0], ""),
+    /html2canvas|gif\.js|wrapAndClampMessage|\.innerHTML\s*=/,
   );
 });
 
