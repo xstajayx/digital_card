@@ -1,0 +1,85 @@
+Validation on 2026-11-03 using Chromium and Playwright.
+
+data
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 292.744532
+
+shop
+PASS 360x800: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 390x844: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 768x1024: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+PASS 1440x900: shop, filters, preview, design routing, keyboard openings/replay/skip, reduced motion and draft recovery/deletion
+
+interactive
+PASS 360x800: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 390x844: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 768x1024: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+PASS 1440x900: all 28 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts
+
+physical
+PASS 360x800: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 390x844: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 768x1024: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+PASS 1440x900: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration
+
+responsive
+PASS 320x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 360x800: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 390x844: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 412x915: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 430x932: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 768x1024: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1024x768: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 1440x900: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 800x360: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+PASS 844x390: five steps, expanded settings, field/container bounds, targets, keyboard-sized viewport, 200% text, keyboard navigation and public pages
+
+recipient
+PASS recipient 320: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 360: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 390: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 412: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 430: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 768: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS recipient 1440: journey, top action, direct taps, keyboard, close/reopen, replay, reading, reduced motion, overflow
+PASS legacy v1
+PASS legacy v2
+PASS legacy v3
+PASS legacy v4
+
+Recipient suite exited 0, including long-message preservation and keyboard skip.
+
+browser
+PASS 360x800: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 360x800: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 360x800: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 360x800: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 360x800: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured
+PASS 390x844: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 390x844: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 390x844: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 390x844: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 390x844: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured
+PASS 768x1024: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 768x1024: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 768x1024: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 768x1024: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 768x1024: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured
+PASS 1440x900: all 23 occasions / 28 designs, fonts available, artwork loads, proportional layout and no overlap
+PASS 1440x900: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit
+PASS 1440x900: editing preserves focus/gallery nodes; single updates; only explicit Replay restarts opening
+PASS 1440x900: long/short messages, readable minimum, overflow blocks share, ordinals, contrast and safe Reset Design
+PASS 1440x900: compact share URL, viewer matches preview geometry/colours/font/artwork/gift/watermark; screenshots captured
+PASS native sharing, duplicate prevention, WhatsApp construction/popup fallback, cancellation, clipboard fallback, keyboard and rapid theme switching
+PASS v1/v2 migration, legacy artwork aliases, HTML/path/URL injection rejection, invalid/missing/future-version error states
+PASS reduced-motion preference stops running animations; 200% text scaling preserves readable text or explicit full-message fallback
+PASS no JavaScript console/page errors, failed local requests, or missing assets
+PASS 24 browser check groups. Screenshots: /workspace/onboarding/polished-studio
+
+All seven test scripts exited successfully.
