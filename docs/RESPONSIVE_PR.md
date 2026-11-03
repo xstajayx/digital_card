@@ -1,0 +1,7 @@
+Step 4's full-width floated legends forced their first controls beside the float. On a 360px viewport the opening dropdown collapsed to 26px and the paper checkbox label to zero width; rounded-panel clipping concealed the spill while document width appeared normal. Remove that float layout and keep form controls inside their columns.
+
+The bottom navigation now reserves its measured height, supports safe areas/overlay keyboards and uses stable grid slots. Related opening controls are shown only when applicable, with short descriptions. Wrapping resets, long headings and the tilted shop hero handle enlarged text. Paper-card actions reserve their actual height rather than overlapping the paper. No schema, codec, artwork or sharing behavior changes.
+
+Validation: all existing suites passed (17 data tests, 24 legacy groups, four each for shop/universal/physical), plus ten responsive viewport groups covering all five steps, real control/container and text bounds, 200% text, focus/footer clearance, public pages and iframe actions. Before/after and all-five-step 360/390 screenshots are in docs/screenshots/responsive/. See docs/RESPONSIVE_FIX.md for measured causes, exact scope and remaining real-device checks.
+
+No deployment, merge, Railway, DNS, payment or AI change is included. Review on the original Android device before publishing; real OS keyboard/native picker/safe-area behavior remains a manual check.

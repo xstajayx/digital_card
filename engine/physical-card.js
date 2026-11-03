@@ -294,6 +294,9 @@ export function createPhysicalCard(root, card, onReveal) {
     if (item) node.src = illustrationUrl(item);
     else node.removeAttribute("src");
   }
+  new ResizeObserver(() => {
+    if (enabled) root.dispatchEvent(new CustomEvent("physical-layout"));
+  }).observe(stage);
   return {
     get enabled() {
       return enabled;

@@ -589,6 +589,8 @@ p {
   text-decoration: underline;
 }
 .toggle {
+  min-width: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -596,6 +598,7 @@ p {
   font-size: 0.82rem;
 }
 .toggle input {
+  margin: 0;
   accent-color: var(--green);
   width: 19px;
   height: 19px;
@@ -603,6 +606,7 @@ p {
 }
 fieldset {
   min-width: 0;
+  width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -619,8 +623,8 @@ legend {
   margin-top: 20px;
 }
 .soft-box legend {
-  float: left;
   width: 100%;
+  max-width: 100%;
 }
 .soft-box .field {
   margin: 12px 0 0;
@@ -632,8 +636,8 @@ legend {
   margin-bottom: 24px;
 }
 .picker-section legend {
-  float: left;
   width: 100%;
+  max-width: 100%;
 }
 .palette-presets {
   display: flex;
@@ -1333,4 +1337,73 @@ iframe.is-physical {
 
 .viewer-wrap.physical-viewer {
   width: min(100%, 732px);
+}
+/* Keep intrinsic text/control sizes from escaping their layout tracks. */
+.site-header {
+  flex-wrap: wrap;
+}
+.brand,
+.header-actions,
+.steps button,
+.step-panel,
+.field > *,
+.toggle > span {
+  min-width: 0;
+  max-width: 100%;
+}
+.button {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.steps button,
+h1,
+h2,
+.brand-subtitle {
+  overflow-wrap: anywhere;
+}
+.reset-row {
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.reset-row .helper {
+  flex: 1 1 180px;
+}
+@media (max-width: 899px) {
+  html {
+    scroll-padding-bottom: calc(var(--studio-footer-height, 80px) + 16px);
+  }
+  .step-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.7fr);
+    align-items: center;
+    bottom: var(--keyboard-inset, 0px);
+  }
+  .step-footer .helper {
+    grid-column: 2;
+    text-align: center;
+  }
+  .step-footer #backStep {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .step-footer #nextStep,
+  .step-footer #quickShareButton {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .site-footer {
+    padding-bottom: calc(var(--studio-footer-height, 80px) + 24px);
+  }
+  .viewer-page .site-footer {
+    padding-bottom: 24px;
+  }
+}
+.filter-row button {
+  min-width: 44px;
+}
+button {
+  overflow-wrap: anywhere;
 }

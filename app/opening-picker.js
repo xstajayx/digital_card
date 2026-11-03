@@ -5,7 +5,8 @@ export function bindOpeningPicker(state) {
   const legend = document.createElement("legend");
   legend.textContent = "Their opening moment";
   box.append(legend);
-  const controls = {};
+  const controls = {},
+    fields = {};
   for (const [key, label, options] of [
     [
       "type",
@@ -52,6 +53,7 @@ export function bindOpeningPicker(state) {
     field.append(title, select);
     box.append(field);
     controls[key] = select;
+    fields[key] = field;
     select.onchange = () => {
       if (key === "type" && select.value === "theme") {
         state.set({ openingConfig: null });
@@ -75,6 +77,11 @@ export function bindOpeningPicker(state) {
         seal: checkbox.checked,
       },
     });
+  const description = document.createElement("small");
+  description.className = "helper";
+  description.id = "opening-description";
+  controls.type.setAttribute("aria-describedby", description.id);
+  fields.type.append(description);
   const hint = document.createElement("p");
   hint.className = "helper";
   hint.textContent =
@@ -83,6 +90,15 @@ export function bindOpeningPicker(state) {
   document.querySelector('[data-panel="4"] .extras').before(box);
   state.subscribe((s) => {
     const config = s.openingConfig;
+    description.textContent = s.physicalConfig
+      ? "Traditional paper card: envelope, illustrated cover and folded inside pages."
+      : {
+          theme:
+            "Use this design’s opening. Choose an envelope or gift box to personalise it.",
+          none: "Show the card straight away, with your chosen celebration.",
+          envelope: "A personal envelope with optional seal and paper colours.",
+          "gift-box": "A wrapped surprise with ribbon and a lift-off lid.",
+        }[config?.type || "theme"];
     controls.type.value = config?.type || "theme";
     controls.type.disabled = !!s.physicalConfig;
     for (const key of ["tone", "wrap", "effect"]) {
@@ -92,5 +108,10 @@ export function bindOpeningPicker(state) {
     }
     checkbox.checked = config?.seal ?? true;
     checkbox.disabled = !config;
+    fields.tone.hidden = !config || config.type === "none";
+    fields.wrap.hidden =
+      !config || config.type !== "gift-box" || !!s.physicalConfig;
+    fields.effect.hidden = !config;
+    seal.hidden = !config || config.type !== "envelope";
   });
 }

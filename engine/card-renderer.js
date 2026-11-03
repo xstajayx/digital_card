@@ -70,6 +70,10 @@ function stopAnimations() {
 const openingController = createOpening(root);
 const physical = createPhysicalCard(root, card, () => revealEffects());
 window.physicalStage = (stage) => physical.preview(stage);
+root.addEventListener("physical-layout", () => {
+  version++;
+  queueFit();
+});
 function replay() {
   if (physical.enabled) {
     openingController.reset("none", () => {});
