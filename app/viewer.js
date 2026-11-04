@@ -1,3 +1,5 @@
+import { hostedRequest, hostedToken } from "./hosted-client.js";
+import { attachHostedPhoto } from "./hosted-photo-view.js";
 import { validateCard, loadThemes, cardContent } from "../engine/card-data.js";
 import { decodeCard } from "../engine/share-codec.js";
 import { createCardController } from "../engine/preview.js";
@@ -7,12 +9,16 @@ async function init() {
     const payload =
       new URLSearchParams(location.hash.slice(1)).get("c") ||
       new URLSearchParams(location.search).get("d");
-    if (!payload) throw new Error("The card link is missing its message.");
+    const hosted = new URLSearchParams(location.search).get("s");
+    if (!payload && !hosted) throw new Error("The card link is missing its message.");
+    if (!payload && hosted && !hostedToken(hosted)) throw new Error("This card link is invalid.");
     const [raw, themes] = await Promise.all([
-      decodeCard(payload),
+      payload ? decodeCard(payload) : hostedRequest("/v1/shared/" + hosted),
       loadThemes(),
     ]);
-    const card = validateCard(raw, themes),
+    const hostedDocument = payload ? null : raw;
+    if (hostedDocument && (hostedDocument.version !== 1 || !hostedDocument.card || !hostedDocument.photo)) throw new Error("This card document is invalid.");
+    const card = validateCard(hostedDocument ? hostedDocument.card : raw, themes),
       content = cardContent(card);
     $("cardPresentation").hidden = false;
     const preview = await createCardController($("viewerFrame"));
@@ -21,6 +27,11 @@ async function init() {
       `${content.headline}\n\n${card.message}\n\n${card.from}`;
     $("fullMessage").hidden = false;
     await preview.checkFit();
+    if (hostedDocument) {
+      const photo = await hostedRequest("/v1/shared/" + hosted + "/photo", {image:true});
+      await attachHostedPhoto($("viewerFrame"), hostedDocument.photo, photo);
+      await preview.checkFit();
+    }
     const doc = $("viewerFrame").contentDocument;
     const root = doc.getElementById("cardRoot");
     // Move the actual engine button, preserving its controller and focus handoff.
@@ -74,14 +85,16 @@ async function init() {
     $("replayButton").onclick = () => { preview.play(); sync(); };
 
   } catch (error) {
+    const hostedError = new URLSearchParams(location.search).has("s");
     $("cardPresentation").hidden = true;
     $("cardError").hidden = false;
     const known =
       /^(Invalid |This card |The card |Unsupported |Please open|Card data|The design)/.test(
         error.message,
       );
-    $("errorReason").textContent = known
-      ? error.message
+    $("errorReason").textContent = hostedError
+      ? (/unavailable, expired or removed/.test(error.message) ? "This hosted card has expired or been removed." : "This hosted card or its photo could not be loaded. Please try again later, or ask the sender for help.")
+      : known ? error.message
       : "The link may be incomplete or contain damaged card data.";
   }
 }

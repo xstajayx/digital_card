@@ -21,6 +21,7 @@ jobs:
       - run: node tests/photo.mjs
       - run: node tests/assistant.mjs
       - run: node tests/creator.mjs
+      - run: node tests/hosted.mjs
       - run: python -m pip install -r requirements-dev.txt
       - run: python -m playwright install --with-deps chromium
       - run: python -u tests/browser.py
@@ -41,3 +42,50 @@ jobs:
         with:
           name: card-studio-browser-results
           path: ${{ runner.temp }}/card-studio-artifacts
+
+  hosted-backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: silent_hello_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+    env:
+      SH_TEST_DATABASE_URL: postgresql+psycopg://postgres:local-test-only@127.0.0.1:5432/silent_hello_test
+      SH_BROWSER_DATABASE_URL: postgresql+psycopg://postgres:local-test-only@127.0.0.1:5432/silent_hello_browser_test
+      CARD_ARTIFACT_DIR: ${{ runner.temp }}/hosted-card-artifacts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r backend/requirements-test-lock.txt -r requirements-dev.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest backend/tests -q
+      - name: Build backend image without publishing
+        run: docker build -f backend/Dockerfile -t silent-hello-backend:test .
+      - name: Non-root image decoder smoke test without networking
+        run: >-
+          docker run --rm --network none --memory 1g --pids-limit 64
+          silent-hello-backend:test python -c
+          'import os,io; from PIL import Image; from backend.silent_hello.config import Settings; from backend.silent_hello.images import optimise; assert os.getuid()==10001; b=io.BytesIO(); Image.new("RGB",(100,120),"pink").save(b,format="JPEG"); data,w,h=optimise(b.getvalue(),"image/jpeg",Settings()); assert w==100 and h==120 and data[:4]==b"RIFF"; print("Non-root decoder passed")'
+      - name: Prepare separate disposable browser database
+        run: |
+          python - <<'PY'
+          import psycopg
+          with psycopg.connect("postgresql://postgres:local-test-only@127.0.0.1:5432/postgres", autocommit=True) as db:
+              db.execute("CREATE DATABASE silent_hello_browser_test")
+          PY
+      - run: python -u tests/hosted.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hosted-card-results
+          path: ${{ runner.temp }}/hosted-card-artifacts

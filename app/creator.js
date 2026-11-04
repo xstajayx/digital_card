@@ -1,3 +1,4 @@
+import { hostedBase } from "./hosted-config.js";
 import { defaultPhysical } from "../engine/physical-schema.js";
 import { defaultOpening } from "../engine/openings/config.js";
 // Sender-only layout adapter. The live iframe stays mounted through preview changes.
@@ -93,8 +94,9 @@ export function bindCreator(state, preview) {
   );
   const photoBox = document.querySelector(".photo-picker");
   photoBox.querySelector("legend").textContent = "Photographs";
-  photoBox.querySelector(":scope > .helper").textContent =
-    "Photos stay on this device. Local preview only.";
+  photoBox.querySelector(":scope > .helper").textContent = hostedBase()
+    ? "Photos stay on this device until you create a hosted link."
+    : "Photos stay on this device. Local preview only.";
   const photoDrafts = make("fieldset", null, "picker-section");
   photoDrafts.append(
     make("legend", "Photo drafts"),

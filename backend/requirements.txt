@@ -1,0 +1,6 @@
+fastapi>=0.121,<1
+uvicorn>=0.35,<1
+SQLAlchemy>=2.0.44,<2.1
+psycopg[binary]>=3.2,<4
+boto3>=1.40,<2
+Pillow>=12.1.1,<13

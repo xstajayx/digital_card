@@ -1,0 +1,250 @@
+{
+  "birthday-balloons": {
+    "birthday": true,
+    "illustrations": [
+      "pink-cake",
+      "blue-cake",
+      "yellow-cake",
+      "purple-cake",
+      "balloons",
+      "party-hat"
+    ]
+  },
+  "birthday-midnight": {
+    "birthday": true,
+    "illustrations": [
+      "pink-cake",
+      "blue-cake",
+      "yellow-cake",
+      "purple-cake",
+      "balloons",
+      "party-hat"
+    ]
+  },
+  "kids-party": {
+    "birthday": true,
+    "illustrations": [
+      "balloons",
+      "party-hat",
+      "bear",
+      "pink-cake"
+    ]
+  },
+  "birthday-milestone": {
+    "birthday": true,
+    "illustrations": [
+      "pink-cake",
+      "blue-cake",
+      "yellow-cake",
+      "purple-cake",
+      "balloons",
+      "party-hat"
+    ]
+  },
+  "love": {
+    "birthday": false,
+    "illustrations": [
+      "red-heart",
+      "pink-heart",
+      "purple-heart",
+      "kiss",
+      "rose"
+    ]
+  },
+  "love-letters": {
+    "birthday": false,
+    "illustrations": [
+      "red-heart",
+      "pink-heart",
+      "purple-heart",
+      "kiss",
+      "rose"
+    ]
+  },
+  "valentines-day": {
+    "birthday": false,
+    "illustrations": [
+      "red-heart",
+      "pink-heart",
+      "purple-heart",
+      "kiss",
+      "rose"
+    ]
+  },
+  "anniversary": {
+    "birthday": false,
+    "illustrations": [
+      "red-heart",
+      "pink-heart",
+      "purple-heart",
+      "kiss",
+      "rose"
+    ]
+  },
+  "wedding": {
+    "birthday": false,
+    "illustrations": [
+      "rings",
+      "bouquet",
+      "pink-heart"
+    ]
+  },
+  "engagement": {
+    "birthday": false,
+    "illustrations": [
+      "rings",
+      "bouquet",
+      "pink-heart"
+    ]
+  },
+  "mothers-day": {
+    "birthday": false,
+    "illustrations": [
+      "flower",
+      "bouquet",
+      "pink-heart"
+    ]
+  },
+  "fathers-day": {
+    "birthday": false,
+    "illustrations": [
+      "tie",
+      "mug",
+      "trophy"
+    ]
+  },
+  "new-baby": {
+    "birthday": false,
+    "illustrations": [
+      "pram",
+      "bottle",
+      "stars",
+      "bear"
+    ]
+  },
+  "thank-you": {
+    "birthday": false,
+    "illustrations": [
+      "bouquet",
+      "ribbon",
+      "stars"
+    ]
+  },
+  "congrats": {
+    "birthday": false,
+    "illustrations": [
+      "trophy",
+      "stars",
+      "fireworks"
+    ]
+  },
+  "graduation": {
+    "birthday": false,
+    "illustrations": [
+      "cap",
+      "diploma",
+      "stars"
+    ]
+  },
+  "good-luck": {
+    "birthday": false,
+    "illustrations": [
+      "stars",
+      "clover"
+    ]
+  },
+  "get-well": {
+    "birthday": false,
+    "illustrations": [
+      "bandage",
+      "tea",
+      "pink-heart"
+    ]
+  },
+  "thinking-of-you": {
+    "birthday": false,
+    "illustrations": [
+      "cloud",
+      "pink-heart",
+      "envelope"
+    ]
+  },
+  "sorry": {
+    "birthday": false,
+    "illustrations": [
+      "pink-heart",
+      "envelope",
+      "flower"
+    ]
+  },
+  "friendship": {
+    "birthday": false,
+    "illustrations": [
+      "sun",
+      "envelope",
+      "bouquet"
+    ]
+  },
+  "christmas": {
+    "birthday": false,
+    "illustrations": [
+      "tree",
+      "present",
+      "snowflake",
+      "bauble"
+    ]
+  },
+  "christmas-snow": {
+    "birthday": false,
+    "illustrations": [
+      "tree",
+      "present",
+      "snowflake",
+      "bauble"
+    ]
+  },
+  "new-year": {
+    "birthday": false,
+    "illustrations": [
+      "fireworks",
+      "stars",
+      "present"
+    ]
+  },
+  "easter": {
+    "birthday": false,
+    "illustrations": [
+      "eggs",
+      "flower",
+      "sun"
+    ]
+  },
+  "just-because": {
+    "birthday": false,
+    "illustrations": [
+      "sun",
+      "envelope",
+      "flower"
+    ]
+  },
+  "birthday-envelope": {
+    "birthday": true,
+    "illustrations": [
+      "pink-cake",
+      "blue-cake",
+      "yellow-cake",
+      "purple-cake",
+      "balloons",
+      "party-hat"
+    ]
+  },
+  "christmas-gift": {
+    "birthday": false,
+    "illustrations": [
+      "tree",
+      "present",
+      "snowflake",
+      "bauble"
+    ]
+  }
+}
