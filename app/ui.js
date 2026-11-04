@@ -1,3 +1,4 @@
+import { hostedShareURL } from "./hosted-cards.js";
 import { assertPreparedShareable } from "./prepared-editor.js";
 import { assertPhotoShareable } from "./photo-card.js";
 import { sanitizeGiftUrl } from "../engine/sanitize.js";
@@ -473,7 +474,8 @@ export function createUI({ state, preview }) {
     linkInput: $("shareUrl"),
     mirrors: [$("quickShareButton")],
     async getUrl() {
-      assertPhotoShareable(state);
+      const hosted = hostedShareURL(state);
+      if (!hosted) assertPhotoShareable(state);
       assertPreparedShareable(state);
       const before = revision,
         current = state.get();
@@ -503,12 +505,14 @@ export function createUI({ state, preview }) {
         },
         themes,
       );
-      const url = await buildShareUrl(card);
+      const url = hosted || (await buildShareUrl(card));
       if (before !== revision)
         throw new Error(
           "Your card changed while preparing the link. Please share again.",
         );
-      assertPhotoShareable(state);
+      if (!hosted) assertPhotoShareable(state);
+      else if (hosted !== hostedShareURL(state))
+        throw new Error("Your hosted card changed. Please share again.");
       assertPreparedShareable(state);
       offerOccasion(current);
       return url;

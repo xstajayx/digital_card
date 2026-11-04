@@ -1,3 +1,4 @@
+import { bindHostedCards } from "./hosted-cards.js";
 import { bindCreator } from "./creator.js";
 import { defaultPhysical } from "../engine/physical-schema.js";
 import { defaultOpening } from "../engine/openings/config.js";
@@ -39,6 +40,7 @@ async function init() {
     bindPhysicalPicker(state, preview);
     bindPreparedEditor(state, preview, photos);
     bindCreator(state, preview);
+    bindHostedCards(state, preview);
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

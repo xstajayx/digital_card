@@ -16,3 +16,22 @@
 @media (max-width: 500px) {
   .viewer-wrap iframe.is-physical { aspect-ratio: 3 / 5; }
 }
+
+/* Only hosted inside-photo cards need these existing-page controls. */
+.recipient-photo-pages {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.recipient-photo-pages[hidden] {
+  display: none;
+}
+.recipient-photo-pages .button {
+  min-height: 44px;
+}
+.recipient-photo-pages [aria-pressed="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}

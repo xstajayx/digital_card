@@ -1,3 +1,13 @@
 .venv/
 __pycache__/
 *.pyc
+
+# Hosted-card secrets, local databases and media must never become static assets.
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+backend/.venv/
+__pycache__/
+.pytest_cache/

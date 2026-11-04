@@ -1,3 +1,4 @@
+import { hostedBase } from "./hosted-config.js";
 // Sender-only adapter. Shared card schemas, rendering and opening controllers stay unchanged.
 import { defaultPhysical } from "../engine/physical-schema.js";
 import { defaultOpening } from "../engine/openings/config.js";
@@ -16,6 +17,15 @@ export function assertPhotoShareable(state) {
     throw new Error(
       "Photo cards are local previews only. Photos cannot be shared yet. Choose Traditional illustrated card to share an illustrated version.",
     );
+}
+export function photoSignature(state) {
+  const session = sessions.get(state);
+  return session?.active ? session.signature() : "";
+}
+export async function exportHostedPhoto(state) {
+  const session = sessions.get(state);
+  if (!session?.active) return null;
+  return session.hosted();
 }
 const node = (tag, cls, text) => {
   const e = document.createElement(tag);
@@ -200,6 +210,9 @@ export function bindPhotoEditor(state, preview) {
     "photo-local-notice",
     "Local photo preview · Sharing is unavailable until secure photo storage is ready.",
   );
+  if (hostedBase())
+    notice.textContent =
+      "Photo preview · Create a hosted link to share securely.";
   notice.id = "photoLocalNotice";
   notice.setAttribute("role", "status");
   document.querySelector(".preview-heading").after(notice);
@@ -304,8 +317,9 @@ export function bindPhotoEditor(state, preview) {
       document.getElementById("shareFallback").hidden = true;
       document.querySelector(".transport-link")?.remove();
       document.getElementById("rememberOccasionPrompt").hidden = true;
-      document.getElementById("exportStatus").textContent =
-        "Photo cards are local previews only. No photo-sharing link can be created yet.";
+      document.getElementById("exportStatus").textContent = hostedBase()
+        ? "Local photo preview. Create a hosted link to share this card."
+        : "Photo cards are local previews only. No photo-sharing link can be created yet.";
     }
     if (mode === "illustrated" && wasActive)
       document.getElementById("exportStatus").textContent =
@@ -579,6 +593,31 @@ export function bindPhotoEditor(state, preview) {
   const session = {
     get active() {
       return mode !== "illustrated";
+    },
+    signature: () => JSON.stringify([mode, edit, outputUrl]),
+    async hosted() {
+      if (processing || !loaded || !source || !outputUrl)
+        throw new Error(
+          "Add a photo and wait for processing before creating a hosted link.",
+        );
+      const before = JSON.stringify([mode, edit, outputUrl]),
+        current = { ...edit },
+        kind = mode;
+      const blob = await editedPhoto(loaded.image, current);
+      if (before !== JSON.stringify([mode, edit, outputUrl]))
+        throw new Error(
+          "Your photo changed. Review it and create the hosted link again.",
+        );
+      return {
+        blob,
+        photo: {
+          kind,
+          layout: current.layout,
+          aspect: current.aspect,
+          border: current.border,
+          alt: current.alt,
+        },
+      };
     },
     saveDraft,
     restoreDraft,
