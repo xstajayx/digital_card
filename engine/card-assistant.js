@@ -92,7 +92,7 @@ export function generatedCard(contact, date, themes, senderName = "") {
     message = `${greeting}, ${name}!\n\n${birthday ? (milestone ? "Wishing you a wonderful milestone and a year full of good things." : "Wishing you a lovely day and a year full of good things.") : "Wishing you a lovely anniversary and many happy moments ahead."}`;
   const folded = p.style === "folded",
     physical = folded
-      ? { ...defaultPhysical(), coverGreeting: greeting }
+      ? { ...defaultPhysical(), coverName: "", coverGreeting: greeting }
       : null;
   const raw = {
     v: folded ? 5 : 4,

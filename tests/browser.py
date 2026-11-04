@@ -4,6 +4,7 @@ Requires Python Playwright and Chromium (system or Playwright-managed).
 Starts its own local server with the GitHub Pages /digital_card/ prefix.
 WhatsApp and native sharing are intercepted; no messages leave the browser.
 """
+from editor_controls import advanced, legacy, font
 import base64
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -59,6 +60,7 @@ def observe(page):
 def step(page, number):
     page.locator(f'.steps button[data-step="{number}"]').click()
     expect(page.locator(f'[data-panel="{number}"]')).to_be_visible()
+    if number == 4: advanced(page)
 
 
 def fit(page, frame_id="cardPreview"):
@@ -75,7 +77,6 @@ def frame(page, frame_id="cardPreview"):
 def choose(page, theme):
     step(page, 1)
     page.locator(f'[data-occasion="{theme["occasionId"]}"]').click()
-    step(page, 2)
     page.locator(f'[data-theme="{theme["id"]}"]').click()
     step(page, 4)
     page.locator(".none-option").click()
@@ -123,6 +124,7 @@ try:
             page = context.new_page()
             page.goto(BASE+"studio.html")
             expect(page.locator(".occasion-tile")).to_have_count(23)
+            legacy(page)
             assert page.locator('input[type="file"]').count() == 1
             expect(page.locator('input[type="file"]')).to_have_attribute("accept", "image/jpeg,image/png,image/webp")
             assert not page.get_by_role("button", name="GIF", exact=False).count()
@@ -171,7 +173,7 @@ try:
             page.locator("#fromInput").fill("With love, Alex")
             step(page, 4)
             for font_id, family in [("fredoka", "Fredoka"), ("pacifico", "Pacifico"), ("quicksand", "Quicksand"), ("poppins", "Poppins"), ("nunito", "Nunito"), ("playfair", "Playfair Display")]:
-                page.locator("#fontSelect").select_option(font_id)
+                font(page,font_id)
                 step(page, 5)
                 assert fit(page), f"Multiline text fit: {font_id} / {width}"
                 for selector in ["#message", "#headline", "#from"]:
@@ -179,7 +181,7 @@ try:
                     assert frame(page).locator(selector).evaluate("e => document.fonts.check(getComputedStyle(e).font)")
                 expect(frame(page).locator("#message")).to_have_text(MESSAGE)
                 step(page, 4)
-            page.locator("#fontSelect").select_option("pacifico")
+            font(page,"pacifico")
             step(page, 5)
             assert fit(page)
             finish_animation(page)
@@ -199,7 +201,7 @@ try:
             step(page, 4)
             page.locator("#paperColorInput").fill("#edf5ff")
             page.locator("#inkColorInput").fill("#263449")
-            page.locator("#fontSelect").select_option("nunito")
+            font(page,"nunito")
             step(page, 5)
             assert fit(page)
             assert frame(page).locator("#cardRoot").get_attribute("data-replays") == before_replay
@@ -224,7 +226,7 @@ try:
             expect(page.locator("#exportStatus")).to_contain_text("does not fit")
             step(page, 3)
             page.locator("#messageInput").fill("A short note. A whole lot of love.")
-            page.locator("#birthdayNumberToggle").check()
+            step(page,2)
             for number, suffix in [(1,"st"),(2,"nd"),(3,"rd"),(4,"th"),(11,"th"),(12,"th"),(13,"th"),(18,"th"),(21,"st"),(40,"th"),(50,"th"),(100,"th"),(120,"th")]:
                 page.locator("#birthdayNumberInput").fill(str(number))
                 page.evaluate("() => new Promise(requestAnimationFrame)")
@@ -234,12 +236,12 @@ try:
             page.locator("#birthdayNumberInput").fill("21")
             step(page, 4)
             page.locator("#paperColorInput").fill("#ffffff"); page.locator("#inkColorInput").fill("#eeeeee")
-            expect(page.locator("#contrastStatus")).to_contain_text("Low contrast")
+            expect(page.locator("#contrastStatus")).to_contain_text("easier reading")
             page.get_by_role("button", name="Garden colours").click()
-            expect(page.locator("#contrastStatus")).to_contain_text("Easy to read")
+            expect(page.locator("#contrastStatus")).to_have_text("")
             page.locator("#resetColorsButton").click()
             expect(page.locator("#paperColorInput")).to_have_value(THEMES[0]["palette"]["paper"])
-            page.locator(".extras summary").click()
+            advanced(page)
             page.locator("#giftToggle").check()
             page.locator("#giftInput").fill("javascript:alert(1)")
             step(page, 5)
@@ -259,9 +261,9 @@ try:
 
             # Prepare the same illustrated, personalised card in editor and viewer.
             page.locator("#messageInput").fill(MESSAGE)
-            page.locator("#birthdayNumberToggle").check(); page.locator("#birthdayNumberInput").fill("21")
+            step(page,2); page.locator("#birthdayNumberInput").fill("21")
             step(page, 4)
-            page.locator("#fontSelect").select_option("quicksand")
+            font(page,"quicksand")
             page.locator("#textSize").select_option("16")
             page.locator("#paperColorInput").fill("#edf5ff"); page.locator("#inkColorInput").fill("#263449")
             page.locator('[data-sticker="purple-cake"]').click()
@@ -298,7 +300,7 @@ try:
         # Broader interaction/security tests only need one viewport.
         context = browser.new_context(viewport={"width":390,"height":844}, permissions=["clipboard-read","clipboard-write"])
         context.on("page", observe)
-        page=context.new_page(); page.goto(BASE+"studio.html")
+        page=context.new_page(); page.goto(BASE+"studio.html"); expect(page.locator(".occasion-tile")).to_have_count(23); legacy(page)
         expect(page.locator(".occasion-tile")).to_have_count(23)
         step(page,3)
         for field in ["toInput", "messageInput", "fromInput"]: page.locator("#"+field).fill("")
@@ -307,13 +309,13 @@ try:
         # A milestone has a prominent age; explicit font choice survives a new design.
         milestone=next(t for t in THEMES if t["id"]=="birthday-milestone")
         choose(page,milestone);step(page,3)
-        page.locator("#birthdayNumberToggle").check();page.locator("#birthdayNumberInput").fill("40")
+        step(page,2);page.locator("#birthdayNumberInput").fill("40")
         step(page,5);assert fit(page)
         expect(frame(page).locator("#ageMark")).to_be_visible()
         assert frame(page).locator("#ageMark").evaluate("e=>parseFloat(getComputedStyle(e).fontSize)") >= 60
         finish_animation(page)
         frame(page).locator("#cardRoot").screenshot(path=str(ARTIFACTS/"milestone-40.png"),style=".step-footer,.skip-link{visibility:hidden!important}")
-        step(page,4);page.locator("#fontSelect").select_option("poppins")
+        step(page,4);font(page,"poppins")
         step(page,1);page.locator('[data-occasion="love"]').click()
         step(page,4);expect(page.locator("#fontSelect")).to_have_value("poppins")
         step(page,5)
@@ -344,8 +346,9 @@ try:
         page.evaluate("window.finishShare()")
         expect(page.locator("#nativeShareButton")).to_be_enabled()
         expect(page.locator("#exportStatus")).to_contain_text("Card shared")
-        expect(page.locator("#quickShareButton")).to_be_visible()
-        page.locator("#quickShareButton").click()
+        expect(page.locator("#nativeShareButton")).to_be_visible()
+        expect(page.locator("#quickShareButton")).to_be_hidden()
+        page.locator("#quickShareButton").dispatch_event("click")
         page.wait_for_function("window.shareCalls===2");page.evaluate("window.finishShare()")
         expect(page.locator("#quickShareButton")).to_be_enabled()
         page.evaluate("""() => { window.open=()=>({opener:null,location:{set href(url){window.whatsappUrl=url}},close(){window.popupClosed=true}}); }""")

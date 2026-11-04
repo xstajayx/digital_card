@@ -357,11 +357,17 @@ export function createPhysicalCard(root, card, onReveal) {
         "aria-label",
         `Open envelope addressed to ${data.recipient || "you"}`,
       );
-      name.textContent = data.recipient ? `For ${data.recipient}` : "";
+      name.textContent = Object.hasOwn(cfg, "coverName")
+        ? cfg.coverName
+        : data.recipient
+          ? `For ${data.recipient}`
+          : "";
       artwork(art, cfg.coverArt, false);
       artwork(leftArt, cfg.insideArt, true);
       artwork(insideArt, cfg.insideArt, true);
       const family = {
+        fredoka: "Fredoka",
+        poppins: "Poppins",
         quicksand: "Quicksand",
         nunito: "Nunito",
         pacifico: "Pacifico",

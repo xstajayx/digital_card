@@ -28,7 +28,7 @@ try:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
     box=action.bounding_box();frame=page.locator('#viewerFrame').bounding_box();assert box['y']+box['height']<=frame['y'];assert box['y']<height
     assert not f.locator('html').evaluate('e=>e.scrollWidth>innerWidth')
-   state('envelope');expect(action).to_have_text('Open your envelope');expect(page.locator('#replayButton')).to_be_hidden();bounds();capture('envelope')
+   state('envelope');expect(f.locator('.paper-cover-name')).to_have_text('For Maya');expect(action).to_have_text('Open your envelope');expect(page.locator('#replayButton')).to_be_hidden();bounds();capture('envelope')
    f.locator('.paper-envelope-front').click();state('cover');expect(action).to_have_text('Open your card');bounds();capture('cover')
    f.locator('.paper-cover').focus();page.keyboard.press('Enter');state('inside');expect(action).to_have_text('Close card');bounds();capture('inside');expect(f.locator('#from')).to_have_text('With love, Alex')
    action.click();state('cover');expect(action).to_have_text('Open your card');action.click();state('inside')

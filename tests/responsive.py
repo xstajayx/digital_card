@@ -1,4 +1,5 @@
 """Detect viewport AND container clipping, including zero-width flex controls."""
+from editor_controls import advanced
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 import threading,subprocess,os,shutil,json
@@ -33,7 +34,7 @@ CHECK='''()=>{
 }'''
 def check(page,label):
  errors=page.evaluate(CHECK);assert not errors,(label,errors)
-def step(page,n):page.locator(f'.steps [data-step="{n}"]').click();expect(page.locator(f'[data-panel="{n}"]')).to_be_visible()
+def step(page,n):page.locator(f'.steps [data-step="{n}"]').click();expect(page.locator(f'[data-panel="{n}"]')).to_be_visible();advanced(page)
 try:
  with sync_playwright() as p:
   b=p.chromium.launch(executable_path=os.environ.get('CARD_CHROMIUM_PATH') or shutil.which('chromium'),args=['--no-sandbox'])
@@ -47,13 +48,13 @@ try:
    ctx=b.new_context(viewport={'width':width,'height':height},permissions=['clipboard-read','clipboard-write']);errors=[];ctx.on('page',lambda page:page.on('pageerror',lambda err:errors.append(str(err))));page=ctx.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23)
    for n in range(1,6):
     step(page,n)
-    if n==4:page.locator('#opening-type').select_option('gift-box')
+    if n==4:page.locator('#physicalToggle').uncheck();page.locator('#opening-type').select_option('gift-box')
     if n==5:assert page.locator('#cardPreview').evaluate('async e=>{await new Promise(requestAnimationFrame);return e.contentWindow.checkFit()}')
     check(page,f'{width} step {n}')
     if width in [360,390,1440]:page.screenshot(path=str(ART/f'after-step{n}-{width}.png'),full_page=True);page.screenshot(path=str(ART/f'after-step{n}-{width}-viewport.png'))
    step(page,4);page.locator('#physicalToggle').check()
    if width in [360,390,1440]:page.screenshot(path=str(ART/f'after-step4-paper-{width}.png'),full_page=True)
-   page.locator('.extras summary').click();page.locator('#giftToggle').check();check(page,f'{width} expanded physical/extras');expect(page.locator('#opening-description')).to_contain_text('Traditional paper card')
+   advanced(page);page.locator('#giftToggle').check();check(page,f'{width} expanded physical/extras');expect(page.locator('#opening-description')).to_contain_text('Traditional paper card')
    if width in [360,390,1440]:page.screenshot(path=str(ART/f'after-step4-expanded-{width}.png'),full_page=True)
    # Every enabled field can be scrolled above the fixed bottom bar.
    if width<900:
@@ -64,9 +65,9 @@ try:
    for n in range(1,6):step(page,n);check(page,f'{width} step {n} 200% text')
    page.locator('html').evaluate("e=>e.style.fontSize=''");step(page,4)
    # Native focus/keyboard operation after reflow.
-   page.locator('#opening-tone').focus();expect(page.locator('#opening-tone')).to_be_focused();page.keyboard.press('Tab');expect(page.locator('#opening-effect')).to_be_focused()
+   page.locator('#opening-effect').focus();expect(page.locator('#opening-effect')).to_be_focused();page.keyboard.press('Tab');expect(page.locator('.extras summary')).to_be_focused()
    if width<900:
-    target=page.locator('#opening-effect').bounding_box();bar=page.locator('.step-footer').bounding_box();assert target['y']>=0 and target['y']+target['height']<=bar['y']+1,(width,target,bar)
+    target=page.locator('.extras summary').bounding_box();bar=page.locator('.step-footer').bounding_box();assert target['y']>=0 and target['y']+target['height']<=bar['y']+1,(width,target,bar)
    page.locator('#physicalToggle').uncheck();page.locator('#opening-type').select_option('gift-box');step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');f.get_by_role('button',name='Skip opening').click()
    for opening in ['envelope','gift-box']:
     step(page,4);page.locator('#opening-type').select_option(opening);step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');assert not f.locator('html').evaluate(CHECK),(width,opening,f.locator('html').evaluate(CHECK));f.get_by_role('button',name='Skip opening').click()

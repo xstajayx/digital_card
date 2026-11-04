@@ -26,8 +26,22 @@ export function validatePhysical(raw, themeId) {
     !Object.hasOwn(PAPERS, raw.paper) ||
     typeof raw.coverGreeting !== "string" ||
     raw.coverGreeting.length > 160 ||
-    !["quicksand", "nunito", "pacifico"].includes(raw.handwriting) ||
-    !["pacifico", "playfair", "nunito"].includes(raw.signature) ||
+    ![
+      "fredoka",
+      "pacifico",
+      "quicksand",
+      "poppins",
+      "nunito",
+      "playfair",
+    ].includes(raw.handwriting) ||
+    ![
+      "fredoka",
+      "pacifico",
+      "quicksand",
+      "poppins",
+      "nunito",
+      "playfair",
+    ].includes(raw.signature) ||
     typeof raw.effects !== "boolean"
   )
     throw new Error("Invalid folded card configuration.");
@@ -43,7 +57,13 @@ export function validatePhysical(raw, themeId) {
       !illustration(themeId, raw.insideArt))
   )
     throw new Error("Invalid inside illustration.");
+  if (
+    Object.hasOwn(raw, "coverName") &&
+    (typeof raw.coverName !== "string" || raw.coverName.length > 120)
+  )
+    throw new Error("Invalid cover name.");
   return {
+    ...(Object.hasOwn(raw, "coverName") ? { coverName: raw.coverName } : {}),
     paper: raw.paper,
     coverGreeting: raw.coverGreeting,
     coverArt: raw.coverArt,

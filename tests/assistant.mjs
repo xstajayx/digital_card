@@ -115,6 +115,7 @@ test("milestone birthday example and every required birthday milestone select re
   );
   assert.equal(c.themeId, "birthday-milestone");
   assert.equal(c.card.physicalConfig.coverGreeting, "Happy 18th Birthday");
+  assert.equal(c.card.physicalConfig.coverName, "");
   assert.equal(c.card.birthdayNumber, "18");
 });
 test("missing year never invents age; anniversary numbers and preferences are respected", () => {
