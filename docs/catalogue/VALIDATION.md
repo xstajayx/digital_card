@@ -74,3 +74,7 @@ Additional 360px/tablet captures and raw command logs remain in `/workspace/onbo
 ## Limits
 
 Chromium was executed; Safari, Firefox, physical-device readers and production custom-domain behavior were not tested. No live Railway/R2 calls, PostgreSQL locking test, Docker image rebuild, production merge or deployment was performed. New designs are static illustrations; their hosted-photo publication is deliberately not added to the independent backend allowlist. The six screenshots above and a focused human editorial review should be part of PR review.
+
+## PR handoff
+
+The tested feature branch was pushed successfully. `gh pr create` was attempted and rejected with `Post "https://api.github.com/graphql": Forbidden`; no PR was created by that command. The environment's active policy excludes `api.github.com`, although that addition is present in the saved environment draft. Apply the allowance in environment settings to enable API creation, or open the pushed branch's GitHub compare page and use `docs/catalogue/PR.md` as the description. This is a tooling/network blocker, not a failed application check. No merge or deployment was performed.

@@ -21,6 +21,8 @@ Every standard design, in every one of the 28 occasions, is shareable using **on
 
 The new-design defaults are applied only at initial creation or an explicit design choice. Decoding old cards never applies recommendations. Folded mode and the existing envelope → cover → inside flow stay in place, with an explicitly empty cover name. A sender-written inside message and chosen font survive subsequent design selection. My Occasions, Prepared Cards, local drafts and photo storage keys are unchanged.
 
+Static-sendable categories: Birthday, Kids Birthday, Milestone Birthday, Belated Birthday, Anniversary, Wedding, Engagement, New Baby, Christening, Congratulations, Retirement, New Home, Thank You, Good Luck, Get Well, Sympathy, Thinking of You, Friendship, Love, Valentine’s Day, Mother’s Day, Father’s Day, Christmas, New Year, Just Because, Graduation, Easter and Sorry.
+
 ## Hosted photos are separate
 
 Photos still use the existing opt-in local editor and configured hosted backend. The independent backend allowlist retains its original 28 photo-supported designs. New illustrated designs do not silently become hosted-photo designs: publishing a photo on one explains that an original supported design must be selected, preserving the local edit. No backend-only occasion is introduced. It is the **photo/hosted transport**, not any ordinary occasion, that needs storage/API services.
