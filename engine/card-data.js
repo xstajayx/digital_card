@@ -1,3 +1,4 @@
+import { CATALOGUE_THEMES } from "./catalogue.js";
 import { validatePhysical } from "./physical-schema.js";
 import { defaultOpening } from "./openings/config.js";
 import { validateOpening } from "./openings/config.js";
@@ -120,13 +121,14 @@ export async function loadThemes() {
     return response.json();
   };
   const ids = await request("../themes/themes.json");
-  return Promise.all(
+  const legacy = await Promise.all(
     ids.map(async (id) => {
       if (!/^[a-z0-9-]+$/.test(id))
         throw new Error("Invalid design catalogue.");
       return { ...(await request(`../themes/${id}/theme.json`)), id };
     }),
   );
+  return [...legacy, ...CATALOGUE_THEMES];
 }
 export function contrastRatio(paper, ink) {
   const luminance = (hex) => {

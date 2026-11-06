@@ -473,3 +473,15 @@
     aspect-ratio: 3/5;
   }
 }
+
+.mini-card[data-art-pack] {
+  gap: 8px;
+}
+.mini-card[data-art-pack] img {
+  width: 90%;
+  height: 110px;
+  object-fit: contain;
+}
+.mini-card[data-art-pack] strong {
+  font-size: 1rem;
+}

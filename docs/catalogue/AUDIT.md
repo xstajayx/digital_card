@@ -1,0 +1,12 @@
+# Catalogue audit — 6 November 2026
+
+Inspected main at `58193ce` (including the merged creator redesign and secure hosted-photo implementation).
+
+- 28 allowlisted designs, 23 occasions, 36 canonical SVG illustrations, plus 43 legacy per-theme files. Birthday/Love/Christmas have multiple designs; most other occasions have one. Missing requested categories: belated birthday, christening, retirement, new home and sympathy.
+- Original art is local and safe, but cover collections repeat cakes/balloons, hearts and a single bouquet across multiple designs. No hobby catalogue, recipient/relationship metadata, art-pack model, or featured collections. Thumbnails always use the first illustration, with the same arch framing. Shop previews render a flat card rather than the creator's default folded journey.
+- Reuse points: `loadThemes`, existing design manifests, allowlisted `ILLUSTRATIONS`, local vector renderer, theme palette, universal opening config, folded-card config, and compact codec. The creator already avoids rebuilding unchanged galleries and keeps user-written messages when switching designs.
+- Static-safe: ordinary illustrations reference local IDs/assets; v1/v2 JSON and v3/v4/v5 compact fragments decode locally. All themes, fonts and artwork are bundled. No backend lookup or uploaded image is required. The codec bounds data and URL length and validates opening/physical config.
+- Backend-dependent: hosted photo publication/retrieval uses configured FastAPI (`HOSTED_API`, currently empty), private owner capabilities and media IDs. Local photo drafts use IndexedDB. My Occasions/Prepared Cards use browser storage and the static renderer. Custom domain is in CNAME; it must stay unchanged.
+- Integration gap: folded-card initial defaults and design changes do not consistently apply coordinated art/inside font/envelope recommendations. `coverName: ''` correctly keeps the recipient off new front covers and must remain explicit. Historical defaults must not be changed during decoding.
+
+Implementation boundary: preserve all 28 original manifests, legacy illustration IDs, v1–v5 schema/decoders, storage keys, photo logic and CNAME. Add curated packs and derived static designs as local modules; apply recommendations only on new design selection. New catalogue cards are standard static illustrations. The existing photo-design allowlist remains the backend's independent policy.

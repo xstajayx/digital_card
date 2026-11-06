@@ -35,7 +35,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('CARD_CHROMIUM_PATH') or shutil.which('chromium'),args=['--no-sandbox'])
   for width,height in [(320,800),(360,800),(390,844),(412,915),(430,932),(768,1024),(1440,900)]:
-   ctx=browser.new_context(viewport={'width':width,'height':height},has_touch=width<500,permissions=['clipboard-read','clipboard-write']);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23)
+   ctx=browser.new_context(viewport={'width':width,'height':height},has_touch=width<500,permissions=['clipboard-read','clipboard-write']);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28)
    step(page,3);page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill('Here’s to all the adventures still to come.\n\nA little birthday joy, just for you.');page.locator('#fromInput').fill('With love, Alex')
    step(page,4);page.locator('#photo-type').select_option('cover');upload(page);expect(page.locator('#photoStatus')).to_contain_text('preview ready',timeout=20000)
    if width==390:
