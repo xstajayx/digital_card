@@ -1,3 +1,4 @@
+import { catalogueDesign } from "../engine/catalogue.js";
 import { sanitizeGiftUrl } from "../engine/sanitize.js";
 import { birthdayNumber } from "../engine/card-data.js";
 import { hostedBase } from "./hosted-config.js";
@@ -124,6 +125,10 @@ export function bindHostedCards(state, preview) {
       if (new URLSearchParams(location.search).has("prepared"))
         throw new Error(
           "Publish photo cards from a separate manual card. Automatic assistant photo publication is not enabled.",
+        );
+      if (catalogueDesign(state.get().theme.id))
+        throw new Error(
+          "This new illustrated design shares as a static link. For hosted photos, choose an original photo-supported design; your local photo is kept.",
         );
       const key = owner();
       if (!consent.checked)

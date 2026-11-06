@@ -1,3 +1,4 @@
+import { catalogueDesign, artPack } from "./catalogue.js";
 import { createPhysicalCard } from "./physical-card.js";
 import { createOpening } from "./openings/controller.js";
 import { illustration, illustrationUrl } from "./illustrations.js";
@@ -159,6 +160,14 @@ function changeTheme(id) {
   settleTheme?.();
   themeError = false;
   const link = $("themeStyles");
+  const cssId = artPack(catalogueDesign(id) || {})?.cssThemeId || id;
+  const href = new URL(`../themes/${cssId}/theme.css`, import.meta.url).href;
+  // Multiple packs share one layout stylesheet. Assigning the same href is not
+  // guaranteed to dispatch another load event; reuse its already loaded sheet.
+  if (link.href === href && link.sheet) {
+    themeReady = Promise.resolve();
+    return;
+  }
   themeReady = new Promise((resolve) => {
     settleTheme = resolve;
     link.onload = () => resolve();
@@ -166,7 +175,7 @@ function changeTheme(id) {
       themeError = true;
       resolve();
     };
-    link.href = new URL(`../themes/${id}/theme.css`, import.meta.url).href;
+    link.href = href;
   });
 }
 function queueFit() {

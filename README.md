@@ -1,6 +1,6 @@
 # Silent Hello
 
-An animated greeting-card studio built with static HTML, CSS and JavaScript. Create a personal card, choose a design and illustration, and send a self-contained link. No account, backend, build step, analytics, photo upload or GIF export.
+An animated greeting-card studio built with static HTML, CSS and JavaScript. Create a personal card, choose a design and illustration, and send a self-contained link. Standard illustrated cards need no account, backend, build step or analytics. Optional photo cards use a separate local/hosted path; there is no GIF export.
 
 ## Run locally
 
@@ -26,7 +26,9 @@ Run from the checkout:
 
 ```bash
 node tests/data.mjs
+node tests/catalogue.mjs
 python3 -u tests/browser.py
+python3 -u tests/catalogue.py
 ```
 
 The browser suite starts and stops its own local server under the GitHub Pages `/digital_card/` prefix. It uses `/usr/bin/chromium` when available, otherwise Playwright's Chromium. Optional configuration:
@@ -39,7 +41,7 @@ Checks cover 360×800, 390×844, 768×1024 and 1440×900; every occasion/design;
 
 ## Catalogue and illustrations
 
-`themes/themes.json` is the ordered allowlist of 28 design IDs. Each `themes/<designId>/` contains a `theme.json` and `theme.css`. The 23 occasions are grouped by `occasionId`; Birthday, Love and Christmas each have two designs. Existing design IDs remain valid.
+`themes/themes.json` retains the ordered allowlist of 28 original design IDs. The modular static catalogue adds 63 curated designs at runtime for a total of 91 designs across 28 occasions; see [the catalogue guide](docs/catalogue/README.md). Each `themes/<designId>/` contains a `theme.json` and `theme.css`. The original 23 occasions are grouped by `occasionId`; Birthday, Love and Christmas each have two designs. Existing design IDs remain valid.
 
 A manifest has:
 

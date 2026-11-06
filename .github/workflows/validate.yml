@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: node tests/catalogue.mjs
       - run: node tests/data.mjs
       - run: node tests/occasions.mjs
       - run: node tests/photo.mjs
@@ -27,6 +28,7 @@ jobs:
       - run: python -u tests/browser.py
         env:
           CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
+      - run: python -u tests/catalogue.py
       - run: python -u tests/shop.py
       - run: python -u tests/interactive.py
       - run: python -u tests/physical.py

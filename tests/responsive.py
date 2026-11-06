@@ -41,11 +41,11 @@ try:
   # Actual baseline source, rather than a fabricated CSS reconstruction.
   Handler.baseline=True
   for width in ([360,390] if BASELINE else []):
-   page=b.new_page(viewport={'width':width,'height':844});page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23);step(page,4);page.locator('#physicalToggle').check();bad=page.evaluate(CHECK);assert any(x[0]=='physicalToggle' for x in bad),bad;assert any(x[0]=='opening-type' for x in bad),bad;page.screenshot(path=str(ART/f'before-step4-{width}.png'),full_page=True);page.close()
+   page=b.new_page(viewport={'width':width,'height':844});page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28);step(page,4);page.locator('#physicalToggle').check();bad=page.evaluate(CHECK);assert any(x[0]=='physicalToggle' for x in bad),bad;assert any(x[0]=='opening-type' for x in bad),bad;page.screenshot(path=str(ART/f'before-step4-{width}.png'),full_page=True);page.close()
   Handler.baseline=False
   sizes=[(320,800),(360,800),(390,844),(412,915),(430,932),(768,1024),(1024,768),(1440,900),(800,360),(844,390)]
   for width,height in sizes:
-   ctx=b.new_context(viewport={'width':width,'height':height},permissions=['clipboard-read','clipboard-write']);errors=[];ctx.on('page',lambda page:page.on('pageerror',lambda err:errors.append(str(err))));page=ctx.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23)
+   ctx=b.new_context(viewport={'width':width,'height':height},permissions=['clipboard-read','clipboard-write']);errors=[];ctx.on('page',lambda page:page.on('pageerror',lambda err:errors.append(str(err))));page=ctx.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28)
    for n in range(1,6):
     step(page,n)
     if n==4:page.locator('#physicalToggle').uncheck();page.locator('#opening-type').select_option('gift-box')
@@ -74,10 +74,10 @@ try:
    step(page,4);page.locator('#physicalToggle').check();step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');assert not f.locator('html').evaluate(CHECK),(width,'paper',f.locator('html').evaluate(CHECK));page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('Link copied');url=page.evaluate('navigator.clipboard.readText()');viewer=ctx.new_page();viewer.goto(url);vf=viewer.frame_locator('#viewerFrame');expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');check(viewer,f'{width} recipient');assert not vf.locator('html').evaluate(CHECK),(width,'recipient paper',vf.locator('html').evaluate(CHECK));viewer.close();page.bring_to_front()
    for path in ['', 'ai.html','information.html']:
     page.goto(BASE+path)
-    if not path:expect(page.locator('.shop-card')).to_have_count(28)
+    if not path:expect(page.locator('.shop-card')).to_have_count(91)
     check(page,f'{width} {path or "shop"}');page.locator('html').evaluate("e=>e.style.fontSize='200%'");check(page,f'{width} {path} 200%');page.locator('html').evaluate("e=>e.style.fontSize=''")
    # A scaled iframe still exposes every action and reserves the action row below paper.
-   page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(23);step(page,4);page.locator('#physicalToggle').check();step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');f.locator('html').evaluate("e=>e.style.fontSize='200%'")
+   page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28);step(page,4);page.locator('#physicalToggle').check();step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');f.locator('html').evaluate("e=>e.style.fontSize='200%'")
    page.locator('#cardPreview').evaluate('async e=>{await new Promise(requestAnimationFrame);await e.contentWindow.checkFit()}')
    rects=f.locator('html').evaluate("()=>({stage:document.querySelector('.physical-stage').getBoundingClientRect().bottom,controls:document.querySelector('.paper-controls').getBoundingClientRect().top,buttons:[...document.querySelectorAll('.paper-controls button')].filter(e=>e.getClientRects().length).map(e=>({top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom})),height:innerHeight})")
    assert rects['stage']<=rects['controls']+1,(width,rects);assert all(r['top']>=0 and r['bottom']<=rects['height'] for r in rects['buttons']),(width,rects)

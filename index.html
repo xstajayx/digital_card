@@ -68,7 +68,18 @@
       <section id="catalogue" class="shop-catalogue">
         <p class="eyebrow">FIND THEIR KIND OF LOVELY</p>
         <h2>A card for every kind of connection.</h2>
-        <p>Choose a design, add your words, and send a little joy.</p>
+        <p>Find a favourite, add your words, and send a little joy.</p>
+        <p id="catalogueCount" class="catalogue-count"></p>
+        <div
+          id="featuredCollections"
+          class="collection-grid"
+          role="group"
+          aria-label="Featured collections"
+        ></div>
+        <p class="static-promise">
+          Illustrated cards, ready to send by link. No account or upload needed.
+        </p>
+        <div id="catalogueResults"></div>
         <form id="filters" class="shop-filters" role="search">
           <label
             >Search cards<input
@@ -91,7 +102,33 @@
             >Opening<select id="opening">
               <option value="">Every opening</option>
             </select></label
-          ><button class="button" type="reset">Clear filters</button>
+          >
+          <details class="browse-more">
+            <summary>Style, recipient &amp; interests</summary>
+            <div class="more-filters">
+              <label
+                >Style<select id="style">
+                  <option value="">Every style</option>
+                </select></label
+              >
+              <label
+                >For someone<select id="relationship">
+                  <option value="">Anyone special</option>
+                </select></label
+              >
+              <label
+                >Their favourite thing<select id="interest">
+                  <option value="">All interests</option>
+                </select></label
+              >
+              <label
+                >Mood<select id="tone">
+                  <option value="">Every mood</option>
+                </select></label
+              >
+            </div>
+          </details>
+          <button class="button" type="reset">Clear filters</button>
         </form>
         <p id="catalogueStatus" role="status">Loading the collection…</p>
         <div id="cardGrid" class="shop-grid"></div>
@@ -148,16 +185,15 @@
         </details>
         <details>
           <summary>Will my old card link work?</summary>
-          <p>
-            Yes. Previously supported v1, v2 and v3 card links remain supported.
-          </p>
+          <p>Yes. Previously supported v1–v5 card links remain supported.</p>
         </details>
         <details>
           <summary>Can I upload a photo or use AI?</summary>
           <p>
-            Photos can be edited and saved as local previews in the card creator.
-            Photo sharing needs a future secure storage service; illustrated cards
-            still share normally. AI creation is not available.
+            Photos can be edited and saved as local previews in the card
+            creator. Photo sharing uses the separate hosted service when
+            configured; illustrated cards share by link alone. AI creation is
+            not available.
           </p>
         </details>
       </section>
@@ -172,9 +208,41 @@
         ><a href="./information.html#contact">Contact</a>
       </nav>
     </footer>
-    <dialog id="designPreview">
+    <dialog id="designPreview" aria-labelledby="previewName">
       <button id="closePreview" class="button">Close preview</button>
       <h2 id="previewName"></h2>
+      <div
+        id="previewStages"
+        class="preview-stage-switch"
+        role="group"
+        aria-label="Card preview stage"
+      >
+        <button
+          class="button small"
+          type="button"
+          data-stage="envelope"
+          aria-pressed="false"
+        >
+          Envelope
+        </button>
+        <button
+          class="button small"
+          type="button"
+          data-stage="cover"
+          aria-pressed="true"
+        >
+          Front cover
+        </button>
+        <button
+          class="button small"
+          type="button"
+          data-stage="inside"
+          aria-pressed="false"
+        >
+          Inside message
+        </button>
+      </div>
+      <p id="previewStatus" class="helper" role="status"></p>
       <iframe id="shopPreview" title="Animated design preview"></iframe
       ><a id="previewCustomise" class="button primary">Customise this card →</a>
     </dialog>

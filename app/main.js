@@ -1,3 +1,4 @@
+import { designDefaults } from "../engine/catalogue.js";
 import { bindHostedCards } from "./hosted-cards.js";
 import { bindCreator } from "./creator.js";
 import { defaultPhysical } from "../engine/physical-schema.js";
@@ -32,6 +33,7 @@ async function init() {
       openingConfig: { ...defaultOpening(), tone: "theme" },
       stickerId: theme.id === "birthday-balloons" ? "pink-cake" : "",
       fontId: theme.defaultFontId || "fredoka",
+      ...designDefaults(theme),
     });
     const photos = bindPhotoEditor(state, preview);
     createUI({ state, preview });

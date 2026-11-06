@@ -1,3 +1,4 @@
+import { artPack, designDefaults } from "../engine/catalogue.js";
 import { hostedShareURL } from "./hosted-cards.js";
 import { assertPreparedShareable } from "./prepared-editor.js";
 import { assertPhotoShareable } from "./photo-card.js";
@@ -111,6 +112,7 @@ export function createUI({ state, preview }) {
       if (current[key] === current.theme.defaults[key])
         copy[key] = theme.defaults[key];
     }
+    const recommended = designDefaults(theme);
     state.set({
       ...copy,
       theme,
@@ -118,12 +120,22 @@ export function createUI({ state, preview }) {
         ? {
             physicalConfig: {
               ...current.physicalConfig,
-              coverArt: "",
+              ...(recommended.physicalConfig || {}),
+              coverArt: recommended.stickerId || "",
               insideArt: "default",
+              ...(current.fontChosen
+                ? {
+                    handwriting: current.physicalConfig.handwriting,
+                    signature: current.physicalConfig.signature,
+                  }
+                : {}),
             },
           }
         : {}),
-      stickerId: "",
+      ...(recommended.openingConfig && current.physicalConfig
+        ? { openingConfig: recommended.openingConfig }
+        : {}),
+      stickerId: recommended.stickerId || "",
       paperOverride: "",
       inkOverride: "",
       fontId: current.fontChosen
@@ -213,7 +225,14 @@ export function createUI({ state, preview }) {
       title.textContent = theme.greeting;
       const small = document.createElement("small");
       small.textContent = "A little something, just for you.";
-      mini.append(symbol, title, small);
+      if (artPack(theme)) {
+        const image = document.createElement("img");
+        image.src = illustrationUrl(artPack(theme).artwork[0]);
+        image.alt = "";
+        image.loading = "lazy";
+        mini.dataset.artPack = theme.catalogue.packId;
+        mini.append(title, image);
+      } else mini.append(symbol, title, small);
       const label = document.createElement("span");
       label.className = "design-name";
       label.textContent = theme.name;
