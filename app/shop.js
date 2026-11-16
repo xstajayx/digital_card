@@ -112,6 +112,9 @@ async function init() {
   try {
     const themes = await loadThemes();
     const nodes = [];
+    const pageSize = 12;
+    let page = 1;
+    let matches = [];
     function options(id, entries) {
       for (const [value, label] of entries) {
         const option = make("option", null, label);
@@ -231,37 +234,45 @@ async function init() {
       image.width = 200;
       image.height = 180;
       thumbnail.append(image);
-      const name = make("h3", null, theme.name),
-        description = make(
-          "p",
-          "card-description",
-          meta.subtitle || `${theme.occasion} · ${meta.styleLabel}`,
-        );
-      const customize = make("a", "button primary", "Make it yours →");
-      customize.href = `./studio.html?design=${encodeURIComponent(theme.id)}`;
-      const button = make("button", "text-button", "Quick preview");
+      const name = make("h3", null, theme.name);
+      const href = `./studio.html?design=${encodeURIComponent(theme.id)}`;
+      const button = make("button", "text-button", "Preview");
       button.type = "button";
       button.setAttribute("aria-label", `Preview ${theme.name}`);
-      button.onclick = () => openPreview(theme, customize.href);
-      article.append(thumbnail, name, description, customize, button);
+      button.onclick = () => openPreview(theme, href);
+      article.append(thumbnail, name, button);
       fragment.append(article);
       nodes.push({ theme, article });
     }
     $("cardGrid").append(fragment);
-    $("catalogueCount").textContent =
-      `${themes.length} designs · ${new Set(themes.map((t) => t.occasionId)).size} occasions`;
+    function renderPage() {
+      const start = (page - 1) * pageSize;
+      const visible = new Set(matches.slice(start, start + pageSize));
+      for (const entry of nodes) entry.article.hidden = !visible.has(entry);
+      const pages = Math.ceil(matches.length / pageSize);
+      $("cataloguePager").hidden = pages <= 1;
+      $("previousCards").disabled = page === 1;
+      $("nextCards").disabled = page >= pages;
+      $("cataloguePage").textContent = `Page ${page} of ${pages}`;
+      $("catalogueStatus").textContent = matches.length
+        ? `Showing ${start + 1}–${Math.min(start + pageSize, matches.length)} of ${matches.length} cards`
+        : "No matching cards. Clear a filter and try again.";
+    }
+    function changePage(offset) {
+      page += offset;
+      renderPage();
+      $("catalogueResults").focus();
+      $("catalogueResults").scrollIntoView({ block: "start" });
+    }
+    $("previousCards").onclick = () => changePage(-1);
+    $("nextCards").onclick = () => changePage(1);
     function filter() {
       const filters = Object.fromEntries(
         filterIds.map((id) => [id, $(id).value]),
       );
-      let count = 0;
-      for (const { theme, article } of nodes) {
-        article.hidden = !matchesDesign(theme, filters);
-        if (!article.hidden) count++;
-      }
-      $("catalogueStatus").textContent = count
-        ? `${count} designs, ready for your words.`
-        : "No matching cards. Clear a filter and try again.";
+      matches = nodes.filter(({ theme }) => matchesDesign(theme, filters));
+      page = 1;
+      renderPage();
       const active = filterIds.filter((id) => filters[id].trim());
       const secondary = active.filter((id) => id !== "search" && id !== "occasion");
       $("filterCount").textContent = secondary.length ? ` (${secondary.length})` : "";

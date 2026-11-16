@@ -636,3 +636,60 @@ dialog h2 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+.shop-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: clamp(20px, 4vw, 40px) var(--space) 16px;
+}
+.shop-intro h1,
+.help-title {
+  margin: 0;
+  font: 500 clamp(1.8rem, 4vw, 3.2rem)/1.15 "Playfair Display", Georgia, serif;
+  color: var(--green);
+}
+.shop-intro p {
+  margin: 8px 0 0;
+}
+#catalogue.shop-catalogue {
+  padding-top: 12px;
+  padding-bottom: 32px;
+}
+#catalogue .collection-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 8px 0 16px;
+  gap: 8px;
+}
+#catalogue .collection-tile {
+  padding: 10px 12px;
+  min-height: 44px;
+}
+#catalogue .collection-tile span {
+  display: none;
+}
+.shop-card .text-button {
+  min-height: 44px;
+}
+.shop-card[hidden],
+.catalogue-pager[hidden] {
+  display: none;
+}
+.catalogue-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 24px;
+}
+.help-title {
+  padding: 24px var(--space) 0;
+}
+@media (max-width: 650px) {
+  #catalogue .collection-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
