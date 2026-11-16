@@ -166,17 +166,23 @@ export function bindCreator(state, preview) {
   dialog.prepend(close);
   let opener = null,
     scroll = 0;
-  $("previewJump").onclick = () => {
-    opener = document.activeElement;
+  const openPreview = (event, fullCard = false) => {
+    opener = event.currentTarget;
     scroll = window.scrollY;
     dialog.close();
     dialog.removeAttribute("role");
     dialog.setAttribute("aria-label", "Preview your card");
     dialog.showModal();
     document.body.classList.add("preview-is-open");
-    preview.play();
+    const stage = { 2: "cover", 3: "inside" }[$("studio").dataset.step];
+    if (!fullCard && stage && state.get().physicalConfig) {
+      preview.physicalStage(stage);
+    } else {
+      preview.play();
+    }
     requestAnimationFrame(() => preview.checkFit().catch(() => {}));
   };
+  $("previewJump").onclick = openPreview;
   close.onclick = () => dialog.close();
   dialog.addEventListener("close", () => {
     if (dialog.open) return;
@@ -195,10 +201,10 @@ export function bindCreator(state, preview) {
   );
   editPreview.type = "button";
   editPreview.id = "editingPreview";
-  editPreview.onclick = () => $("previewJump").click();
+  editPreview.onclick = openPreview;
   document.querySelector(".step-footer").append(editPreview);
   const finalPreview = make("button", "Preview entire card", "button");
   finalPreview.type = "button";
-  finalPreview.onclick = () => $("previewJump").click();
+  finalPreview.onclick = (event) => openPreview(event, true);
   $("cardSummary").before(finalPreview);
 }
