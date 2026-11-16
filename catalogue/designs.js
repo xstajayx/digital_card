@@ -1,5 +1,7 @@
 // Curated designs compose occasion copy + art pack + cover treatment.
+import { PREMIUM_DESIGNS } from "./premium.js";
 export const DESIGNS = [
+  ...PREMIUM_DESIGNS,
   {
     id: "birthday-garden",
     occasionId: "birthday",

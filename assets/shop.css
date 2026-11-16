@@ -589,3 +589,50 @@ dialog h2 {
   opacity: 1;
   border-color: #315a4c;
 }
+
+.occasion-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.occasion-shortcuts .button {
+  min-height: 44px;
+}
+
+.occasion-shortcuts .button[aria-pressed="true"] {
+  background: #315a4c;
+  color: white;
+}
+
+.shop-filters {
+  margin-top: 16px;
+}
+
+.shop-filters .browse-more {
+  flex-basis: 100%;
+}
+
+.shop-filters #clearFilters[hidden] {
+  display: none;
+}
+
+.shop-filters .more-filters label {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .shop-filters > label:first-child {
+    flex-basis: 100%;
+  }
+
+  .shop-card .card-description {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .collection-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

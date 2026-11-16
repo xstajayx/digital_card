@@ -40,7 +40,7 @@ try:
    assert result==273
    page.locator('#cardPreview').evaluate("async e=>{e.contentWindow.Element.prototype.animate=undefined;await e.contentWindow.play()}");expect(frame.locator('.interactive-opening')).to_be_hidden()
    assert not errors,errors;assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-   print(f'PASS {width}x{height}: all 91 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts',flush=True)
+   print(f'PASS {width}x{height}: all 115 designs × 3 opening choices, touch/keyboard, duplicate activation, replay/skip, v4 draft/link/recipient parity, reduced motion, email/SMS drafts',flush=True)
    context.close()
   browser.close()
 finally:server.shutdown();server.server_close()

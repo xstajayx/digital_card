@@ -2,6 +2,7 @@
 import { ART_PACKS } from "../catalogue/art-packs.js";
 import { DESIGNS } from "../catalogue/designs.js";
 import { OCCASIONS } from "../catalogue/occasions.js";
+import { PREMIUM_COLLECTIONS } from "../catalogue/premium.js";
 import { defaultPhysical } from "./physical-schema.js";
 
 export { ART_PACKS, DESIGNS, OCCASIONS };
@@ -71,6 +72,7 @@ export function designDefaults(theme) {
   };
 }
 export const FEATURED_COLLECTIONS = [
+  ...PREMIUM_COLLECTIONS,
   {
     id: "curated",
     name: "The little details",
@@ -104,6 +106,8 @@ export const FEATURED_COLLECTIONS = [
 ];
 export function matchesCollection(theme, value) {
   const meta = designMetadata(theme);
+  if (PREMIUM_COLLECTIONS.some(({ id }) => id === value))
+    return meta.collection === value;
   switch (value) {
     case "curated":
       return !!theme.catalogue;
