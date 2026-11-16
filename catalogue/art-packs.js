@@ -1,6 +1,8 @@
 // Original local artwork and curated recommendations. IDs are stable public content.
 import { STYLE_FAMILIES } from "./styles.js";
+import { PREMIUM_PACKS } from "./premium.js";
 const PACKS = {
+  ...PREMIUM_PACKS,
   birthday_cake_classic: {
     id: "birthday_cake_classic",
     illustrationFamily: "pink-cake",

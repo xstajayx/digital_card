@@ -18,13 +18,14 @@ try:
   for width,height in [(360,800),(390,844),(768,1024),(1440,900)]:
    context=b.new_context(viewport={'width':width,'height':height});errors=[]
    context.on('page',lambda pg:pg.on('pageerror',lambda e:errors.append(str(e))))
-   pg=context.new_page();pg.goto(base);expect(pg.locator('.shop-card')).to_have_count(91)
+   pg=context.new_page();pg.goto(base);expect(pg.locator('.shop-card')).to_have_count(115)
    pg.locator('.shop-thumbnail img').evaluate_all("images=>images.forEach(i=>i.loading='eager')");pg.wait_for_function("[...document.querySelectorAll('.shop-thumbnail img')].every(i=>i.complete&&i.naturalWidth>0)")
    pg.locator('#search').fill('birthday');assert pg.locator('.shop-card:visible').count()>=4
-   pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(91)
+   pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(115)
+   pg.locator('.browse-more summary').click()
    pg.locator('#opening').select_option('envelope');expect(pg.locator('.shop-card:visible')).to_have_count(1)
    pg.locator('.shop-card:visible .text-button').click();expect(pg.locator('#designPreview')).to_be_visible();pg.locator('#closePreview').click()
-   pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(91)
+   pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(115)
    assert pg.evaluate('document.documentElement.scrollWidth<=innerWidth')
    pg.screenshot(path=str(artifacts/f'shop-{width}.png'),full_page=True)
    pg.goto(base+'studio.html?design=birthday-envelope');expect(pg.locator('.occasion-tile')).to_have_count(28);legacy(pg);drafts(pg)

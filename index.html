@@ -70,66 +70,30 @@
         <h2>A card for every kind of connection.</h2>
         <p>Find a favourite, add your words, and send a little joy.</p>
         <p id="catalogueCount" class="catalogue-count"></p>
-        <div
-          id="featuredCollections"
-          class="collection-grid"
-          role="group"
-          aria-label="Featured collections"
-        ></div>
-        <p class="static-promise">
-          Illustrated cards, ready to send by link. No account or upload needed.
-        </p>
-        <div id="catalogueResults"></div>
+        <h3>Browse by occasion</h3>
+        <div id="quickOccasions" class="occasion-shortcuts" role="group" aria-label="Popular occasions"></div>
         <form id="filters" class="shop-filters" role="search">
-          <label
-            >Search cards<input
-              id="search"
-              type="search"
-              placeholder="Birthday, love, Christmas…" /></label
-          ><label
-            >Occasion<select id="occasion">
-              <option value="">Every occasion</option>
-            </select></label
-          ><label
-            >Collection<select id="collection">
-              <option value="">All collections</option>
-              <option>Celebrate</option>
-              <option>Love & family</option>
-              <option>Everyday</option>
-              <option>Seasonal</option>
-            </select></label
-          ><label
-            >Opening<select id="opening">
-              <option value="">Every opening</option>
-            </select></label
-          >
+          <label>Search cards<input id="search" type="search" placeholder="Birthday, love, Christmas…" /></label>
+          <label>Occasion<select id="occasion"><option value="">Every occasion</option></select></label>
           <details class="browse-more">
-            <summary>Style, recipient &amp; interests</summary>
+            <summary>Filters<span id="filterCount"></span></summary>
             <div class="more-filters">
-              <label
-                >Style<select id="style">
-                  <option value="">Every style</option>
-                </select></label
-              >
-              <label
-                >For someone<select id="relationship">
-                  <option value="">Anyone special</option>
-                </select></label
-              >
-              <label
-                >Their favourite thing<select id="interest">
-                  <option value="">All interests</option>
-                </select></label
-              >
-              <label
-                >Mood<select id="tone">
-                  <option value="">Every mood</option>
-                </select></label
-              >
+              <label>Collection<select id="collection">
+                <option value="">All collections</option>
+                <option>Celebrate</option><option>Love &amp; family</option><option>Everyday</option><option>Seasonal</option>
+              </select></label>
+              <label>Opening<select id="opening"><option value="">Every opening</option></select></label>
+              <label>Style<select id="style"><option value="">Every style</option></select></label>
+              <label>For someone<select id="relationship"><option value="">Anyone special</option></select></label>
+              <label>Their favourite thing<select id="interest"><option value="">All interests</option></select></label>
+              <label>Mood<select id="tone"><option value="">Every mood</option></select></label>
             </div>
           </details>
-          <button class="button" type="reset">Clear filters</button>
+          <button id="clearFilters" class="button" type="reset" hidden>Clear filters</button>
         </form>
+        <h3>Featured collections</h3>
+        <div id="featuredCollections" class="collection-grid" role="group" aria-label="Featured collections"></div>
+        <div id="catalogueResults"></div>
         <p id="catalogueStatus" role="status">Loading the collection…</p>
         <div id="cardGrid" class="shop-grid"></div>
       </section>

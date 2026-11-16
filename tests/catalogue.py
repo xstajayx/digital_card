@@ -35,7 +35,7 @@ try:
     page.on('response',lambda r:errors.append(f'HTTP {r.status}: {r.url}') if r.status>=400 else None)
    context.on('page',observe)
    page=context.new_page();page.goto(BASE)
-   expect(page.locator('.shop-card')).to_have_count(91)
+   expect(page.locator('.shop-card')).to_have_count(115)
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
    page.locator('.shop-thumbnail img').evaluate_all("items=>items.forEach(i=>i.loading='eager')")
    page.wait_for_function("[...document.querySelectorAll('.shop-thumbnail img')].every(i=>i.complete&&i.naturalWidth)")
@@ -44,12 +44,18 @@ try:
     page.locator('#filters').evaluate('e=>e.reset()')
     page.locator('#'+id).select_option(value)
     expect(page.locator('.shop-card:visible').first).to_be_visible()
-    assert page.locator('.shop-card:visible').count()<91
-   page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(91)
+    assert page.locator('.shop-card:visible').count()<115
+   page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(115)
    page.locator('#search').fill('no such design xxxxx');expect(page.locator('#catalogueStatus')).to_contain_text('No matching')
-   page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(91)
-   page.locator('[data-collection="winter"]').click()
-   expect(page.locator('.shop-card:visible')).to_have_count(7)
+   page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(115)
+   wedding = page.locator('#quickOccasions [data-occasion="wedding"]')
+   wedding.click()
+   expect(wedding).to_have_attribute('aria-pressed','true')
+   expect(page.locator('#occasion')).to_have_value('wedding')
+   expect(page.locator('.shop-card[data-id="interlocking-rings"]')).to_be_visible()
+   expect(page.locator('.shop-card[data-id="record-day"]')).to_be_hidden()
+   page.locator('[data-collection="winter-atelier"]').click()
+   expect(page.locator('.shop-card:visible')).to_have_count(6)
    page.locator('#filters').evaluate('e=>e.reset()')
    page.locator('.browse-more').evaluate('e=>e.open=false')
    page.locator('#catalogueResults').scroll_into_view_if_needed()
@@ -107,14 +113,14 @@ try:
      const img=w.document.querySelector('.paper-cover-art');await img.decode();
      if(w.document.querySelector('.paper-cover-name').textContent)throw Error('Cover name leak');
     }return themes.length;
-   }''');assert count==63
+   }''');assert count==87
    # Milestone entry applies default pack art and prominent ordinal without a name.
    page.goto(BASE+'studio.html?design=milestone-candles');expect(page.locator('.occasion-tile')).to_have_count(28)
    page.locator('#birthdayNumberInput').fill('40');f=page.frame_locator('#cardPreview')
    expect(f.locator('.paper-cover-title')).to_have_text('Happy 40th Birthday!')
    assert not errors,errors
    assert not external,external
-   print(f'PASS {width}x{height}: 91 thumbnails, filters, folded preview, creator defaults, rapid design changes, static v5 recipient journey, all 63 new covers/fonts/assets fit, milestone; zero external/backend requests or console errors',flush=True)
+   print(f'PASS {width}x{height}: 115 thumbnails, filters, folded preview, creator defaults, rapid design changes, static v5 recipient journey, all 87 catalogue covers/fonts/assets fit, milestone; zero external/backend requests or console errors',flush=True)
    context.close()
   browser.close()
 finally:server.shutdown();server.server_close()

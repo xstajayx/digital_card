@@ -8,6 +8,7 @@ import {
   designMetadata,
   matchesDesign,
 } from "../engine/catalogue.js";
+import { PREMIUM_COLLECTIONS } from "../catalogue/premium.js";
 import { defaultPhysical } from "../engine/physical-schema.js";
 import { defaultOpening } from "../engine/openings/config.js";
 const $ = (id) => document.getElementById(id);
@@ -153,27 +154,39 @@ async function init() {
       "collection",
       FEATURED_COLLECTIONS.map((c) => [c.id, c.name]),
     );
-    for (const c of FEATURED_COLLECTIONS) {
-      const b = make("button", "collection-tile");
-      b.type = "button";
-      b.dataset.collection = c.id;
-      b.setAttribute("aria-pressed", "false");
-      b.append(make("strong", null, c.name), make("span", null, c.description));
-      b.onclick = () => {
-        $("collection").value = $("collection").value === c.id ? "" : c.id;
+    function shortcut(container, field, value, label) {
+      const button = make("button", "button", label);
+      button.type = "button";
+      button.dataset[field] = value;
+      button.onclick = () => {
+        const previous = $(field).value;
+        $("filters").reset();
+        $(field).value = previous === value ? "" : value;
         filter();
-        $("catalogueResults").scrollIntoView({
-          block: "start",
-          behavior: "instant",
-        });
+        $("catalogueResults").scrollIntoView({ block: "start" });
       };
-      $("featuredCollections").append(b);
+      $(container).append(button);
+      return button;
+    }
+    for (const id of ["birthday", "wedding", "anniversary", "thank-you", "christmas"]) {
+      const option = [...$("occasion").options].find((item) => item.value === id);
+      shortcut("quickOccasions", "occasion", id, option.textContent);
+    }
+    for (const c of PREMIUM_COLLECTIONS) {
+      const b = shortcut("featuredCollections", "collection", c.id);
+      b.className = "collection-tile";
+      b.append(make("strong", null, c.name), make("span", null, c.description));
+
     }
     const selected = new URLSearchParams(location.search).get("occasion");
     if ([...$("occasion").options].some((o) => o.value === selected))
       $("occasion").value = selected;
     const fragment = document.createDocumentFragment();
     const spotlight = [
+      "champagne-stars",
+      "peony-study",
+      "record-day",
+      "snow-globe-train",
       "birthday-garden",
       "birthday-fishing",
       "christmas-robin",
@@ -249,6 +262,13 @@ async function init() {
       $("catalogueStatus").textContent = count
         ? `${count} designs, ready for your words.`
         : "No matching cards. Clear a filter and try again.";
+      const active = filterIds.filter((id) => filters[id].trim());
+      const secondary = active.filter((id) => id !== "search" && id !== "occasion");
+      $("filterCount").textContent = secondary.length ? ` (${secondary.length})` : "";
+      $("clearFilters").hidden = !active.length;
+      document.querySelectorAll("#quickOccasions button").forEach((button) =>
+        button.setAttribute("aria-pressed", String(button.dataset.occasion === filters.occasion)),
+      );
       $("featuredCollections")
         .querySelectorAll("button")
         .forEach((b) =>
