@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Silent Hello — Digital Greeting Cards",
+  "short_name": "Silent Hello",
+  "description": "Create thoughtful folded greeting cards and send a little joy.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f1",
+  "theme_color": "#183e35",
+  "icons": [
+    {
+      "src": "./assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
