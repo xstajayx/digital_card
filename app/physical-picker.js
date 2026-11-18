@@ -18,6 +18,10 @@ export function bindPhysicalPicker(state, preview) {
       "Envelope, illustrated cover and folded inside pages",
     ),
   );
+  // All newly created cards use the folded envelope journey; no opt-out control.
+  toggle.checked = true;
+  toggle.hidden = true;
+  label.hidden = true;
   box.append(label);
   const controls = document.createElement("div");
   controls.id = "physicalControls";
@@ -86,6 +90,8 @@ export function bindPhysicalPicker(state, preview) {
     effects,
     document.createTextNode("Add the selected celebration after unfolding"),
   );
+  // Celebration is configured once in the main Effects section.
+  effectLabel.hidden = true;
   controls.append(effectLabel);
   effects.onchange = () =>
     state.set({
@@ -98,6 +104,7 @@ export function bindPhysicalPicker(state, preview) {
   hint.className = "helper";
   hint.textContent =
     "Write the inside message and signature in step 3. Paper sets readable inside colours; custom colours decorate the cover. Physical cards use an envelope. Existing gift-box openings remain available with this mode off.";
+  hint.hidden = true;
   controls.append(hint);
   const stages = document.createElement("div");
   stages.className = "recipient-actions";
@@ -134,7 +141,7 @@ export function bindPhysicalPicker(state, preview) {
   document.querySelector('[data-panel="4"] .extras').before(box);
   let themeId = "";
   state.subscribe((s) => {
-    toggle.checked = !!s.physicalConfig;
+    toggle.checked = true;
     controls.hidden = !s.physicalConfig;
     if (themeId !== s.theme.id) {
       themeId = s.theme.id;
