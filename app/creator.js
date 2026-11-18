@@ -64,6 +64,9 @@ export function bindCreator(state, preview) {
   const physicalBox = $("physicalToggle").closest("fieldset"),
     openingBox = $("opening-type").closest("fieldset");
   physicalBox.querySelector("legend").textContent = "Paper and presentation";
+  // A folded card is mandatory; hide the obsolete enable/disable switch.
+  $("physicalToggle").closest("label").hidden = true;
+  $("physicalToggle").tabIndex = -1;
   physicalBox.querySelector("p.helper")?.remove();
   // Keep legacy opening and artwork controls wired for old drafts, but hide them
   // from the standard creator until their mobile presentation is redesigned.
@@ -82,13 +85,19 @@ export function bindCreator(state, preview) {
     openingBox,
   );
   more.append($("fontSelect").closest("label"));
-  $("fontSelect").closest("label").hidden = true;
+  const fontDropdown = $("fontSelect").closest("label");
+  fontDropdown.hidden = true;
+  fontDropdown.setAttribute("aria-hidden", "true");
+  $("fontSelect").tabIndex = -1;
   more.append(style.querySelector(".reset-row"));
   // Preview stages belong beside the preview, rather than amongst form settings.
   const stageButtons = physicalBox.querySelector(".recipient-actions");
   stageButtons.classList.add("preview-stages");
   stageButtons.setAttribute("aria-label", "Preview stage");
   document.querySelector(".preview-heading").after(stageButtons);
+  // Keep one celebration picker; the second physical-effects toggle is hidden.
+  $("physical-effects").closest("label").hidden = true;
+  $("physical-effects").tabIndex = -1;
   const effectsBox = make("fieldset", null, "picker-section");
   effectsBox.append(make("legend", "Effects"));
   const effects = $("opening-effect").closest("label");
