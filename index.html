@@ -29,7 +29,7 @@
       <nav id="shopLinks" aria-label="Main navigation">
         <a href="#catalogue">All cards</a
         ><a href="?occasion=birthday#catalogue">Birthday</a
-        ><a href="#catalogue">Occasions</a
+        ><a href="./how-it-works.html">How it works</a
         ><a href="./prepared.html">My Prepared Cards</a
         ><a href="./occasions.html">My Occasions</a
         ><a href="./studio.html">Create your own</a
@@ -37,40 +37,15 @@
       </nav>
     </header>
     <main>
-      <section class="shop-hero">
+      <section class="shop-intro">
         <div>
-          <p class="eyebrow">THOUGHTFULLY MADE. PERSONALLY YOURS.</p>
-          <h1>
-            For the moments<br />that deserve<br /><em>a little hello.</em>
-          </h1>
-          <p>
-            A birthday wish. A quiet thank you. A just-because.<br />Beautiful
-            animated cards, filled with your words.
-          </p>
-          <a class="button primary" href="#catalogue">Find their card →</a
-          ><a class="text-button" href="./studio.html">Create a card →</a
-          ><small
-            >No account. No payment. Just a lovely little connection.</small
-          >
+          <h1>Digital cards for thoughtful moments</h1>
+          <p>Choose a design, add your message and send it as a link.</p>
         </div>
-        <div class="hero-paper">
-          <span>♡</span>
-          <h2>
-            Some people<br />make ordinary days<br /><em>extraordinary.</em>
-          </h2>
-          <p>You’re one of them.</p>
-          <img
-            src="./stickers/library/bouquet.svg"
-            alt="Pastel garden bouquet"
-          /><small>Silent Hello · Made to mean something</small>
-        </div>
+        <a class="button primary" href="./studio.html">Create a card</a>
       </section>
       <section id="catalogue" class="shop-catalogue">
-        <p class="eyebrow">FIND THEIR KIND OF LOVELY</p>
-        <h2>A card for every kind of connection.</h2>
-        <p>Find a favourite, add your words, and send a little joy.</p>
-        <p id="catalogueCount" class="catalogue-count"></p>
-        <h3>Browse by occasion</h3>
+        <h2>Browse by occasion</h2>
         <div id="quickOccasions" class="occasion-shortcuts" role="group" aria-label="Popular occasions"></div>
         <form id="filters" class="shop-filters" role="search">
           <label>Search cards<input id="search" type="search" placeholder="Birthday, love, Christmas…" /></label>
@@ -93,79 +68,22 @@
         </form>
         <h3>Featured collections</h3>
         <div id="featuredCollections" class="collection-grid" role="group" aria-label="Featured collections"></div>
-        <div id="catalogueResults"></div>
-        <p id="catalogueStatus" role="status">Loading the collection…</p>
-        <div id="cardGrid" class="shop-grid"></div>
-      </section>
-      <section class="how-it-works">
-        <p class="eyebrow">A FEW WORDS CAN MAKE A DAY</p>
-        <h2>From your heart to their screen.</h2>
-        <div>
-          <article>
-            <b>01</b>
-            <h3>Find a little lovely</h3>
-            <p>Browse an occasion or choose a design that feels like them.</p>
-          </article>
-          <article>
-            <b>02</b>
-            <h3>Make it personal</h3>
-            <p>
-              Your words, their favourite colours, a playful finishing touch.
-            </p>
-          </article>
-          <article>
-            <b>03</b>
-            <h3>Send a little smile</h3>
-            <p>
-              Copy the complete link, use native share or send through WhatsApp.
-            </p>
-          </article>
+        <div id="catalogueResults" tabindex="-1">
+          <p id="catalogueStatus" role="status">Loading the collection…</p>
         </div>
-      </section>
-      <section class="ai-intro">
-        <p class="eyebrow">THE NEXT CHAPTER</p>
-        <h2>A little creative company.</h2>
-        <p>
-          We’re planning an AI creation studio. Until a secure service is ready,
-          no prompts or photos are sent to an AI provider.
-        </p>
-        <a class="button" href="./ai.html">Explore what’s planned →</a>
-      </section>
-      <section class="shop-faq">
-        <h2>A few little questions.</h2>
-        <details>
-          <summary>Do I need an account or payment?</summary>
-          <p>
-            No. The current collection and editor are free to use without
-            registering.
-          </p>
-        </details>
-        <details>
-          <summary>Where is my message stored?</summary>
-          <p>
-            The shared link contains the card. Anyone with it can read it.
-            Optional local drafts stay in this browser until you delete them.
-          </p>
-        </details>
-        <details>
-          <summary>Will my old card link work?</summary>
-          <p>Yes. Previously supported v1–v5 card links remain supported.</p>
-        </details>
-        <details>
-          <summary>Can I upload a photo or use AI?</summary>
-          <p>
-            Photos can be edited and saved as local previews in the card
-            creator. Photo sharing uses the separate hosted service when
-            configured; illustrated cards share by link alone. AI creation is
-            not available.
-          </p>
-        </details>
+        <div id="cardGrid" class="shop-grid"></div>
+        <nav id="cataloguePager" class="catalogue-pager" aria-label="Card pages" hidden>
+          <button id="previousCards" class="button" type="button">Previous</button>
+          <span id="cataloguePage"></span>
+          <button id="nextCards" class="button" type="button">Next</button>
+        </nav>
       </section>
     </main>
     <footer class="shop-footer">
       <a class="wordmark" href="./">Silent Hello</a>
       <p>A little message. A big smile.</p>
       <nav>
+        <a href="./how-it-works.html">How it works</a>
         <a href="./information.html#privacy">Privacy</a
         ><a href="./information.html#terms">Terms</a
         ><a href="./information.html#cookies">Cookies</a
