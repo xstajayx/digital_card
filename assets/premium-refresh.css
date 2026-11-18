@@ -1,0 +1,30 @@
+/* Premium storefront refresh: intentionally scoped to the shop homepage. */
+body:has(.shop-intro) { background:#fbf9f5; color:#292c29; }
+body:has(.shop-intro) .shop-nav { padding-block:18px; gap:16px; }
+body:has(.shop-intro) .wordmark { letter-spacing:-.035em; }
+body:has(.shop-intro) .shop-intro { margin:20px var(--space) 0; padding:clamp(28px,6vw,76px); border-radius:24px; background:linear-gradient(120deg,#e9ede5 0%,#f7efe7 65%,#f5e8e5 100%); gap:24px; }
+body:has(.shop-intro) .shop-intro h1 { max-width:680px; font-size:clamp(2.4rem,6vw,5rem); letter-spacing:-.045em; line-height:1.06; }
+body:has(.shop-intro) .shop-intro p { max-width:46ch; font-size:clamp(.95rem,1.4vw,1.1rem); line-height:1.65; }
+body:has(.shop-intro) .shop-intro .button.primary { min-height:48px; display:inline-flex; align-items:center; justify-content:center; padding-inline:26px; }
+body:has(.shop-intro) #catalogue { padding-top:36px; }
+body:has(.shop-intro) #catalogue h2 { font-family:"Playfair Display",Georgia,serif; font-size:clamp(1.6rem,3vw,2.5rem); letter-spacing:-.025em; }
+body:has(.shop-intro) #catalogue h3 { font-size:1.05rem; margin-top:28px; }
+body:has(.shop-intro) .occasion-shortcuts { gap:8px; }
+body:has(.shop-intro) .shop-filters { border:1px solid #e8e3dc; background:#fff; border-radius:18px; padding:16px; margin-block:20px; }
+body:has(.shop-intro) #catalogue .collection-grid { gap:12px; margin-bottom:28px; }
+body:has(.shop-intro) #catalogue .collection-tile { min-height:64px; border-radius:14px; }
+body:has(.shop-intro) .shop-card { overflow:hidden; border-radius:18px; transition:transform .2s ease,box-shadow .2s ease; }
+@media (hover:hover) and (prefers-reduced-motion:no-preference) { body:has(.shop-intro) .shop-card:hover { transform:translateY(-3px); box-shadow:0 18px 36px #183e3518; } }
+@media (max-width:700px) {
+ body:has(.shop-intro) .shop-nav { padding-block:12px; }
+ body:has(.shop-intro) .shop-intro { margin:8px 12px 0; padding:32px 22px; border-radius:18px; }
+ body:has(.shop-intro) .shop-intro h1 { font-size:clamp(2.25rem,9vw,3.3rem); }
+ body:has(.shop-intro) .shop-intro .button.primary { width:100%; }
+ body:has(.shop-intro) #catalogue { padding-top:24px; }
+ body:has(.shop-intro) .occasion-shortcuts { display:flex; flex-wrap:nowrap; overflow-x:auto; padding-bottom:10px; scroll-snap-type:x proximity; scrollbar-width:thin; }
+ body:has(.shop-intro) .occasion-shortcuts > * { flex:0 0 auto; scroll-snap-align:start; }
+ body:has(.shop-intro) .shop-filters { padding:12px; }
+ body:has(.shop-intro) #catalogue .collection-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ body:has(.shop-intro) #catalogue .collection-tile { min-height:58px; }
+}
+@media (prefers-reduced-motion:reduce) { body:has(.shop-intro) .shop-card { transition:none; } }
