@@ -1407,3 +1407,25 @@ h2,
 button {
   overflow-wrap: anywhere;
 }
+
+/* Final step: share first, preview directly underneath. Other editor steps retain their layout. */
+.studio[data-step="5"] .preview-block {
+  display: flex;
+  flex-direction: column;
+  position: static;
+  gap: 12px;
+}
+.studio[data-step="5"] .share-panel { order: 0; padding: 0; }
+.studio[data-step="5"] .preview-heading { order: 1; padding: 12px 2px 0; }
+.studio[data-step="5"] .preview-stages { order: 2; }
+.studio[data-step="5"] .preview-stage { order: 3; }
+.studio[data-step="5"] .fit-status { order: 4; }
+.studio[data-step="5"] .full-message { order: 5; }
+.studio[data-step="5"] .share-heading { margin-bottom: 10px; }
+.studio[data-step="5"] .recipient-actions { margin-bottom: 10px; }
+.studio[data-step="5"] .whatsapp { margin-top: 10px; }
+.studio[data-step="5"] .share-panel .remember-occasion-prompt { margin-top: 12px; }
+@media (max-width: 900px) {
+  .studio[data-step="5"] .quick-share { display: none; }
+  .studio[data-step="5"] .step-footer { position: static; box-shadow: none; padding-bottom: 14px; }
+}

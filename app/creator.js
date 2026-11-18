@@ -221,8 +221,5 @@ export function bindCreator(state, preview) {
   editPreview.id = "editingPreview";
   editPreview.onclick = openPreview;
   document.querySelector(".step-footer").append(editPreview);
-  const finalPreview = make("button", "Preview entire card", "button");
-  finalPreview.type = "button";
-  finalPreview.onclick = (event) => openPreview(event, true);
-  $("cardSummary").before(finalPreview);
+  // The full card preview is already visible directly below send actions on step 5.
 }

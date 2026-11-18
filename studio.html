@@ -318,23 +318,14 @@
               aria-labelledby="shareTitle"
               hidden
             >
-              <h2 id="shareTitle" tabindex="-1">Your card is ready</h2>
-              <div id="cardSummary" class="card-summary"></div>
+              <h2 id="shareTitle" tabindex="-1">Preview &amp; send</h2>
+              <div id="cardSummary" class="card-summary" hidden></div>
               <div class="edit-shortcuts">
                 <button class="text-button" type="button" data-go="3">
                   Edit message →</button
                 ><button class="text-button" type="button" data-go="4">
                   Edit style →
                 </button>
-              </div>
-              <div class="privacy-note">
-                <span aria-hidden="true">♡</span>
-                <p>
-                  Just between you and them.<br /><small
-                    >Your card lives in its link. We don’t store your message.
-                    Anyone with the link can open it.</small
-                  >
-                </p>
               </div>
             </section>
           </div>
@@ -376,9 +367,6 @@
                   title="Your animated greeting card preview"
                 ></iframe>
               </div>
-              <p class="stage-caption">
-                <span aria-hidden="true">✧</span> A little moment, made by you.
-              </p>
             </div>
             <p id="fitStatus" class="fit-status" role="status"></p>
             <details id="fullMessage" class="full-message" hidden>
@@ -387,8 +375,7 @@
             </details>
             <div class="share-panel">
               <div class="share-heading">
-                <h3>Share your card</h3>
-                <span>Always free. Always personal.</span>
+                <h3>Send your card</h3>
               </div>
               <div class="recipient-actions">
                 <button id="emailShareButton" class="button" type="button">
@@ -397,10 +384,6 @@
                   SMS draft
                 </button>
               </div>
-              <p class="helper">
-                Native sharing opens your device’s app choices. Choose Snapchat
-                if offered, or copy the link. App delivery is not confirmed.
-              </p>
               <div class="share-actions">
                 <button id="shareLinkButton" class="button" type="button">
                   Copy link <span aria-hidden="true">→</span></button
@@ -459,9 +442,6 @@
                 class="occasion-note"
                 role="status"
               ></p>
-              <p class="helper share-note">
-                The whole card travels in the link. Keep it intact.
-              </p>
             </div>
           </aside>
         </dialog>
