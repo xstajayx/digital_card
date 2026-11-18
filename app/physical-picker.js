@@ -109,10 +109,8 @@ export function bindPhysicalPicker(state, preview) {
   const stages = document.createElement("div");
   stages.className = "recipient-actions";
   for (const [value, title] of [
-    ["envelope", "Envelope"],
     ["cover", "Front cover"],
     ["inside", "Inside pages"],
-    ["journey", "Full journey"],
   ]) {
     const button = document.createElement("button");
     button.type = "button";

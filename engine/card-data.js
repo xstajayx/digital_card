@@ -97,12 +97,15 @@ export function cardContent(current) {
         }
       : {}),
     recipient: current.to,
-    headline: greetingFor(
-      current.theme,
-      current.to,
-      current.birthdayNumberEnabled ?? !!current.birthdayNumber,
-      current.birthdayNumber,
-    ),
+    // Legacy layouts use an occasion headline. The folded inside uses the written greeting.
+    headline: current.physicalConfig
+      ? current.to
+      : greetingFor(
+          current.theme,
+          current.to,
+          current.birthdayNumberEnabled ?? !!current.birthdayNumber,
+          current.birthdayNumber,
+        ),
     birthdayNumber:
       (current.birthdayNumberEnabled ?? true)
         ? birthdayNumber(current.birthdayNumber)

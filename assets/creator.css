@@ -233,23 +233,11 @@
   text-transform: none;
   letter-spacing: 0;
 }
-.creator-page .share-panel {
-  margin-top: 20px;
-}
-.creator-page .studio:not([data-step="5"]) .share-panel {
-  display: none;
-}
-.creator-page .privacy-note {
-  font-size: 0.8rem;
-}
 .creator-page .step-footer {
   padding: 16px 24px;
 }
 .creator-page #stepProgress {
   font-size: 0.75rem;
-}
-.creator-page #quickShareButton {
-  display: none;
 }
 #creatorPreviewDialog:modal {
   width: min(900px, 100% - 24px);
@@ -272,9 +260,6 @@
 .creator-page #creatorPreviewDialog:modal .preview-block {
   display: block;
   position: static;
-}
-#creatorPreviewDialog:modal .share-panel {
-  display: none !important;
 }
 .preview-is-open {
   overflow: hidden;
@@ -334,15 +319,6 @@
   }
   .creator-page .step-footer .button {
     min-height: 44px;
-  }
-  .creator-page .studio[data-step="5"] .card-summary {
-    display: block;
-  }
-  .creator-page .studio[data-step="5"] .step-content {
-    padding: 20px;
-  }
-  .creator-page .studio[data-step="5"] .privacy-note {
-    display: block;
   }
   .creator-page #creatorPreviewDialog:modal .preview-block {
     display: block;
@@ -452,9 +428,6 @@
 .creator-page .editor-preview-action {
   min-height: 44px;
 }
-.creator-page .studio[data-step="5"] .editor-preview-action {
-  display: none;
-}
 @media (max-width: 500px) {
   .creator-page .editor-preview-action {
     flex: 1 1 100%;
@@ -484,4 +457,84 @@
 }
 .mini-card[data-art-pack] strong {
   font-size: 1rem;
+}
+
+/* Step five follows the same order visually and in keyboard navigation. */
+.creator-page .studio[data-step="5"] {
+  max-width: 820px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 28px);
+}
+.creator-page .studio[data-step="5"] .step-content,
+.creator-page .studio[data-step="5"] .step-footer,
+.creator-page .studio[data-step="5"] .preview-stages,
+.creator-page .studio:not([data-step="5"]) .send-support {
+  display: none;
+}
+.creator-page .share-panel {
+  padding: clamp(15px, 3vw, 24px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fffefa;
+}
+.creator-page #shareTitle,
+.creator-page .studio[data-step="5"] #previewTitle {
+  margin: 0;
+  font: 500 1.45rem/1.25 "Playfair Display", Georgia, serif;
+}
+.creator-page .share-actions {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  margin-top: 14px;
+}
+.creator-page .share-actions .button,
+.creator-page .share-channels .button {
+  padding-inline: 8px;
+  text-align: center;
+}
+.creator-page .share-channels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 8px;
+}
+.creator-page .share-channels > button,
+.creator-page #replayButton,
+.creator-page .send-support .text-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.creator-page .share-channels .text-button {
+  padding-inline: 8px;
+}
+.creator-page .studio[data-step="5"] .preview-block {
+  position: static;
+}
+.creator-page .studio[data-step="5"] .preview-heading {
+  padding: 0 2px 6px;
+}
+.creator-page .studio[data-step="5"] .preview-stage {
+  background: #edf0e9;
+  padding: clamp(6px, 2vw, 20px);
+}
+.creator-page .studio[data-step="5"] .preview-card-frame:not(.physical-frame) {
+  max-width: 360px;
+}
+.creator-page .preview-stages {
+  margin: 10px 0 0;
+}
+.creator-page .send-support {
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.creator-page .send-support .edit-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+}
+@media (max-width: 500px) {
+  .creator-page .studio[data-step="5"] {
+    padding-inline: 12px;
+  }
 }

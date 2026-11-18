@@ -312,22 +312,6 @@
                 </p>
               </div>
             </section>
-            <section
-              class="step-panel final-step"
-              data-panel="5"
-              aria-labelledby="shareTitle"
-              hidden
-            >
-              <h2 id="shareTitle" tabindex="-1">Preview &amp; send</h2>
-              <div id="cardSummary" class="card-summary" hidden></div>
-              <div class="edit-shortcuts">
-                <button class="text-button" type="button" data-go="3">
-                  Edit message →</button
-                ><button class="text-button" type="button" data-go="4">
-                  Edit style →
-                </button>
-              </div>
-            </section>
           </div>
           <div class="step-footer">
             <button id="backStep" class="button ghost" type="button" disabled>
@@ -336,15 +320,30 @@
               >Step 1 of 5</span
             ><button id="nextStep" class="button primary" type="button">
               Continue →</button
-            ><button
-              id="quickShareButton"
-              class="button primary quick-share"
-              type="button"
             >
-              Share card →
-            </button>
           </div>
         </div>
+        <section class="share-panel" data-panel="5" aria-labelledby="shareTitle" hidden>
+          <h2 id="shareTitle" tabindex="-1">Send your card</h2>
+          <div class="share-actions">
+            <button id="nativeShareButton" class="button primary" type="button">
+              Share card
+            </button>
+            <button id="shareLinkButton" class="button" type="button">
+              Copy link
+            </button>
+          </div>
+          <div class="share-channels" role="group" aria-label="More ways to send">
+            <button id="shareWhatsappButton" class="button" type="button">WhatsApp</button>
+            <button id="emailShareButton" class="text-button" type="button">Email</button>
+            <button id="smsShareButton" class="text-button" type="button">SMS</button>
+          </div>
+          <p id="exportStatus" class="export-status" role="status"></p>
+          <label id="shareFallback" class="field manual-link" hidden>
+            <span>Your card link <small>select and copy</small></span>
+            <input id="shareUrl" readonly aria-label="Card link to copy" />
+          </label>
+        </section>
         <dialog id="creatorPreviewDialog" open role="presentation">
           <aside
             class="preview-block"
@@ -352,10 +351,7 @@
             aria-labelledby="previewTitle"
           >
             <div class="preview-heading">
-              <div>
-                <span class="status-dot"></span>
-                <h2 id="previewTitle">Your card</h2>
-              </div>
+              <h2 id="previewTitle">Your card</h2>
               <button id="replayButton" class="text-button" type="button">
                 <span aria-hidden="true">↻</span> Replay
               </button>
@@ -373,45 +369,11 @@
               <summary>Read the full card text</summary>
               <div id="fullMessageText"></div>
             </details>
-            <div class="share-panel">
-              <div class="share-heading">
-                <h3>Send your card</h3>
+            <div class="send-support">
+              <div class="edit-shortcuts" role="group" aria-label="Edit your card">
+                <button class="text-button" type="button" data-go="3">Edit message</button>
+                <button class="text-button" type="button" data-go="1">Change design</button>
               </div>
-              <div class="recipient-actions">
-                <button id="emailShareButton" class="button" type="button">
-                  Email draft</button
-                ><button id="smsShareButton" class="button" type="button">
-                  SMS draft
-                </button>
-              </div>
-              <div class="share-actions">
-                <button id="shareLinkButton" class="button" type="button">
-                  Copy link <span aria-hidden="true">→</span></button
-                ><button
-                  id="nativeShareButton"
-                  class="button primary"
-                  type="button"
-                >
-                  Share card <span aria-hidden="true">→</span>
-                </button>
-              </div>
-              <button
-                id="shareWhatsappButton"
-                class="text-button whatsapp"
-                type="button"
-              >
-                Send with WhatsApp →
-              </button>
-              <p
-                id="exportStatus"
-                class="export-status"
-                role="status"
-                aria-live="polite"
-              ></p>
-              <label id="shareFallback" class="field manual-link" hidden
-                ><span>Your card link <small>select and copy</small></span
-                ><input id="shareUrl" readonly aria-label="Card link to copy"
-              /></label>
               <div
                 id="rememberOccasionPrompt"
                 class="remember-occasion-prompt"

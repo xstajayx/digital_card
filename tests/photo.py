@@ -78,9 +78,9 @@ try:
   # Full cover retains a separate, readable greeting band.
   page.locator('#photo-layout').select_option('full');step(page,5);f=page.frame_locator('#cardPreview');page.emulate_media(reduced_motion='reduce');f.locator('.paper-envelope-front').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');capture(page,f,'full-cover-390.png');a=f.locator('.local-photo-zone').bounding_box();b=f.locator('.paper-cover-title').bounding_box();assert b['y']>=a['y']+a['height']-1
   page.evaluate('''()=>{window.transports=0;Object.defineProperty(navigator,'share',{configurable:true,value:()=>{transports++;return Promise.resolve()}});window.open=()=>{transports++;return {opener:null,close(){},location:{}}}}''')
-  for selector in ['#shareLinkButton','#nativeShareButton','#emailShareButton','#smsShareButton','#shareWhatsappButton','#quickShareButton']:
+  for selector in ['#shareLinkButton','#nativeShareButton','#emailShareButton','#smsShareButton','#shareWhatsappButton']:
    # The redundant quick-share mirror is intentionally hidden in the new creator.
-   (page.locator(selector).dispatch_event('click') if selector=='#quickShareButton' else page.locator(selector).click());expect(page.locator('#exportStatus')).to_contain_text('local previews only')
+   page.locator(selector).click();expect(page.locator('#exportStatus')).to_contain_text('local previews only')
   # A WhatsApp blank window may be reserved by the existing transport, then closed;
   # no card URL or native share payload can be delivered.
   assert page.evaluate('window.transports')<=1
