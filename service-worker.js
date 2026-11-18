@@ -20,9 +20,12 @@ self.addEventListener("activate", (event) => {
 });
 self.addEventListener("fetch", (event) => {
   const request = event.request;
-  if (request.method !== "GET" || request.mode !== "navigate") return;
+  if (request.method !== "GET") return;
   const url = new URL(request.url);
-  if (url.origin !== ROOT.origin || url.search || url.hash || !shellPaths.has(url.pathname)) return;
+  if (url.origin !== ROOT.origin || !url.pathname.startsWith(ROOT.pathname) || url.search || url.hash) return;
+  // Cache only public static assets and unpersonalised shell pages.
+  const staticAsset = /\.(?:js|mjs|css|json|svg|png|webp|woff2?)$/i.test(url.pathname);
+  if (!staticAsset && !(request.mode === "navigate" && shellPaths.has(url.pathname))) return;
   event.respondWith(fetch(request).then((response) => {
     if (response.ok) {
       const copy = response.clone();
