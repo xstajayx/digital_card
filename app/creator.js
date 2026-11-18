@@ -65,6 +65,15 @@ export function bindCreator(state, preview) {
     openingBox = $("opening-type").closest("fieldset");
   physicalBox.querySelector("legend").textContent = "Paper and presentation";
   physicalBox.querySelector("p.helper")?.remove();
+  // Keep legacy opening and artwork controls wired for old drafts, but hide them
+  // from the standard creator until their mobile presentation is redesigned.
+  openingBox.hidden = true;
+  openingBox.setAttribute("aria-hidden", "true");
+  openingBox.querySelectorAll("select, input, button").forEach((control) => { control.tabIndex = -1; });
+  const coverArtField = $("physical-coverArt").closest("label");
+  coverArtField.hidden = true;
+  coverArtField.setAttribute("aria-hidden", "true");
+  $("physical-coverArt").tabIndex = -1;
   more.append(
     $("textSize").closest("label"),
     style.querySelector(".colour-fields"),
