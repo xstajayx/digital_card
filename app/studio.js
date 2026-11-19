@@ -9,7 +9,7 @@ import { bindPhotoEditor } from "./photo-card.js";
 import { bindPhysicalPicker } from "./physical-picker.js";
 import { bindOpeningPicker } from "./opening-picker.js";
 import { createState } from "./state.js";
-import { createUI } from "./ui.js";
+import { createUI } from "./studio-ui.js";
 import { loadThemes } from "../engine/card-data.js";
 import { createCardController } from "../engine/preview.js";
 

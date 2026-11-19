@@ -29,7 +29,17 @@ try:
     for n in range(1,6):step(page,n);page.screenshot(path=str(ART/f'before-step{n}-{width}.png'),full_page=True)
     ctx.close();continue
    expect(page.locator('.steps button')).to_have_text(['1Choose card','2Front cover','3Message','4Style','5Preview & send'])
-   page.goto(BASE+'studio.html?design=birthday-midnight');expect(page.locator('#studio')).to_have_attribute('data-step','2');expect(page.locator('#creatorPreviewDialog')).to_have_attribute('open','')
+   # A browser may still have the previous studio modules cached under these URLs.
+   page.route("**/app/main.js", lambda route: route.abort())
+   page.route("**/app/ui.js", lambda route: route.abort())
+   page.goto(BASE)
+   page.locator('#search').fill('Midnight')
+   page.locator('.shop-card[data-id="birthday-midnight"]').get_by_role('button', name='Preview').click()
+   page.locator('#previewCustomise').click()
+   expect(page).to_have_url(BASE+'studio.html?design=birthday-midnight')
+   expect(page.locator('#studio')).to_have_attribute('data-step','2')
+   expect(page.locator('#creatorPreviewDialog')).to_have_attribute('open','')
+   expect(page.get_by_role('alert')).to_have_count(0)
    f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');expect(f.locator('.paper-cover-name')).to_have_text('');expect(page.locator('#coverNameToggle')).not_to_be_checked();assert f.locator('.physical-scene').evaluate('e=>e.style.getPropertyValue("--envelope-paper").trim()')==f.locator('#cardRoot').evaluate('e=>e.style.getPropertyValue("--paper").trim()')
    # The name can be explicitly enabled even before To is filled.
    page.locator('#coverNameToggle').check();page.locator('#coverNameInput').fill('Birthday star');page.locator('#physical-coverGreeting').fill('A day full of little wonders');page.locator('#birthdayNumberInput').fill('21');page.locator('#coverNameToggle').uncheck()
