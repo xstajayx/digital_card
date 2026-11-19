@@ -63,7 +63,7 @@ function presentGift(gift, clock = Date.now) {
     const { stage, nextAt } = roseStage(gift.mode, state, current);
     showArt(stage);
     $("giftStage").textContent = stage.label;
-    const preserved = stage.id === "keepsake";
+    const preserved = stage.keepsake === true;
     $("keepRose").hidden = preserved;
     $("keepHint").hidden = preserved;
     if (nextAt) timer = setTimeout(update, Math.max(1, nextAt - current));
