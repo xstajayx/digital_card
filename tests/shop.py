@@ -18,7 +18,7 @@ try:
   for width,height in [(360,800),(390,844),(768,1024),(1440,900)]:
    context=b.new_context(viewport={'width':width,'height':height});errors=[]
    context.on('page',lambda pg:pg.on('pageerror',lambda e:errors.append(str(e))))
-   pg=context.new_page();pg.goto(base);expect(pg.locator('.shop-card')).to_have_count(115)
+   pg=context.new_page();pg.goto(base+"cards.html");expect(pg.locator('.shop-card')).to_have_count(115)
    expect(pg.locator('.shop-card:visible')).to_have_count(12)
    first_page=pg.locator('.shop-card:visible').evaluate_all('cards=>cards.map(card=>card.dataset.id)')
    expect(pg.locator('#previousCards')).to_be_disabled()

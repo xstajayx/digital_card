@@ -57,10 +57,11 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
 
         context.on("page", observe)
         sender = context.new_page()
+        sender.on("dialog", lambda dialog: dialog.accept())
         sender.goto(base + "rose.html")
         expect(sender).to_have_url(base + "flower-studio.html?flower=blush-rose")
         sender.goto(base)
-        entry = sender.get_by_role("link", name="Send flowers")
+        entry = sender.get_by_role("link", name="Explore Flowers")
         if not entry.is_visible():
             sender.get_by_role("button", name="Menu").click()
         entry.click()
@@ -188,6 +189,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
         for width in [320, 360, 390, 430, 768, 1440]:
             context = browser.new_context(viewport={"width": width, "height": 900}, reduced_motion="reduce")
             page = context.new_page()
+            page.on("dialog", lambda dialog: dialog.accept())
             page.goto(base + "flowers.html")
             bounded(page)
             if width == 1440:

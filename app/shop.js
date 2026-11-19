@@ -26,11 +26,6 @@ const fontNames = {
   nunito: "Nunito",
   playfair: "Playfair Display",
 };
-$("menuToggle").onclick = () => {
-  const open = $("menuToggle").getAttribute("aria-expanded") !== "true";
-  $("menuToggle").setAttribute("aria-expanded", String(open));
-  $("shopLinks").classList.toggle("is-open", open);
-};
 const filterIds = [
   "search",
   "occasion",

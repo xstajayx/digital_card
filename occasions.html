@@ -14,67 +14,47 @@
     <link rel="stylesheet" href="./assets/shop.css" />
     <link rel="stylesheet" href="./assets/occasions.css" />
     <link rel="stylesheet" href="./assets/assistant.css" />
+    <link rel="stylesheet" href="./assets/site.css" />
+    <script type="module" src="./app/site-menu.js"></script>
   </head>
   <body class="occasions-page">
     <a class="skip-link" href="#myOccasions">Skip to occasions</a>
-    <header class="shop-nav">
-      <a class="wordmark" href="./"
-        >Silent Hello<span>A LITTLE MESSAGE. A BIG SMILE.</span></a
-      >
-      <nav aria-label="Main navigation">
-        <a href="./#catalogue">Find a card</a
-        ><a href="./occasions.html" aria-current="page">My Occasions</a
-        ><a href="./prepared.html">My Prepared Cards</a
-        ><a href="./studio.html">Create a card</a>
-      </nav>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./occasions.html" aria-current="page">My Occasions</a>
+          <a href="./how-it-works.html">About Silent Hello</a>
+        </nav>
+      </details>
     </header>
     <main id="myOccasions" class="occasions-main">
       <section class="occasions-intro" aria-labelledby="occasionsTitle">
-        <p class="eyebrow">LITTLE DATES. LOVELY CONNECTIONS.</p>
-        <h1 id="occasionsTitle">Keep their day close.</h1>
-        <p>
-          Family, friends and the dates you want to remember. Choose optional
-          card preferences to prepare next year’s greeting.
-        </p>
-        <button id="addOccasion" class="button primary" type="button">
-          Add an occasion
-        </button>
+        <h1 id="occasionsTitle">My Occasions</h1>
+        <p>Remember birthdays and anniversaries, add reminders to your calendar and come back to send a gift.</p>
+        <button id="addOccasion" class="button primary" type="button">Add an occasion</button>
+        <p class="occasion-support"><a href="./prepared.html">My Prepared Cards</a></p>
       </section>
-      <aside class="occasion-privacy" aria-label="About your local reminders">
-        <strong>Just on this device, just for you.</strong>
-        <p>
-          Stored only in this browser on this device. No automatic emails,
-          browser notifications. Optional contact details and default greetings
-          stay local. Clearing browser data removes your occasions; private
-          browsing may not keep them.
-        </p>
-        <p>
-          Download an event to use your calendar. Check imported dates and
-          alerts; support varies by app.
-        </p>
+      <aside class="occasion-privacy" aria-label="Where your occasions are saved">
+        <strong>Your occasions are saved in this browser on this device.</strong>
+        <p>Download a backup before changing devices or clearing browser data. Reminders use your calendar app.</p>
       </aside>
-      <section
-        class="assistant-transfer"
-        aria-label="Export and import your occasions"
-      >
-        <button id="exportContacts" class="button" type="button">
-          Export my records
-        </button>
-        <label class="field"
-          >Import my records (JSON, up to 2 MB)<input
-            id="importContacts"
-            type="file"
-            accept="application/json,.json"
-        /></label>
-        <label class="occasion-check"
-          ><input id="replaceContacts" type="checkbox" /> Replace matching IDs
-          when importing; keep other records</label
-        >
-        <p class="occasion-note">
-          Exports contain your optional names, dates, emails and default
-          greetings in plain text. Keep them private. Existing records are not
-          silently replaced.
-        </p>
+      <section class="occasion-backups" aria-labelledby="backupTitle">
+        <h2 id="backupTitle">Back up or restore occasions</h2>
+        <div class="assistant-transfer">
+          <button id="exportContacts" class="button" type="button">Download backup</button>
+          <label class="field">Restore from backup (JSON, up to 2 MB)
+            <input id="importContacts" type="file" accept="application/json,.json" />
+          </label>
+          <label class="occasion-check">
+            <input id="replaceContacts" type="checkbox" /> Replace matching records when restoring
+          </label>
+          <p class="occasion-note">Keep the backup private. It may contain names, dates, emails and saved greetings.</p>
+        </div>
       </section>
       <section aria-labelledby="upcomingTitle">
         <div class="occasions-list-heading">
@@ -130,9 +110,14 @@
         </button>
       </div>
     </dialog>
-    <footer class="shop-footer">
-      <a class="wordmark" href="./">Silent Hello</a
-      ><a href="./information.html#privacy">Privacy</a>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
     </footer>
     <noscript
       ><p class="noscript">

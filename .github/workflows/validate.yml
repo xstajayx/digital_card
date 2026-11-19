@@ -41,6 +41,7 @@ jobs:
       - run: python -u tests/assistant.py
       - run: python -u tests/creator.py
       - run: python -u tests/flowers.py
+      - run: python -u tests/site-navigation.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

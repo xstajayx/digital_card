@@ -23,45 +23,29 @@
     <title>Create your card · Silent Hello</title>
     <link rel="stylesheet" href="./assets/shop.css" />
     <link rel="stylesheet" href="./assets/creator.css" />
+    <link rel="stylesheet" href="./assets/site.css" />
+    <script type="module" src="./app/site-menu.js"></script>
   </head>
   <body class="creator-page">
     <a class="skip-link" href="#studio">Skip to card studio</a>
-    <header class="site-header">
-      <a class="brand" href="./" aria-label="Silent Hello home">
-        <span class="brand-mark" aria-hidden="true"
-          ><svg viewBox="0 0 32 32" fill="none">
-            <path
-              d="m4 10 12-6 12 6v16H4Z"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-            <path
-              d="m4 11 12 9 12-9M4 26l9-9m15 9-9-9"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-            <path
-              d="M12 9c-3-3-6 2 4 6 10-4 7-9 4-6l-4 3Z"
-              fill="currentColor"
-            /></svg
-        ></span>
-        <span
-          ><strong>Silent Hello</strong
-          ><span class="brand-subtitle">MORE THAN A MESSAGE</span></span
-        >
-      </a>
-      <div class="header-actions">
-        <span class="header-note"
-          ><span class="status-dot"></span> A proper card, made personal</span
-        ><button class="button small" id="previewJump" type="button">
-          Preview card <span aria-hidden="true">→</span>
-        </button>
-      </div>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html" aria-current="location">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./occasions.html">My Occasions</a>
+          <a href="./how-it-works.html">About Silent Hello</a>
+        </nav>
+      </details>
     </header>
     <main>
       <div class="creator-intro">
-        <a href="./">← All cards</a>
+        <a class="collection-back" href="./cards.html">← Greeting Cards</a>
         <h1>Create your card</h1>
+        <button class="button small" id="previewJump" type="button">Preview card</button>
       </div>
       <section
         class="studio"
@@ -409,9 +393,14 @@
         </dialog>
       </section>
     </main>
-    <footer class="site-footer">
-      <span class="footer-wordmark">Little moments. Lovely connections.</span
-      ><span>Made with love · Silent Hello</span>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
     </footer>
     <noscript
       ><p class="noscript">

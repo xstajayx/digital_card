@@ -81,7 +81,7 @@ function row(item, next) {
     return b;
   }
   if (next)
-    button("Download calendar event", () => {
+    button("Add reminder to calendar", () => {
       error("");
       try {
         downloadCalendar(item, { alarm: $("calendarAlarm").checked });
@@ -102,6 +102,16 @@ function row(item, next) {
         error(e.message);
       }
     });
+  for (const [label, href] of [
+    ["Send a Card", `./cards.html?occasion=${encodeURIComponent(item.kind)}#catalogue`],
+    ["Send Flowers", "./flowers.html"],
+  ]) {
+    const link = document.createElement("a");
+    link.className = "button";
+    link.href = href;
+    link.textContent = label;
+    actions.append(link);
+  }
   if (item.profile) {
     const extra = document.createElement("p");
     extra.className = "occasion-note";

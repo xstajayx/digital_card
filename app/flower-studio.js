@@ -2,6 +2,7 @@ import { flowerProduct } from "../engine/flowers/catalogue.js";
 import { renderFlowers } from "../engine/flowers/render.js";
 import { encodeFlowerGift, newGiftId, GIFT_LIMITS } from "../engine/flowers/gift.js";
 import { flowerPresentation, noteContent } from "./flower-presentation.js";
+import { draftNavigation } from "./draft-navigation.js";
 import { bindShareActions } from "./share-actions.js";
 
 const $ = (id) => document.getElementById(id);
@@ -20,8 +21,10 @@ if (!product) {
   $("productDescription").textContent = product.description;
   renderFlowers($("studioArt"), product);
   const read = () => Object.fromEntries(new FormData(form));
+  const warnForDraft = draftNavigation();
   function update() {
     const gift = read();
+    warnForDraft(Object.values(gift).some(Boolean));
     for (const [part, limit] of Object.entries(GIFT_LIMITS)) {
       const invalid = gift[part].length > limit;
       form.elements[part].setCustomValidity(invalid ? `Use ${limit} characters or fewer.` : "");

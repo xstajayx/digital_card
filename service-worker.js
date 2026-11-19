@@ -1,7 +1,7 @@
 // Only cache public, unpersonalised app-shell resources. Never cache card links,
 // viewer pages, API responses, uploaded photos, drafts or message payloads.
-const CACHE = "silent-hello-shell-v1";
-const SHELL = ["./", "./index.html", "./studio.html", "./assets/app.css", "./assets/shop.css", "./assets/creator.css", "./assets/fonts.css", "./assets/app-icon.svg"];
+const CACHE = "silent-hello-shell-v2";
+const SHELL = ["./", "./index.html", "./cards.html", "./flowers.html", "./studio.html", "./assets/site.css", "./assets/app.css", "./assets/shop.css", "./assets/creator.css", "./assets/fonts.css", "./assets/app-icon.svg"];
 const ROOT = new URL("./", self.location.href);
 const shellPaths = new Set(SHELL.map((path) => new URL(path, ROOT).pathname));
 self.addEventListener("install", (event) => {

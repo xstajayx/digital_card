@@ -12,26 +12,36 @@
     <link rel="stylesheet" href="./assets/fonts.css" />
     <link rel="stylesheet" href="./assets/app.css" />
     <link rel="stylesheet" href="./assets/shop.css" />
+    <link rel="stylesheet" href="./assets/site.css" />
+    <script type="module" src="./app/site-menu.js"></script>
   </head>
   <body>
-    <header class="shop-nav">
-      <a class="wordmark" href="./">Silent Hello</a>
-      <a class="button" href="./#catalogue">Browse cards</a>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./occasions.html">My Occasions</a>
+          <a href="./how-it-works.html" aria-current="page">About Silent Hello</a>
+        </nav>
+      </details>
     </header>
     <main>
-      <h1 class="help-title">How it works</h1>
+      <h1 class="help-title">About Silent Hello</h1>
       <section class="how-it-works">
-        <p class="eyebrow">A FEW WORDS CAN MAKE A DAY</p>
-        <h2>From your heart to their screen.</h2>
+        <h2>How it works</h2>
         <div>
           <article>
             <h3>Find a little lovely</h3>
-            <p>Browse an occasion or choose a design that feels like them.</p>
+            <p>Choose an illustrated card, a single flower or a bouquet.</p>
           </article>
           <article>
             <h3>Make it personal</h3>
             <p>
-              Your words, their favourite colours, a playful finishing touch.
+              Add your own message and preview the gift before sending.
             </p>
           </article>
           <article>
@@ -54,7 +64,7 @@
         <details>
           <summary>Where is my message stored?</summary>
           <p>
-            The shared link contains the card. Anyone with it can read it.
+            The shared link contains the gift and its message. Anyone with the link can read it.
             Optional local drafts stay in this browser until you delete them.
           </p>
         </details>
@@ -63,15 +73,23 @@
           <p>Yes. Previously supported v1–v5 card links remain supported.</p>
         </details>
         <details>
-          <summary>Can I upload a photo or use AI?</summary>
+          <summary>Can I add a photo to a card?</summary>
           <p>
             Photos can be edited and saved as local previews in the card
             creator. Photo sharing uses the separate hosted service when
-            configured; illustrated cards share by link alone. AI creation is
-            not available.
+            configured. Illustrated cards and digital flowers share by link alone.
           </p>
         </details>
       </section>
     </main>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
+    </footer>
   </body>
 </html>

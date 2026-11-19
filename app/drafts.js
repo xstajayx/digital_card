@@ -1,6 +1,6 @@
 import { validateCard } from "../engine/card-data.js";
 const KEY = "silent-hello-draft-v1";
-export function bindDrafts(state, photos) {
+export function bindDrafts(state, photos, onSaved = () => {}) {
   const bar = document.createElement("div");
   bar.className = "draft-tools";
   const status = document.createElement("p");
@@ -30,6 +30,7 @@ export function bindDrafts(state, photos) {
           themeId: theme.id,
         }),
       );
+      onSaved();
       status.textContent =
         "Draft saved on this browser. Anyone using this browser may access it.";
     } catch (error) {
@@ -51,6 +52,7 @@ export function bindDrafts(state, photos) {
         giftEnabled: raw.giftEnabled === true && !!card.giftUrl,
         fontChosen: true,
       });
+      onSaved();
       status.textContent = "Local draft restored.";
     } catch {
       status.textContent =

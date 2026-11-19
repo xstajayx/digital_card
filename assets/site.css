@@ -1,0 +1,116 @@
+:root {
+  --brand-ink: #263d35;
+  --brand-muted: #526258;
+  --brand-paper: #fffaf1;
+  --brand-line: #dcd5c8;
+  --brand-serif: "Playfair Display", Georgia, serif;
+}
+.brand-header, .brand-footer {
+  width: min(100% - 32px, 1180px);
+  margin-inline: auto;
+  color: var(--brand-ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 20px;
+  font: 1rem/1.4 "Nunito", system-ui, sans-serif;
+}
+.brand-header { position: relative; min-height: 72px; padding-block: 10px; border-bottom: 1px solid var(--brand-line); }
+.brand-header:has(.brand-menu[open]) { align-items: start; }
+.brand-wordmark { display: inline-flex; align-items: center; min-height: 44px; font: 500 1.55rem/1.2 var(--brand-serif); color: inherit; text-decoration: none; }
+.brand-menu { min-width: 0; max-width: 100%; }
+.brand-menu > summary {
+  width: fit-content;
+  margin-inline-start: auto;
+  min-height: 44px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+  border: 1px solid #b9c2b5;
+  border-radius: 6px;
+  background: var(--brand-paper);
+  font-weight: 800;
+}
+.brand-menu > summary::-webkit-details-marker { display: none; }
+.brand-menu > summary::after { content: ""; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); }
+.brand-menu[open] > summary::after { transform: translateY(2px) rotate(225deg); }
+.brand-menu nav { display: flex; flex-wrap: wrap; gap: 2px 6px; padding: 8px 0 0; }
+.brand-menu nav a, .brand-footer nav a { display: flex; align-items: center; min-height: 44px; color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+.brand-menu nav a { padding: 6px 10px; border-radius: 5px; text-decoration: none; font-weight: 700; }
+.brand-menu nav a:is(:hover, [aria-current]) { background: #e9ede3; }
+.brand-header :focus-visible, .brand-footer :focus-visible, .home-page :focus-visible { outline: 2px solid #884d56; outline-offset: 3px; }
+.brand-footer { border-top: 1px solid var(--brand-line); margin-block: 48px 0; padding: 14px 0 24px; }
+.brand-footer nav { display: flex; flex-wrap: wrap; gap: 0 14px; font-size: .9rem; }
+.creator-page .brand-footer { padding-bottom: calc(var(--studio-footer-height, 0px) + 24px); }
+.collection-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.collection-back { display: inline-flex; align-items: center; min-height: 44px; }
+.creator-page .creator-intro { flex-wrap: wrap; gap: 4px 16px; }
+.creator-page .creator-intro #previewJump { display: inline-flex; min-height: 44px; }
+.occasion-backups { margin-block: 18px; }
+.occasion-backups h2 { margin: 0 0 10px; }
+.occasion-backups .assistant-transfer { margin: 0; }
+.occasion-support { margin-block: 16px; }
+.home-page { margin: 0; background: #f8f5ed; color: var(--brand-ink); font: 1rem/1.5 "Nunito", system-ui, sans-serif; }
+.home-page * { box-sizing: border-box; }
+.home-skip { position: absolute; padding: 10px; background: var(--brand-paper); color: var(--brand-ink); z-index: 3; }
+.home-skip:not(:focus) { clip-path: inset(50%); }
+.home-gifts { width: min(100% - 32px, 1120px); margin-inline: auto; }
+.home-intro { padding: clamp(22px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); text-align: center; }
+.home-intro h1, .home-collection h2 { margin: 0; font: 500 clamp(2.25rem, 6vw, 4rem)/1.1 var(--brand-serif); }
+.home-intro p, .home-collection p { color: var(--brand-muted); margin: 8px 0 0; }
+.home-collections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 3vw, 34px); }
+.home-collection { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid var(--brand-line); border-radius: 10px; background: var(--brand-paper); }
+.home-art { height: clamp(218px, 29vw, 320px); position: relative; overflow: hidden; display: grid; place-items: center; }
+.home-card-art { background: #e7eadf; }
+.home-flower-art { background: #f2e7db; }
+.home-flower-art img { height: 106%; width: auto; max-width: 100%; object-fit: contain; position: absolute; filter: drop-shadow(3px 7px 5px #563c3024); }
+.home-envelope {
+  position: absolute; width: clamp(150px, 42%, 228px); aspect-ratio: 1.45; border-radius: 4px;
+  transform: translate(-18%, 22%) rotate(-13deg); border: 1px solid #9ca48c;
+  background: linear-gradient(28deg, transparent 49.4%, #b6baa6 50%, transparent 50.6%) left bottom/50% 75% no-repeat,
+    linear-gradient(-28deg, transparent 49.4%, #b6baa6 50%, transparent 50.6%) right bottom/50% 75% no-repeat, #bbc3ab;
+  box-shadow: 1px 12px 20px #37443024;
+}
+.home-card-cover {
+  position: relative; width: clamp(128px, 36%, 181px); aspect-ratio: .74; transform: translate(22%, -2%) rotate(8deg);
+  display: grid; place-content: center; justify-items: center; gap: 6px;
+  border: 1px solid #d9c8b6; border-radius: 4px; background: #fff8ea;
+  box-shadow: inset 4px 0 #e7d9c4, 4px 11px 18px #4c493c30;
+  color: #663e48; font: 500 clamp(.92rem, 2vw, 1.2rem)/1.2 var(--brand-serif);
+}
+.home-card-cover img { display: block; width: 66%; height: auto; }
+.home-collection-content { padding: clamp(16px, 3vw, 26px); display: flex; flex-direction: column; align-items: flex-start; }
+.home-collection h2 { font-size: clamp(1.7rem, 3.2vw, 2.36rem); }
+.home-collection p { margin-bottom: 16px; }
+.gift-link { display: inline-flex; gap: 12px; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 6px; background: #304c3e; color: #fffaf1; font-weight: 800; text-decoration: none; margin-top: auto; }
+.gift-link:hover { background: #243b30; }
+@media (max-width: 680px) {
+  .home-collections { grid-template-columns: minmax(0, 1fr); }
+  .brand-menu[open] { flex: 1 0 100%; }
+  .brand-header:has(.brand-menu[open]) .brand-wordmark { max-width: calc(100% - 94px); }
+  .brand-menu[open] > summary { position: absolute; inset-inline-end: 0; top: 10px; }
+  .brand-menu nav { display: grid; grid-template-columns: minmax(0, 1fr); }
+}
+.contact-section {
+  margin-block: 24px;
+  padding: clamp(16px, 4vw, 24px);
+  border: 1px solid var(--brand-line);
+  border-radius: 8px;
+  background: var(--brand-paper);
+}
+.contact-section h2 { margin-top: 0; }
+.contact-section a {
+  display: inline-block;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: 8px;
+  color: var(--brand-ink);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+}
+.contact-section p:last-child { margin-bottom: 0; }

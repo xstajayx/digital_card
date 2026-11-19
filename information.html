@@ -7,10 +7,24 @@
     <link rel="stylesheet" href="./assets/app.css" />
     <link rel="stylesheet" href="./assets/shop.css" />
     <title>Silent Hello · Information</title>
+    <link rel="stylesheet" href="./assets/site.css" />
+    <script type="module" src="./app/site-menu.js"></script>
   </head>
   <body>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./occasions.html">My Occasions</a>
+          <a href="./how-it-works.html" aria-current="location">About Silent Hello</a>
+        </nav>
+      </details>
+    </header>
     <main class="information">
-      <a href="./" class="wordmark">Silent Hello</a>
       <h1>A few important details.</h1>
       <p>
         Owner review required before launch. These notices describe this static
@@ -48,16 +62,11 @@
           available.
         </p>
       </section>
-      <section id="contact">
-        <h2>Contact and reporting</h2>
-        <p>
-          The owner must supply a verified support address, business identity
-          and abuse-reporting route before public commercial launch. No address
-          or registration number has been invented. Without storage-backed
-          links, we cannot revoke an individual card URL; ask its sender to stop
-          distributing it. Hosting abuse can be reported to the hosting
-          provider.
-        </p>
+      <section id="contact" class="contact-section" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact Silent Hello</h2>
+        <p>Get in touch for help with a gift, to share feedback or to report a link.</p>
+        <a href="mailto:jworldcreations@hotmail.com">jworldcreations@hotmail.com</a>
+        <p>If you receive an unwanted card link, you can ask the sender to stop sharing it. Links that contain the card itself can’t be revoked individually.</p>
       </section>
       <section>
         <h2>AI and refunds</h2>
@@ -70,5 +79,14 @@
         </p>
       </section>
     </main>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
+    </footer>
   </body>
 </html>

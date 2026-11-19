@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#faf7f1" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/app-icon.svg" />
+    <title>Greeting Cards · Silent Hello</title>
+    <link rel="icon" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="./assets/fonts.css" />
+    <link rel="stylesheet" href="./assets/app.css" />
+    <link rel="stylesheet" href="./assets/shop.css" />
+    <link rel="stylesheet" href="./assets/premium-refresh.css" />
+    <link rel="stylesheet" href="./assets/site.css" />
+    <script type="module" src="./app/site-menu.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalogue">Skip to cards</a>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html" aria-current="page">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./occasions.html">My Occasions</a>
+          <a href="./how-it-works.html">About Silent Hello</a>
+        </nav>
+      </details>
+    </header>
+    <main>
+      <section class="shop-intro">
+        <div>
+          <h1>Greeting Cards</h1>
+          <p>Choose a ready-made design to personalise, or start in the studio and put your card together step by step.</p>
+        </div>
+        <div class="collection-actions">
+          <a class="button primary" href="#catalogue">Choose a Design</a>
+          <a class="button" href="./studio.html">Create Your Own</a>
+        </div>
+      </section>
+      <section id="catalogue" class="shop-catalogue">
+        <h2>Browse by occasion</h2>
+        <div id="quickOccasions" class="occasion-shortcuts" role="group" aria-label="Popular occasions"></div>
+        <form id="filters" class="shop-filters" role="search">
+          <label>Search cards<input id="search" type="search" placeholder="Birthday, love, Christmas…" /></label>
+          <label>Occasion<select id="occasion"><option value="">Every occasion</option></select></label>
+          <details class="browse-more">
+            <summary>Filters<span id="filterCount"></span></summary>
+            <div class="more-filters">
+              <label>Collection<select id="collection">
+                <option value="">All collections</option>
+                <option>Celebrate</option><option>Love &amp; family</option><option>Everyday</option><option>Seasonal</option>
+              </select></label>
+              <label>Opening<select id="opening"><option value="">Every opening</option></select></label>
+              <label>Style<select id="style"><option value="">Every style</option></select></label>
+              <label>For someone<select id="relationship"><option value="">Anyone special</option></select></label>
+              <label>Their favourite thing<select id="interest"><option value="">All interests</option></select></label>
+              <label>Mood<select id="tone"><option value="">Every mood</option></select></label>
+            </div>
+          </details>
+          <button id="clearFilters" class="button" type="reset" hidden>Clear filters</button>
+        </form>
+        <h3>Featured collections</h3>
+        <div id="featuredCollections" class="collection-grid" role="group" aria-label="Featured collections"></div>
+        <div id="catalogueResults" tabindex="-1">
+          <p id="catalogueStatus" role="status">Loading the collection…</p>
+        </div>
+        <div id="cardGrid" class="shop-grid"></div>
+        <nav id="cataloguePager" class="catalogue-pager" aria-label="Card pages" hidden>
+          <button id="previousCards" class="button" type="button">Previous</button>
+          <span id="cataloguePage"></span>
+          <button id="nextCards" class="button" type="button">Next</button>
+        </nav>
+      </section>
+    </main>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
+    </footer>
+    <dialog id="designPreview" aria-labelledby="previewName">
+      <button id="closePreview" class="button">Close preview</button>
+      <h2 id="previewName"></h2>
+      <div
+        id="previewStages"
+        class="preview-stage-switch"
+        role="group"
+        aria-label="Card preview stage"
+      >
+        <button
+          class="button small"
+          type="button"
+          data-stage="envelope"
+          aria-pressed="false"
+        >
+          Envelope
+        </button>
+        <button
+          class="button small"
+          type="button"
+          data-stage="cover"
+          aria-pressed="true"
+        >
+          Front cover
+        </button>
+        <button
+          class="button small"
+          type="button"
+          data-stage="inside"
+          aria-pressed="false"
+        >
+          Inside message
+        </button>
+      </div>
+      <p id="previewStatus" class="helper" role="status"></p>
+      <iframe id="shopPreview" title="Animated design preview"></iframe
+      ><a id="previewCustomise" class="button primary">Customise this card →</a>
+    </dialog>
+    <script type="module" src="./app/shop.js"></script>
+    <script type="module" src="./app/assistant-on-visit.js"></script>
+    <script type="module" src="./app/pwa.js"></script>
+  </body>
+</html>

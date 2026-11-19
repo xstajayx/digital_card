@@ -34,7 +34,7 @@ try:
     page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
     page.on('response',lambda r:errors.append(f'HTTP {r.status}: {r.url}') if r.status>=400 else None)
    context.on('page',observe)
-   page=context.new_page();page.goto(BASE)
+   page=context.new_page();page.goto(BASE+"cards.html")
    expect(page.locator('.shop-card')).to_have_count(115)
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
    page.locator('.shop-card:not([hidden]) img').evaluate_all("items=>items.forEach(i=>i.loading='eager')")
