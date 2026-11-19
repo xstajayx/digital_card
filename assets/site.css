@@ -95,3 +95,22 @@
   .brand-menu[open] > summary { position: absolute; inset-inline-end: 0; top: 10px; }
   .brand-menu nav { display: grid; grid-template-columns: minmax(0, 1fr); }
 }
+.contact-section {
+  margin-block: 24px;
+  padding: clamp(16px, 4vw, 24px);
+  border: 1px solid var(--brand-line);
+  border-radius: 8px;
+  background: var(--brand-paper);
+}
+.contact-section h2 { margin-top: 0; }
+.contact-section a {
+  display: inline-block;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: 8px;
+  color: var(--brand-ink);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+}
+.contact-section p:last-child { margin-bottom: 0; }
