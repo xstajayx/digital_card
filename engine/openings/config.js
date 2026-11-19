@@ -1,3 +1,10 @@
+export function envelopeAddress(recipient = "") {
+  if (!recipient.trim()) return "Especially for you";
+  return /^(?:to|for|dear)(?:\s|[,:]|$)/i.test(recipient.trimStart())
+    ? recipient
+    : `For ${recipient}`;
+}
+
 export const OPENING_TYPES = ["none", "envelope", "gift-box"];
 export const EFFECTS = [
   "theme",

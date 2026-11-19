@@ -1,4 +1,4 @@
-import { TONES } from "./config.js";
+import { envelopeAddress, TONES } from "./config.js";
 export function createOpening(root) {
   const cover = document.createElement("section");
   cover.className = "interactive-opening";
@@ -60,9 +60,7 @@ export function createOpening(root) {
     }
     cover.dataset.wrap = config.wrap || "plain";
     layers.seal.hidden = config.seal === false;
-    layers.tag.textContent = recipient
-      ? `For ${recipient}`
-      : "Especially for you";
+    layers.tag.textContent = envelopeAddress(recipient);
     text.textContent = sender
       ? `${sender} sent you a little hello.`
       : "Someone has sent you a little hello.";

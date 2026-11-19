@@ -4,7 +4,7 @@ import {
   illustration,
   illustrationUrl,
 } from "./illustrations.js";
-import { TONES } from "./openings/config.js";
+import { envelopeAddress, TONES } from "./openings/config.js";
 const make = (tag, cls, text) => {
   const e = document.createElement(tag);
   e.className = cls;
@@ -340,9 +340,8 @@ export function createPhysicalCard(root, card, onReveal) {
       ].entries())
         scene.style.setProperty(key, tone[i]);
       seal.hidden = data.openingConfig?.seal === false;
-      tag.textContent = data.recipient
-        ? `For ${data.recipient}`
-        : "Especially for you";
+      const address = envelopeAddress(data.recipient);
+      tag.textContent = address;
       front.style.setProperty(
         "--cover-font",
         root.style.getPropertyValue("--card-font"),
@@ -355,7 +354,7 @@ export function createPhysicalCard(root, card, onReveal) {
       );
       envelope.setAttribute(
         "aria-label",
-        `Open envelope addressed to ${data.recipient || "you"}`,
+        `Open envelope. ${address}`,
       );
       name.textContent = Object.hasOwn(cfg, "coverName")
         ? cfg.coverName
