@@ -1,19 +1,5 @@
 export const ROSE_ART = "blush-rose";
 export const ROSE_LIMITS = { greeting: 100, message: 1000, signature: 100 };
-export const DAY_MS = 86_400_000;
-const FULL_BLOOM = {
-  id: "bloom",
-  day: 5,
-  label: "In full bloom",
-  alt: "A fully open blush-pink rose with layered petals and veined green leaves.",
-};
-const KEEPSAKE = { ...FULL_BLOOM, day: 14, label: "Your keepsake", keepsake: true };
-const ROSE_STAGES = [
-  { id: "bud", day: 0, label: "In bud", alt: "A partly closed blush rosebud on a green stem with two leaf sprigs." },
-  { id: "opening", day: 2, label: "Beginning to open", alt: "Blush petals unfurling from the same rosebud." },
-  FULL_BLOOM,
-  KEEPSAKE,
-];
 const MAX_PAYLOAD = 10_000;
 const ID_PATTERN = /^[0-9a-f]{32}$/;
 
@@ -60,21 +46,4 @@ export function decodeRoseGift(payload) {
   if (!Array.isArray(data) || data.length !== 7)
     throw new Error("This rose link is invalid.");
   return validateGift(data);
-}
-
-export function readRoseState(raw, now) {
-  if (!raw || !Number.isSafeInteger(raw.openedAt) || raw.openedAt <= 0 || raw.openedAt > now)
-    return null;
-  return { openedAt: raw.openedAt, kept: raw.kept === true };
-}
-
-export function roseStage(mode, state, now) {
-  if (state?.kept) return { stage: KEEPSAKE, nextAt: null };
-  if (mode === "everlasting") return { stage: FULL_BLOOM, nextAt: null };
-  const openedAt = state?.openedAt ?? now;
-  const age = Math.max(0, now - openedAt);
-  const next = ROSE_STAGES.findIndex(({ day }) => age < day * DAY_MS);
-  return next === -1
-    ? { stage: KEEPSAKE, nextAt: null }
-    : { stage: ROSE_STAGES[next - 1], nextAt: openedAt + ROSE_STAGES[next].day * DAY_MS };
 }

@@ -3,90 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f8f4ec">
-    <meta name="referrer" content="no-referrer">
-    <title>Send a rose · Silent Hello</title>
-    <meta name="description" content="Send a blush rose with a personal note. Let it blossom over time or keep it in full bloom.">
     <link rel="icon" href="./assets/favicon.svg">
-    <link rel="stylesheet" href="./assets/fonts.css">
-    <link rel="stylesheet" href="./assets/rose.css">
+    <meta http-equiv="refresh" content="0; url=./flower-studio.html?flower=blush-rose">
+    <title>Send a Blush Rose · Silent Hello Flowers</title>
   </head>
   <body>
-    <a class="rose-skip" href="#main">Skip to content</a>
-    <header class="rose-header">
-      <a class="rose-brand" href="./">Silent Hello</a>
-      <a href="./#catalogue">Browse cards</a>
-    </header>
-    <main id="main" class="rose-studio">
-      <div class="rose-intro">
-        <h1>The Living Rose</h1>
-        <p>A little beauty, growing just for you.</p>
-      </div>
-      <div class="studio-art">
-        <figure>
-          <div id="draftArt" class="rose-art"></div>
-          <figcaption id="draftStage"></figcaption>
-        </figure>
-        <div id="draftNote" class="rose-note" aria-label="Your note preview">
-          <p data-note="greeting" hidden></p>
-          <p data-note="message" hidden></p>
-          <p data-note="signature" hidden></p>
-        </div>
-      </div>
-      <form id="roseForm" class="rose-form">
-        <h2>Make it personal</h2>
-        <label for="roseGreeting">Greeting <small>Optional</small></label>
-        <input id="roseGreeting" name="greeting" type="text" aria-describedby="greetingError">
-        <p id="greetingError" class="rose-error" aria-live="polite"></p>
-        <div class="label-row">
-          <label for="roseMessage">Your message</label>
-          <span id="messageCount">0 / 1000</span>
-        </div>
-        <textarea id="roseMessage" name="message" rows="4" aria-describedby="messageCount messageError"></textarea>
-        <p id="messageError" class="rose-error" aria-live="polite"></p>
-        <label for="roseSignature">Signature <small>Optional</small></label>
-        <input id="roseSignature" name="signature" type="text" aria-describedby="signatureError">
-        <p id="signatureError" class="rose-error" aria-live="polite"></p>
-        <fieldset>
-          <legend>How should it bloom?</legend>
-          <label class="rose-mode">
-            <input type="radio" name="mode" value="evolving" checked>
-            <span>Let it bloom over time <small>Opens gradually and stays in full bloom.</small></span>
-          </label>
-          <label class="rose-mode">
-            <input type="radio" name="mode" value="everlasting">
-            <span>Keep it in bloom <small>Opens fully and stays that way.</small></span>
-          </label>
-        </fieldset>
-        <button id="openPreview" class="rose-button" type="button">Preview gift</button>
-        <section class="rose-send" aria-labelledby="roseSendTitle">
-          <h2 id="roseSendTitle">Send your rose</h2>
-          <div class="rose-actions">
-            <button id="shareRose" class="rose-button primary" type="button">Share rose</button>
-            <button id="copyRose" class="rose-button" type="button">Copy link</button>
-            <button id="whatsAppRose" class="rose-button" type="button">WhatsApp</button>
-          </div>
-          <p id="sendStatus" class="rose-status" role="status"></p>
-          <label id="manualLink" class="manual-link" hidden>
-            Your rose link
-            <input id="roseLink" readonly>
-          </label>
-        </section>
-      </form>
-    </main>
-    <dialog id="rosePreview" aria-labelledby="previewTitle">
-      <div class="rose-dialog-header">
-        <h2 id="previewTitle">Gift preview</h2>
-        <button id="closePreview" class="rose-button" type="button">Back to editing</button>
-      </div>
-      <div id="previewArt" class="rose-art"></div>
-      <div id="previewNote" class="rose-note">
-        <p data-note="greeting" hidden></p>
-        <p data-note="message" hidden></p>
-        <p data-note="signature" hidden></p>
-      </div>
-    </dialog>
-    <noscript><p class="rose-noscript">Enable JavaScript to create and share a rose.</p></noscript>
-    <script type="module" src="./app/rose-creator.js"></script>
+    <main><a href="./flower-studio.html?flower=blush-rose">Personalise your Blush Rose</a></main>
   </body>
 </html>

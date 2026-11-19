@@ -3,50 +3,38 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f8f4ec">
+    <meta name="theme-color" content="#f7f2e8">
     <meta name="referrer" content="no-referrer">
     <meta name="robots" content="noindex, nofollow">
-    <title>A rose for you · Silent Hello</title>
+    <title>Your flower gift · Silent Hello Flowers</title>
     <link rel="icon" href="./assets/favicon.svg">
     <link rel="stylesheet" href="./assets/fonts.css">
-    <link rel="stylesheet" href="./assets/rose.css">
+    <link rel="stylesheet" href="./assets/flowers.css">
+    <script type="module" src="./app/flower-view.js"></script>
   </head>
-  <body class="rose-recipient">
-    <a class="rose-skip" href="#main">Skip to content</a>
-    <header class="rose-header">
-      <a class="rose-brand" href="./">Silent Hello</a>
+  <body>
+    <a class="flower-skip" href="#main">Skip to content</a>
+    <header class="flower-header">
+      <a class="flower-brand" href="./flowers.html">Silent Hello <span>Flowers</span></a>
+      <a href="./">Greeting cards</a>
     </header>
-    <main id="main" class="rose-gift" tabindex="-1">
-      <section id="unopened" class="rose-cover" aria-labelledby="revealTitle" hidden>
-        <div class="rose-cover-image" aria-hidden="true"></div>
-        <div class="rose-cover-note">
-          <h1 id="revealTitle">A rose for you</h1>
-          <button id="revealRose" class="rose-button primary" type="button">Open your rose</button>
-        </div>
-      </section>
-      <article id="opened" class="rose-opened" hidden>
-        <h1 id="giftTitle" tabindex="-1">A rose for you</h1>
-        <figure>
-          <div id="giftArt" class="rose-art"></div>
-          <figcaption id="giftStage" role="status"></figcaption>
-        </figure>
-        <div class="gift-letter">
-          <div id="giftNote" class="rose-note">
-            <p data-note="greeting" hidden></p>
-            <p data-note="message" hidden></p>
-            <p data-note="signature" hidden></p>
-          </div>
-          <div class="rose-preserve">
-            <button id="keepRose" class="rose-button" type="button" aria-describedby="keepHint">Keep this rose</button>
-            <p id="keepHint">Keep your rose in full bloom in this browser.</p>
-            <p id="keepStatus" role="status" class="rose-status"></p>
+    <main id="main" class="flower-recipient" tabindex="-1">
+      <article id="flowerGift" class="flower-presentation" hidden>
+        <h1 data-title></h1>
+        <div class="flower-present-art" data-art></div>
+        <div class="flower-gift-details">
+          <button class="flower-button primary" data-bloom type="button"></button>
+          <p class="flower-status" data-status role="status"></p>
+          <div class="flower-note" data-letter hidden>
+          <p data-note="greeting" hidden></p>
+          <p data-note="message" hidden></p>
+          <p data-note="signature" hidden></p>
           </div>
         </div>
       </article>
-      <p id="giftError" class="rose-error" role="alert"></p>
-      <p class="rose-footer"><a href="./rose.html">Send a little joy of your own</a></p>
+      <p id="giftError" class="flower-error" role="alert"></p>
+      <p class="flower-return"><a href="./flowers.html">Send a little beauty of your own</a></p>
     </main>
-    <noscript><p class="rose-noscript">Enable JavaScript to open your rose.</p></noscript>
-    <script type="module" src="./app/rose-view.js"></script>
+    <noscript><p class="flower-noscript">Enable JavaScript to use Silent Hello Flowers.</p></noscript>
   </body>
 </html>
