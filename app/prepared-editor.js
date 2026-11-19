@@ -35,7 +35,7 @@ export function assertPreparedShareable(state) {
       "This edited card differs from the approved draft. Save, review and approve your changes first.",
     );
 }
-export function bindPreparedEditor(state, preview, photos) {
+export function bindPreparedEditor(state, preview, photos, onSaved = () => {}) {
   const id = new URLSearchParams(location.search).get("prepared");
   if (!id) return;
   const bar = document.createElement("section");
@@ -91,6 +91,7 @@ export function bindPreparedEditor(state, preview, photos) {
         );
         let next = updatePrepared(id, version, { card: raw });
         version = next.version;
+        onSaved();
         const valid = await preview.checkFit();
         next = updatePrepared(id, version, {
           status: valid ? "ready" : "draft",

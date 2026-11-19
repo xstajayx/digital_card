@@ -39,12 +39,12 @@ try:
      if d>=today:return d
    expected=[i['nickname'] for i in sorted(records,key=lambda i:(next_date(i),i['nickname']))];actual=page.locator('.occasion-item h3').all_text_contents();assert all(actual[i].startswith(name) for i,name in enumerate(expected))
    brother=page.locator('.occasion-item').filter(has=page.get_by_role('heading',name='Brother’s Birthday',exact=True))
-   with page.expect_download() as download:brother.get_by_role('button',name=re.compile('Download calendar')).click()
+   with page.expect_download() as download:brother.get_by_role('button',name=re.compile('Add reminder to calendar')).click()
    dl=download.value;assert dl.suggested_filename.endswith('.ics');raw=Path(dl.path()).read_bytes();assert b'\r\nBEGIN:VALARM\r\n' in raw;assert b'TRIGGER:-P7D' in raw;assert b'RRULE:FREQ=YEARLY;BYMONTH=6;BYMONTHDAY=15' in raw
    from icalendar import Calendar
    cal=Calendar.from_ical(raw);event=cal.walk('VEVENT')[0];assert event.decoded('dtstart').month==6;assert str(event['summary'])=='Brother’s Birthday';assert len(event.subcomponents)==1
    page.locator('#calendarAlarm').uncheck()
-   with page.expect_download() as download:brother.get_by_role('button',name=re.compile('Download calendar')).click()
+   with page.expect_download() as download:brother.get_by_role('button',name=re.compile('Add reminder to calendar')).click()
    assert b'VALARM' not in Path(download.value.path()).read_bytes()
    brother.get_by_role('button',name=re.compile('Edit:')).click();expect(dialog.locator('[name=day]')).to_have_value('15');dialog.locator('[name=nickname]').fill('Sibling');dialog.get_by_role('button',name='Save occasion').click();expect(page.get_by_role('heading',name='Sibling’s Birthday')).to_be_visible()
    page.screenshot(path=str(ART/f'upcoming-{width}.png'),full_page=True)
@@ -57,16 +57,16 @@ try:
   page.locator('.steps [data-step="3"]').click();page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill('PRIVATE CARD WORDS');page.locator('.steps [data-step="5"]').click();page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('Link copied');expect(page.locator('#rememberOccasionPrompt')).to_be_visible();url=page.evaluate('navigator.clipboard.readText()');assert '#c=' in url
   page.locator('#rememberOccasionButton').click();dialog=page.locator('.occasion-dialog:visible');expect(dialog.locator('[name=nickname]')).to_have_value('Maya');expect(dialog.locator('[name=day]')).to_have_value('');expect(dialog.locator('[name=month]')).to_have_value('');page.screenshot(path=str(ART/'sender-dialog-390.png'),full_page=False)
   dialog.locator('[name=day]').fill('15');dialog.locator('[name=month]').select_option('6');dialog.get_by_role('button',name='Save occasion').click();stored=page.evaluate('(key)=>localStorage.getItem(key)',KEY);assert 'PRIVATE CARD WORDS' not in stored;expect(page.locator('#occasionSavedStatus')).to_contain_text('saved on this device')
-  page.goto(BASE+'occasions.html');expect(page.get_by_role('heading',name='Maya’s Birthday')).to_be_visible()
+  page.once('dialog', lambda dialog: dialog.accept());page.goto(BASE+'occasions.html');expect(page.get_by_role('heading',name='Maya’s Birthday')).to_be_visible()
   # Download-start failures are visible and do not claim a completed import.
-  page.evaluate('() => { URL.createObjectURL=()=>{throw new Error("blocked")}; }');page.get_by_role('button',name=re.compile('Download calendar')).click();expect(page.locator('#occasionError')).to_contain_text('Allow downloads')
+  page.evaluate('() => { URL.createObjectURL=()=>{throw new Error("blocked")}; }');page.get_by_role('button',name=re.compile('Add reminder to calendar')).click();expect(page.locator('#occasionError')).to_contain_text('Allow downloads')
   # Editing in two tabs cannot silently overwrite a newer edit.
   page.get_by_role('button',name=re.compile('Edit:')).click();page.evaluate('key=>{const d=JSON.parse(localStorage.getItem(key));d.items[0].revision++;localStorage.setItem(key,JSON.stringify(d))}',KEY);dialog=page.locator('.occasion-dialog:visible');dialog.get_by_role('button',name='Save occasion').click();expect(dialog.locator('[data-error]')).to_contain_text('another tab');page.keyboard.press('Escape')
   # Corrupt storage is preserved; save errors stay inside the dialog.
   page.evaluate('(key)=>localStorage.setItem(key,"{broken")',KEY);page.reload();expect(page.locator('#occasionError')).to_contain_text('not been overwritten');page.locator('#addOccasion').click();dialog.locator('[name=nickname]').fill('Friend');dialog.locator('[name=day]').fill('1');dialog.locator('[name=month]').select_option('1');dialog.get_by_role('button',name='Save occasion').click();expect(dialog.locator('[data-error]')).to_contain_text('not been overwritten');assert page.evaluate('(key)=>localStorage.getItem(key)',KEY)=='{broken';page.keyboard.press('Escape')
   page.evaluate('Storage.prototype.setItem=()=>{throw new Error("quota")};Storage.prototype.getItem=()=>null');page.locator('#addOccasion').click();dialog.locator('[name=nickname]').fill('Friend');dialog.locator('[name=day]').fill('1');dialog.locator('[name=month]').select_option('1');dialog.get_by_role('button',name='Save occasion').click();expect(dialog.locator('[data-error]')).to_contain_text('could not save');page.keyboard.press('Escape')
   viewer=context.new_page();viewer.goto(url);expect(viewer.frame_locator('#viewerFrame').locator('#message')).to_have_text('PRIVATE CARD WORDS');assert viewer.locator('#rememberOccasionPrompt,.occasion-dialog').count()==0
-  page=context.new_page();page.goto(BASE);page.locator('#menuToggle').click();expect(page.get_by_role('link',name='My Occasions',exact=True)).to_be_visible();page.get_by_role('link',name='My Occasions',exact=True).click();expect(page.locator('#occasionsTitle')).to_have_text('Keep their day close.')
+  page=context.new_page();page.goto(BASE);page.locator('#menuToggle').click();expect(page.get_by_role('link',name='My Occasions',exact=True)).to_be_visible();page.get_by_role('link',name='My Occasions',exact=True).click();expect(page.locator('#occasionsTitle')).to_have_text('My Occasions')
   print('PASS sender prepare/share, nickname prefill with blank date, no card text stored, failure handling, conflict handling, shop navigation and recipient isolation',flush=True)
   browser.close()
 finally:server.shutdown();server.server_close()

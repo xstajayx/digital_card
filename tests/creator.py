@@ -32,7 +32,7 @@ try:
    # A browser may still have the previous studio modules cached under these URLs.
    page.route("**/app/main.js", lambda route: route.abort())
    page.route("**/app/ui.js", lambda route: route.abort())
-   page.goto(BASE)
+   page.goto(BASE+"cards.html")
    page.locator('#search').fill('Midnight')
    page.locator('.shop-card[data-id="birthday-midnight"]').get_by_role('button', name='Preview').click()
    page.locator('#previewCustomise').click()

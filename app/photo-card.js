@@ -33,7 +33,7 @@ const node = (tag, cls, text) => {
   if (text) e.textContent = text;
   return e;
 };
-export function bindPhotoEditor(state, preview) {
+export function bindPhotoEditor(state, preview, onSaved = () => {}) {
   const frame = document.getElementById("cardPreview"),
     doc = frame.contentDocument,
     root = doc.getElementById("cardRoot");
@@ -527,6 +527,7 @@ export function bindPhotoEditor(state, preview) {
     say(
       "Photo draft saved on this browser/device. It is still a local preview and cannot be shared.",
     );
+    onSaved();
     return "Photo draft saved on this browser/device. Use Restore photo draft in Personalise to recover it.";
   }
   async function restoreDraft() {
@@ -578,6 +579,7 @@ export function bindPhotoEditor(state, preview) {
       say(
         "Local photo draft restored. Nothing has been uploaded; sharing remains unavailable.",
       );
+      onSaved();
       return "Photo draft restored.";
     } finally {
       if (run === busy) processing = false;

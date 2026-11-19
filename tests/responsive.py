@@ -72,9 +72,9 @@ try:
    for opening in ['envelope','gift-box']:
     step(page,4);page.locator('#opening-type').select_option(opening);step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-opening-state','ready');assert not f.locator('html').evaluate(CHECK),(width,opening,f.locator('html').evaluate(CHECK));f.get_by_role('button',name='Skip opening').click()
    step(page,4);page.locator('#physicalToggle').check();step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');assert not f.locator('html').evaluate(CHECK),(width,'paper',f.locator('html').evaluate(CHECK));page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('Link copied');url=page.evaluate('navigator.clipboard.readText()');viewer=ctx.new_page();viewer.goto(url);vf=viewer.frame_locator('#viewerFrame');expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');check(viewer,f'{width} recipient');assert not vf.locator('html').evaluate(CHECK),(width,'recipient paper',vf.locator('html').evaluate(CHECK));viewer.close();page.bring_to_front()
-   for path in ['', 'ai.html','information.html']:
+   for path in ['cards.html', '', 'ai.html','information.html']:
     page.goto(BASE+path)
-    if not path:expect(page.locator('.shop-card')).to_have_count(115)
+    if path == 'cards.html':expect(page.locator('.shop-card')).to_have_count(115)
     check(page,f'{width} {path or "shop"}');page.locator('html').evaluate("e=>e.style.fontSize='200%'");check(page,f'{width} {path} 200%');page.locator('html').evaluate("e=>e.style.fontSize=''")
    # A scaled iframe still exposes every action and reserves the action row below paper.
    page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28);step(page,4);page.locator('#physicalToggle').check();step(page,5);f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');f.locator('html').evaluate("e=>e.style.fontSize='200%'")

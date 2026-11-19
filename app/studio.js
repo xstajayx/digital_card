@@ -13,6 +13,7 @@ import { createUI } from "./studio-ui.js";
 import { loadThemes } from "../engine/card-data.js";
 import { createCardController } from "../engine/preview.js";
 
+import { draftNavigation } from "./draft-navigation.js";
 import { bindDrafts } from "./drafts.js";
 
 async function init() {
@@ -35,14 +36,28 @@ async function init() {
       fontId: theme.defaultFontId || "fredoka",
       ...designDefaults(theme),
     });
-    const photos = bindPhotoEditor(state, preview);
+    const photos = bindPhotoEditor(state, preview, () => markSaved());
     createUI({ state, preview });
-    bindDrafts(state, photos);
+    const warnForDraft = draftNavigation();
+    const snapshot = () => {
+      const { themes, theme, ...draft } = state.get();
+      return JSON.stringify([theme.id, draft, photos.active ? photos.signature() : ""]);
+    };
+    let saved;
+    const markSaved = () => {
+      saved = snapshot();
+      warnForDraft(false);
+    };
+    bindDrafts(state, photos, markSaved);
     bindOpeningPicker(state);
     bindPhysicalPicker(state, preview);
-    bindPreparedEditor(state, preview, photos);
+    bindPreparedEditor(state, preview, photos, markSaved);
     bindCreator(state, preview);
     bindHostedCards(state, preview);
+    markSaved();
+    const checkDraft = () => warnForDraft(snapshot() !== saved);
+    state.subscribe(checkDraft);
+    document.getElementById("studio").addEventListener("input", () => queueMicrotask(checkDraft));
   } catch (error) {
     document.getElementById("exportStatus").textContent = error.message;
     const notice = document.createElement("p");

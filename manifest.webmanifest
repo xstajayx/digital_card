@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Silent Hello — Digital Greeting Cards",
+  "name": "Silent Hello — Digital Gifts",
   "short_name": "Silent Hello",
-  "description": "Create thoughtful folded greeting cards and send a little joy.",
+  "description": "Send thoughtful folded greeting cards and flowers that bloom when opened.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
