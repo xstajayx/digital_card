@@ -71,10 +71,22 @@ try:
    page.locator('.draft-menu summary').click()
    step(page,3)
    expect(page.locator('#messageInput')).to_have_value(message)
-   for greeting in ['Jamie', 'To Jamie', 'Dear Jamie', 'Happy Birthday Jamie', '', '  To  Stacey  ']:
+   for greeting, address in [
+    ('Jamie', 'For Jamie'),
+    ('to Jamie', 'to Jamie'),
+    ('To: Jamie', 'To: Jamie'),
+    ('For Jamie', 'For Jamie'),
+    ('Dear Jamie', 'Dear Jamie'),
+    ('Toby', 'For Toby'),
+    ('Happy Birthday Jamie', 'For Happy Birthday Jamie'),
+    ('', 'Especially for you'),
+    ('  To  Stacey  ', '  To  Stacey  '),
+   ]:
     page.locator('#toInput').fill(greeting)
     expect(f.locator('#headline')).to_have_text(greeting)
     assert f.locator('#headline').text_content() == greeting
+    expect(f.locator('.paper-envelope-tag')).to_have_text(address)
+    assert f.locator('.paper-envelope-tag').text_content() == address
    page.locator('#toInput').fill('To Stacey')
    page.locator('#editingPreview').click()
    expect(f.locator('#headline')).to_have_text('To Stacey')
@@ -131,7 +143,7 @@ try:
    viewer=ctx.new_page()
    viewer.goto(url)
    vf=viewer.frame_locator('#viewerFrame')
-   expect(vf.locator('.paper-envelope-tag')).to_have_text('For To Stacey')
+   expect(vf.locator('.paper-envelope-tag')).to_have_text('To Stacey')
    expect(vf.locator('.paper-cover-name')).to_have_text('')
    vf.locator('.paper-envelope-front').click()
    vf.locator('.paper-cover').click()
