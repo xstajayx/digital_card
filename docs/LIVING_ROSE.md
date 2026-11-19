@@ -12,19 +12,18 @@ The first reveal starts the timeline for that gift in the recipient’s browser.
 | --- | --- |
 | 0–1 | Partly closed bud |
 | 2–4 | Beginning to open |
-| 5–9 | Full bloom |
-| 10–13 | Softer, gently relaxed bloom |
-| 14 onward | Preserved keepsake |
+| 5–13 | Full bloom |
+| 14 onward | Keepsake in full bloom |
 
-Everlasting gifts open in full bloom. **Keep this rose** changes either mode to the preserved view early. The message remains available in every stage. Stage boundaries and readable labels are in `engine/rose-gift.js`. The art changes at a stage boundary with a brief fade. Reduced-motion mode displays it immediately. Returning to a tab rechecks elapsed time so the rose can advance past stages missed while the tab was closed or suspended.
+Everlasting gifts open in full bloom. **Keep this rose** immediately keeps either mode in full bloom, including gifts that were already saved. The message remains available in every stage. Stage boundaries and readable labels are in `engine/rose-gift.js`. The art changes at a stage boundary with a brief fade. Reduced-motion mode displays it immediately. Returning to a tab rechecks elapsed time so the rose can advance past stages missed while the tab was closed or suspended.
 
 Only the first-open timestamp and the keepsake choice are saved in local storage under the gift ID. Different browsers and devices can have separate timelines. Clearing browser storage can reset the timeline and the keepsake choice. With storage blocked, the rose and note still work for the current visit. Preservation does not synchronise across devices. No server confirms delivery, opening or visits.
 
 ## Artwork
 
-The original full-bloom image was created with OpenAI ImageGen for Silent Hello. Each of the other four images was edited from that same 1024×1536 reference using ImageGen, with the stem, leaf sequence, lighting and camera framing held as reference. The stages were inspected together for anatomical and visual consistency. The series is five rendered stills from a common reference. The preserved art uses papery pink petals and muted olive leaves on the same ivory background.
+The original full-bloom image was created with OpenAI ImageGen for Silent Hello. The bud and opening images was edited from that same 1024×1536 reference using ImageGen, with the stem, leaf sequence, lighting and camera framing held as reference. The stages were inspected together for anatomical and visual consistency. The series uses three rendered stills from a common reference. The keepsake uses the same image as full bloom.
 
-The repository ships opaque 480×720 and 960×1440 WebP derivatives of all five images. The 960px files serve as the shipped high-resolution set. No third-party stock, flower trademarks, remote art requests or runtime generation are used. Generated output is subject to the applicable OpenAI terms.
+The repository ships opaque 480×720 and 960×1440 WebP derivatives of all three images. The 960px files serve as the shipped high-resolution set. No third-party stock, flower trademarks, remote art requests or runtime generation are used. Generated output is subject to the applicable OpenAI terms.
 
 ## Verification
 

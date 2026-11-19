@@ -118,7 +118,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
             assert recipient.get_by_role("button", name="Copy link").count() == 0
             if width != 1440:
                 assert recipient.locator("#opened").evaluate("element => getComputedStyle(element).animationName") == "none"
-            for day, stage in [(2, "opening"), (5, "bloom"), (10, "relaxed")]:
+            for day, stage in [(2, "opening"), (5, "bloom"), (10, "bloom")]:
                 recipient.evaluate("""offset => {
                   window.roseTimeOffset = offset;
                   document.dispatchEvent(new Event("visibilitychange"));
@@ -129,7 +129,8 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
                     recipient.locator("#giftTitle").blur()
                     recipient.screenshot(path=ARTIFACTS / f"recipient-{width}.png", full_page=True, animations="disabled")
             recipient.evaluate("window.roseTimeOffset = 14 * 86400000; dispatchEvent(new Event('focus'))")
-            expect_art(recipient, "keepsake")
+            expect_art(recipient, "bloom")
+            expect(recipient.locator("#giftStage")).to_have_text("Your keepsake")
             expect(recipient.get_by_role("button", name="Keep this rose")).to_be_hidden()
             assert recipient.locator('#giftNote [data-note="message"]').text_content() == message
 
@@ -147,10 +148,13 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
             recipient.reload()
             expect_art(recipient, "bloom")
             recipient.get_by_role("button", name="Keep this rose").click()
-            expect_art(recipient, "keepsake")
+            expect_art(recipient, "bloom")
+            expect(recipient.locator("#giftStage")).to_have_text("Your keepsake")
             expect(recipient.locator("#keepStatus")).to_be_focused()
             recipient.reload()
-            expect_art(recipient, "keepsake")
+            expect_art(recipient, "bloom")
+            expect(recipient.locator("#giftStage")).to_have_text("Your keepsake")
+            assert "/bloom-" in recipient.locator("#giftArt img").evaluate("image => image.currentSrc")
             clean(recipient)
             assert not errors, errors
             print(f"PASS {width}px creator, keyboard preview, share link, all stages, keepsake and overflow", flush=True)
@@ -219,7 +223,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
         expect_art(recipient, "bud")
         expect(recipient.locator("#keepStatus")).to_contain_text("couldn’t remember")
         recipient.get_by_role("button", name="Keep this rose").click()
-        expect_art(recipient, "keepsake")
+        expect_art(recipient, "bloom")
         expect(recipient.locator("#keepStatus")).to_contain_text("for this visit")
         expect(recipient.locator('#giftNote [data-note="message"]')).to_have_text(untrusted_note)
         assert recipient.locator("#giftNote img").count() == 0

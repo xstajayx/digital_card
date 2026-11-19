@@ -36,15 +36,20 @@ test("rejects unknown versions, art, invalid text, bad IDs and oversized links",
 test("lifecycle advances at exact elapsed UTC boundaries and handles long gaps", () => {
   const openedAt = Date.UTC(2026, 10, 19, 23, 45);
   const state = { openedAt, kept: false };
-  for (const [day, name, next] of [[0, "bud", 2], [2, "opening", 5], [5, "bloom", 10], [10, "relaxed", 14], [14, "keepsake", null], [300000, "keepsake", null]]) {
+  for (const [day, name, next] of [[0, "bud", 2], [2, "opening", 5], [5, "bloom", 14], [10, "bloom", 14], [14, "bloom", null], [300000, "bloom", null]]) {
     const result = roseStage("evolving", state, openedAt + day * DAY_MS);
     assert.equal(result.stage.id, name);
+    assert.equal(Boolean(result.stage.keepsake), day >= 14);
     assert.equal(result.nextAt, next === null ? null : openedAt + next * DAY_MS);
   }
   assert.equal(roseStage("evolving", state, openedAt + 2 * DAY_MS - 1).stage.id, "bud");
   assert.equal(roseStage("everlasting", state, openedAt + 99 * DAY_MS).stage.id, "bloom");
-  for (const mode of ["evolving", "everlasting"])
-    assert.equal(roseStage(mode, { ...state, kept: true }, openedAt).stage.id, "keepsake");
+  for (const mode of ["evolving", "everlasting"]) {
+    const { stage, nextAt } = roseStage(mode, { ...state, kept: true }, openedAt);
+    assert.equal(stage.id, "bloom");
+    assert.equal(stage.label, "Your keepsake");
+    assert.equal(nextAt, null);
+  }
 });
 
 test("invalid or future stored timestamps do not start the gift", () => {
