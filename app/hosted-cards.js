@@ -100,7 +100,7 @@ export function bindHostedCards(state, preview) {
   const list = make("div");
   list.id = "ownedHostedCards";
   box.append(list);
-  document.querySelector(".share-panel").prepend(box);
+  document.querySelector(".share-panel").append(box);
   let busy = false,
     attempt = null;
   const owner = () => {

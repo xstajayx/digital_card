@@ -379,11 +379,9 @@ export function createPhysicalCard(root, card, onReveal) {
       );
       card.querySelector("#from").style.fontFamily =
         `"${family[cfg.signature]}",serif`;
-      // Never assume a salutation: the sender may prefer To, Dear or just a name.
-      card.querySelector("#headline").textContent = data.recipient || "";
       card.querySelector("#ageMark").hidden = true;
       card.querySelector(".sticker-zone").hidden = true;
-      readerText.textContent = `${title.textContent}\n\n${card.querySelector("#headline").textContent}\n\n${data.message}\n\n${data.from}`;
+      readerText.textContent = `${title.textContent}\n\n${data.headline || ""}\n\n${data.message}\n\n${data.from}`;
       return true;
     },
     reset() {

@@ -48,7 +48,6 @@ export function createUI({ state, preview }) {
     search = "",
     designKey = "",
     stickerKey = "",
-    summaryKey = "",
     revision = 0;
   const themes = state.get().themes;
   const occasions = [
@@ -76,6 +75,7 @@ export function createUI({ state, preview }) {
     });
     $("backStep").disabled = step === 1;
     $("nextStep").hidden = step === 5;
+    $("previewJump").hidden = step === 5;
     $("nextStep").textContent = labels[step] || "";
     $("stepProgress").textContent = `Step ${step} of 5`;
     if (focus) {
@@ -372,7 +372,6 @@ export function createUI({ state, preview }) {
       "Design reset. Your occasion, design, names and message are kept.";
   };
   $("replayButton").onclick = () => preview.play();
-  $("quickShareButton").onclick = () => $("nativeShareButton").click();
   renderOccasions();
 
   state.subscribe((current, changed) => {
@@ -456,20 +455,6 @@ export function createUI({ state, preview }) {
       );
     $("messageRemaining").textContent =
       `${Array.from(current.message).length.toLocaleString()} characters`;
-    const summary = [
-      `For ${current.to || "someone special"}`,
-      `${theme.occasion} · ${theme.name}`,
-      `From ${current.from || "you"}`,
-    ];
-    if (JSON.stringify(summary) !== summaryKey) {
-      summaryKey = JSON.stringify(summary);
-      $("cardSummary").replaceChildren();
-      for (const text of summary) {
-        const p = document.createElement("p");
-        p.textContent = text;
-        $("cardSummary").append(p);
-      }
-    }
     const content = cardContent(current);
     $("fullMessageText").textContent =
       `${content.headline}\n\n${content.message}\n\n${content.from}`;
@@ -491,7 +476,6 @@ export function createUI({ state, preview }) {
     status: $("exportStatus"),
     fallback: $("shareFallback"),
     linkInput: $("shareUrl"),
-    mirrors: [$("quickShareButton")],
     async getUrl() {
       const hosted = hostedShareURL(state);
       if (!hosted) assertPhotoShareable(state);

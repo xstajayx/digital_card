@@ -20,10 +20,10 @@ def clean(page):
 try:
  with sync_playwright() as p:
   b=p.chromium.launch(executable_path=os.environ.get('CARD_CHROMIUM_PATH') or shutil.which('chromium'),args=['--no-sandbox'])
-  sizes=[(390,844),(1440,900)] if BEFORE else [(320,800),(360,800),(390,844),(412,915),(430,932),(768,1024),(1024,768),(1440,900),(844,390)]
+  sizes=[(390,844),(1440,900)] if BEFORE else [(320,800),(360,800),(375,812),(390,844),(412,915),(430,932),(768,1024),(1024,768),(1440,900),(844,390)]
   if os.environ.get('CREATOR_WIDTH'):sizes=[v for v in sizes if v[0] in {int(x) for x in os.environ['CREATOR_WIDTH'].split(',')}]
   for width,height in sizes:
-   ctx=b.new_context(viewport={'width':width,'height':height},permissions=['clipboard-read','clipboard-write'],reduced_motion='reduce',has_touch=width<500);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('response',lambda r:errors.append(str(r.status)+' '+r.url) if r.status>=400 else None)
+   ctx=b.new_context(viewport={'width':width,'height':height},permissions=['clipboard-read','clipboard-write'],reduced_motion='no-preference' if width == 1440 else 'reduce',has_touch=width<500);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('response',lambda r:errors.append(str(r.status)+' '+r.url) if r.status>=400 else None)
    page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28)
    if BEFORE:
     for n in range(1,6):step(page,n);page.screenshot(path=str(ART/f'before-step{n}-{width}.png'),full_page=True)
@@ -52,8 +52,84 @@ try:
    page.locator('#birthdayNumberInput').fill('');expect(page.locator('#birthdayNumberInput')).to_have_attribute('aria-invalid','false');page.locator('#birthdayNumberInput').fill('121');expect(page.locator('#birthdayNumberInput')).to_have_attribute('aria-invalid','true');page.locator('#birthdayNumberInput').fill('21')
    page.locator('#coverNameToggle').check();page.locator('#coverNameInput').fill('Jamie, the birthday star');page.locator('#editingPreview').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');expect(f.locator('.paper-cover-name')).to_have_text('Jamie, the birthday star');page.keyboard.press('Escape');expect(page.locator('#editingPreview')).to_be_focused();expect(page.locator('#studio')).to_have_attribute('data-step','2');page.locator('#coverNameToggle').uncheck()
    # Local save/restore and new share retain explicit no-cover-name policy.
-   page.locator('.draft-menu summary').click();page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(28);page.locator('.draft-menu summary').click();page.get_by_role('button',name='Restore draft',exact=True).click();page.locator('.draft-menu summary').click();step(page,3);expect(page.locator('#messageInput')).to_have_value(message);step(page,5);full_preview=page.get_by_role('button',name='Preview entire card');full_preview.click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');page.locator('#closeCreatorPreview').click();expect(full_preview).to_be_focused();assert fits(page);page.locator('#shareLinkButton').click();expect(page.locator('#exportStatus')).to_contain_text('Link copied');url=page.evaluate('navigator.clipboard.readText()');assert '#c=5' in url
-   viewer=ctx.new_page();viewer.goto(url);vf=viewer.frame_locator('#viewerFrame');expect(vf.locator('.paper-envelope-tag')).to_have_text('For Jamie');expect(vf.locator('.paper-cover-name')).to_have_text('');vf.locator('.paper-envelope-front').click();vf.locator('.paper-cover').click();expect(vf.locator('#message')).to_have_text(message);assert viewer.locator('.steps,#previewJump').count()==0;viewer.close()
+   page.locator('.draft-menu summary').click()
+   page.get_by_role('button',name='Save draft',exact=True).click()
+   page.reload()
+   expect(page.locator('.occasion-tile')).to_have_count(28)
+   page.locator('.draft-menu summary').click()
+   page.get_by_role('button',name='Restore draft',exact=True).click()
+   page.locator('.draft-menu summary').click()
+   step(page,3)
+   expect(page.locator('#messageInput')).to_have_value(message)
+   for greeting in ['Jamie', 'To Jamie', 'Dear Jamie', 'Happy Birthday Jamie', '', '  To  Stacey  ']:
+    page.locator('#toInput').fill(greeting)
+    expect(f.locator('#headline')).to_have_text(greeting)
+    assert f.locator('#headline').text_content() == greeting
+   page.locator('#toInput').fill('To Stacey')
+   page.locator('#editingPreview').click()
+   expect(f.locator('#headline')).to_have_text('To Stacey')
+   page.keyboard.press('Escape')
+   step(page,5)
+   clean(page)
+   send=page.locator('#nativeShareButton')
+   expect(page.locator('#shareTitle')).to_be_focused()
+   page.keyboard.press('Tab')
+   expect(send).to_be_focused()
+   assert send.evaluate('e=>e.matches(":focus-visible")')
+   assert send.bounding_box()['y'] < page.locator('#previewTitle').bounding_box()['y']
+   expect(page.get_by_role('button',name='Share card',exact=True)).to_have_count(1)
+   expect(page.get_by_role('button',name='Preview card',exact=True)).to_have_count(0)
+   expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope')
+   if width in [390,1440]:
+    page.evaluate('window.scrollTo(0, 0)')
+    page.screenshot(path=str(ART/f'send-envelope-{width}.png'),full_page=True)
+   f.locator('.paper-envelope-front').click()
+   expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover')
+   if width in [390,1440]:
+    page.evaluate('window.scrollTo(0, 0)')
+    page.screenshot(path=str(ART/f'send-cover-{width}.png'),full_page=True)
+   f.locator('.paper-cover').click()
+   expect(f.locator('#headline')).to_be_visible()
+   expect(f.locator('#headline')).to_have_text('To Stacey')
+   expect(f.locator('#message')).to_have_text(message)
+   if width in [390,1440]:
+    page.evaluate('window.scrollTo(0, 0)')
+    page.screenshot(path=str(ART/f'send-inside-{width}.png'),full_page=True)
+   page.locator('#replayButton').click()
+   expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope')
+   assert fits(page)
+   page.locator('#shareLinkButton').click()
+   expect(page.locator('#exportStatus')).to_contain_text('Link copied')
+   url=page.evaluate('navigator.clipboard.readText()')
+   assert '#c=5' in url
+   page.evaluate("""() => {
+    Object.defineProperty(navigator,'share',{value:async payload=>{window.sharedCard=payload.url}})
+    window.open=()=>({location:{set href(url){window.whatsappUrl=url}}})
+   }""")
+   send.click()
+   expect(page.locator('#exportStatus')).to_contain_text('Card shared')
+   assert page.evaluate('window.sharedCard')==url
+   page.locator('#shareWhatsappButton').click()
+   expect(page.locator('#exportStatus')).to_contain_text('WhatsApp opened')
+   assert page.evaluate('decodeURIComponent(window.whatsappUrl)').endswith(url)
+   for button, protocol in [('emailShareButton','mailto:'),('smsShareButton','sms:')]:
+    page.locator('#'+button).click()
+    link=page.locator('.transport-link')
+    expect(link).to_be_visible()
+    assert link.get_attribute('href').startswith(protocol)
+    expect(page.locator('#shareUrl')).to_have_value(url)
+   viewer=ctx.new_page()
+   viewer.goto(url)
+   vf=viewer.frame_locator('#viewerFrame')
+   expect(vf.locator('.paper-envelope-tag')).to_have_text('For To Stacey')
+   expect(vf.locator('.paper-cover-name')).to_have_text('')
+   vf.locator('.paper-envelope-front').click()
+   vf.locator('.paper-cover').click()
+   expect(vf.locator('#headline')).to_have_text('To Stacey')
+   expect(vf.locator('#message')).to_have_text(message)
+   assert viewer.locator('#fullMessageText').text_content().startswith('To Stacey\n\n')
+   assert viewer.locator('.steps,#nativeShareButton').count()==0
+   viewer.close()
    for n in range(1,6):
     step(page,n);clean(page)
     if width in [390,1440]:page.screenshot(path=str(ART/f'after-step{n}-{width}.png'),full_page=True)

@@ -94,7 +94,8 @@ export function bindCreator(state, preview) {
   const stageButtons = physicalBox.querySelector(".recipient-actions");
   stageButtons.classList.add("preview-stages");
   stageButtons.setAttribute("aria-label", "Preview stage");
-  document.querySelector(".preview-heading").after(stageButtons);
+  stageButtons.setAttribute("role", "group");
+  document.querySelector(".preview-stage").after(stageButtons);
   // Keep one celebration picker; the second physical-effects toggle is hidden.
   $("physical-effects").closest("label").hidden = true;
   $("physical-effects").tabIndex = -1;
@@ -184,7 +185,7 @@ export function bindCreator(state, preview) {
   dialog.prepend(close);
   let opener = null,
     scroll = 0;
-  const openPreview = (event, fullCard = false) => {
+  const openPreview = (event) => {
     opener = event.currentTarget;
     scroll = window.scrollY;
     dialog.close();
@@ -193,7 +194,7 @@ export function bindCreator(state, preview) {
     dialog.showModal();
     document.body.classList.add("preview-is-open");
     const stage = { 2: "cover", 3: "inside" }[$("studio").dataset.step];
-    if (!fullCard && stage && state.get().physicalConfig) {
+    if (stage && state.get().physicalConfig) {
       preview.physicalStage(stage);
     } else {
       preview.play();
@@ -221,5 +222,4 @@ export function bindCreator(state, preview) {
   editPreview.id = "editingPreview";
   editPreview.onclick = openPreview;
   document.querySelector(".step-footer").append(editPreview);
-  // The full card preview is already visible directly below send actions on step 5.
 }
