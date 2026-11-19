@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f2e8">
+    <meta name="referrer" content="no-referrer">
+    <title>Send flowers · Silent Hello Flowers</title>
+    <link rel="icon" href="./assets/favicon.svg">
+    <link rel="stylesheet" href="./assets/fonts.css">
+    <link rel="stylesheet" href="./assets/flowers.css">
+    <script type="module" src="./app/flowers-shop.js"></script>
+  </head>
+  <body>
+    <a class="flower-skip" href="#main">Skip to content</a>
+    <header class="flower-header">
+      <a class="flower-brand" href="./flowers.html">Silent Hello <span>Flowers</span></a>
+      <a href="./">Greeting cards</a>
+    </header>
+    <main id="main" class="flower-shop">
+      <div class="flower-intro">
+        <h1>Flowers for someone special</h1>
+        <p>A little beauty, sent with love.</p>
+      </div>
+      <div id="flowerFilters" class="flower-filters" role="group" aria-label="Filter flower gifts">
+        <button type="button" data-filter="all" aria-pressed="true">All flowers</button>
+        <button type="button" data-filter="single" aria-pressed="false">Single flowers</button>
+        <button type="button" data-filter="bouquet" aria-pressed="false">Bouquets</button>
+        <button type="button" data-filter="romantic" aria-pressed="false">Romantic</button>
+        <button type="button" data-filter="birthday" aria-pressed="false">Birthday</button>
+        <button type="button" data-filter="thank-you" aria-pressed="false">Thank you</button>
+        <button type="button" data-filter="just-because" aria-pressed="false">Just because</button>
+      </div>
+      <p id="flowerCount" class="flower-visually-hidden" role="status"></p>
+      <div id="flowerGrid" class="flower-grid"></div>
+    </main>
+    <noscript><p class="flower-noscript">Enable JavaScript to use Silent Hello Flowers.</p></noscript>
+  </body>
+</html>

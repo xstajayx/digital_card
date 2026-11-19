@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f2e8">
+    <meta name="referrer" content="no-referrer">
+    <title>Personalise your flowers · Silent Hello Flowers</title>
+    <link rel="icon" href="./assets/favicon.svg">
+    <link rel="stylesheet" href="./assets/fonts.css">
+    <link rel="stylesheet" href="./assets/flowers.css">
+    <script type="module" src="./app/flower-studio.js"></script>
+  </head>
+  <body>
+    <a class="flower-skip" href="#main">Skip to content</a>
+    <header class="flower-header">
+      <a class="flower-brand" href="./flowers.html">Silent Hello <span>Flowers</span></a>
+      <a href="./">Greeting cards</a>
+    </header>
+    <main id="main" class="flower-studio">
+      <a class="flower-back" href="./flowers.html">← All flowers</a>
+      <p id="studioError" role="alert" hidden>This flower is unavailable. Choose a gift from the collection.</p>
+      <div id="studio" class="flower-studio-grid">
+        <div class="flower-studio-intro">
+          <h1 id="productName"></h1>
+          <p id="productDescription"></p>
+        </div>
+        <div class="flower-studio-preview">
+          <div id="studioArt" class="flower-present-art"></div>
+          <div id="studioNote" class="flower-note" hidden>
+          <p data-note="greeting" hidden></p>
+          <p data-note="message" hidden></p>
+          <p data-note="signature" hidden></p>
+          </div>
+        </div>
+        <form id="flowerForm" class="flower-form">
+          <h2>Make it personal</h2>
+          <label for="greeting">Greeting <small>Optional</small></label>
+          <input id="greeting" name="greeting" type="text" aria-describedby="greetingError">
+          <p id="greetingError" class="flower-error" aria-live="polite"></p>
+          <div class="flower-label-row"><label for="message">Your message</label><span id="messageCount"></span></div>
+          <textarea id="message" name="message" rows="4" aria-describedby="messageCount messageError"></textarea>
+          <p id="messageError" class="flower-error" aria-live="polite"></p>
+          <label for="signature">Signature <small>Optional</small></label>
+          <input id="signature" name="signature" type="text" aria-describedby="signatureError">
+          <p id="signatureError" class="flower-error" aria-live="polite"></p>
+          <button id="openPreview" class="flower-button" type="button">Preview their gift</button>
+          <section class="flower-share" aria-labelledby="shareTitle">
+            <h2 id="shareTitle">Send your gift</h2>
+            <div class="flower-actions">
+              <button id="shareFlower" class="flower-button primary" type="button">Share gift</button>
+              <button id="copyFlower" class="flower-button" type="button">Copy link</button>
+              <button id="whatsAppFlower" class="flower-button" type="button">WhatsApp</button>
+            </div>
+            <p id="sendStatus" class="flower-status" role="status"></p>
+            <label id="manualLink" hidden>Gift link<input id="flowerLink" readonly></label>
+          </section>
+        </form>
+      </div>
+    </main>
+    <dialog id="flowerPreview" aria-label="Recipient preview">
+      <div class="flower-dialog-top"><button id="closePreview" class="flower-button" type="button">Back to editing</button></div>
+      <article id="previewPresentation" class="flower-presentation">
+        <h1 data-title></h1>
+        <div class="flower-present-art" data-art></div>
+        <div class="flower-gift-details">
+          <button class="flower-button primary" data-bloom type="button"></button>
+          <p class="flower-status" data-status role="status"></p>
+          <div class="flower-note" data-letter hidden>
+          <p data-note="greeting" hidden></p>
+          <p data-note="message" hidden></p>
+          <p data-note="signature" hidden></p>
+          </div>
+        </div>
+      </article>
+    </dialog>
+    <noscript><p class="flower-noscript">Enable JavaScript to use Silent Hello Flowers.</p></noscript>
+  </body>
+</html>
