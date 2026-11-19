@@ -8,6 +8,12 @@ export function bindShareActions({
   linkInput,
   mirrors = [],
   getContext = () => ({}),
+  item = {
+    name: "card",
+    title: "A little card for you",
+    text: "You’ve got a card 💌",
+    success: "Card shared. A little joy is on its way!",
+  },
 }) {
   let busy = false;
   const say = (message) => {
@@ -43,7 +49,7 @@ export function bindShareActions({
         b.disabled = true;
         b.setAttribute("aria-busy", "true");
       });
-      say("Preparing your card…");
+      say(`Preparing your ${item.name}…`);
       // Reserve a window during the click so mobile browsers do not block an async popup.
       let popup = null;
       try {
@@ -73,10 +79,10 @@ export function bindShareActions({
             "Draft ready. Open your messaging app below, or copy the complete link. Nothing has been sent.",
           );
         } else if (kind === "whatsapp") {
-          const destination = `https://wa.me/?text=${encodeURIComponent(`You’ve got a card 💌 ${url}`)}`;
+          const destination = `https://wa.me/?text=${encodeURIComponent(`${item.text} ${url}`)}`;
           if (popup) {
             popup.location.href = destination;
-            say("WhatsApp opened. Choose who to send your card to.");
+            say(`WhatsApp opened. Choose who to send your ${item.name} to.`);
           } else {
             manual(url);
             say(
@@ -86,23 +92,19 @@ export function bindShareActions({
         } else if (kind === "native" && navigator.share) {
           try {
             const payload = {
-              title: "A little card for you",
-              text: "You’ve got a card 💌",
+              title: item.title,
+              text: item.text,
               url,
             };
             if (navigator.canShare && !navigator.canShare(payload)) {
               await copy(url);
               return;
             }
-            await navigator.share({
-              title: "A little card for you",
-              text: "You’ve got a card 💌",
-              url,
-            });
-            say("Card shared. A little joy is on its way!");
+            await navigator.share(payload);
+            say(item.success);
           } catch (error) {
             if (error.name === "AbortError")
-              say("Sharing cancelled. Your card is ready whenever you are.");
+              say(`Sharing cancelled. Your ${item.name} is ready whenever you are.`);
             else {
               await copy(url);
             }
@@ -110,7 +112,7 @@ export function bindShareActions({
         } else await copy(url);
       } catch (error) {
         popup?.close();
-        say(error.message || "We couldn’t share that card. Please try again.");
+        say(error.message || `We couldn’t share that ${item.name}. Please try again.`);
       } finally {
         busy = false;
         controls.forEach((b) => {
