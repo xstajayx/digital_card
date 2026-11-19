@@ -21,6 +21,7 @@ jobs:
       - run: node tests/occasions.mjs
       - run: node tests/photo.mjs
       - run: node tests/assistant.mjs
+      - run: node tests/rose.mjs
       - run: node tests/creator.mjs
       - run: node tests/hosted.mjs
       - run: python -m pip install -r requirements-dev.txt
@@ -39,6 +40,7 @@ jobs:
       - run: python -u tests/photo.py
       - run: python -u tests/assistant.py
       - run: python -u tests/creator.py
+      - run: python -u tests/rose.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
