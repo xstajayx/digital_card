@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>A Heart Jar for you · Silent Hello</title>
+    <link rel="icon" href="./assets/favicon.svg">
+    <link rel="stylesheet" href="./assets/fonts.css">
+    <link rel="stylesheet" href="./assets/site.css">
+    <link rel="stylesheet" href="./assets/heart-jar.css">
+    <meta name="robots" content="noindex, nofollow">
+    <script type="module" src="./app/jar-view.js"></script>
+  </head>
+  <body class="jar-page">
+    <a class="home-skip" href="#main">Skip to Heart Jar</a>
+    <header class="jar-recipient-header"><a class="brand-wordmark" href="./">Silent Hello</a></header>
+    <main id="main" class="jar-shell jar-recipient" tabindex="-1">
+      <h1>A Heart Jar for you</h1>
+      <div id="gift"></div>
+      <p id="giftError" role="alert" hidden></p>
+    </main>
+    <template id="jarPresentation">
+      <article class="jar-reveal">
+        <div class="jar-reveal-intro">
+          <h2 data-jar="title"></h2>
+          <p data-jar="recipient" class="jar-dedication"></p>
+          <p data-jar="greeting" class="jar-greeting"></p>
+        </div>
+        <div data-jar="art"></div>
+        <div class="jar-reveal-controls">
+          <button class="jar-button primary" type="button" data-jar="open">Open Your Jar</button>
+          <section data-jar="picker" aria-label="Choose a heart" hidden>
+            <p data-jar="progress" class="jar-progress" role="status"></p>
+            <p data-jar="complete" class="jar-complete" hidden>You’ve opened every heart. They’re all here to revisit.</p>
+            <div data-jar="choices" class="jar-choices" role="group" aria-label="Hearts in your jar"></div>
+            <div data-jar="note" class="jar-note" hidden>
+              <div data-jar="chosen-heart" class="jar-chosen"></div>
+              <div>
+                <h3 data-jar="note-title" tabindex="-1"></h3>
+                <p data-jar="note-text"></p>
+                <div class="jar-actions">
+                  <button type="button" class="jar-button primary" data-jar="next">Pick Another Heart</button>
+                  <button type="button" class="jar-button" data-jar="all">Choose a heart</button>
+                </div>
+              </div>
+            </div>
+            <button class="jar-button jar-replay" type="button" data-jar="replay">Replay opening</button>
+            <p data-jar="storage" class="jar-storage" role="status"></p>
+          </section>
+          <p data-jar="signature" class="jar-signature"></p>
+        </div>
+      </article>
+    </template>
+
+    <noscript><p class="jar-noscript">Enable JavaScript to use The Heart Jar.</p></noscript>
+  </body>
+</html>

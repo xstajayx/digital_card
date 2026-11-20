@@ -11,13 +11,15 @@ from playwright.sync_api import expect, sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 ART = Path(os.environ.get("CARD_ARTIFACT_DIR", "/tmp/silent-hello-artifacts")) / "site-integration"
 ART.mkdir(parents=True, exist_ok=True)
-LINKS = ["Home", "Greeting Cards", "Digital Flowers", "My Occasions", "About Silent Hello"]
+LINKS = ["Home", "Greeting Cards", "Digital Flowers", "Heart Jars", "My Occasions", "About Silent Hello"]
 ROUTES = {
     "": ("Home", "page"),
     "cards.html": ("Greeting Cards", "page"),
     "studio.html?design=birthday-midnight": ("Greeting Cards", "location"),
     "flowers.html": ("Digital Flowers", "page"),
     "flower-studio.html?flower=purple-orchid": ("Digital Flowers", "location"),
+    "jars.html": ("Heart Jars", "page"),
+    "jar-studio.html?theme=love": ("Heart Jars", "location"),
     "occasions.html": ("My Occasions", "page"),
     "prepared.html": ("My Occasions", "location"),
     "how-it-works.html": ("About Silent Hello", "page"),

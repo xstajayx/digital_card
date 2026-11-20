@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>Create a Heart Jar · Silent Hello</title>
+    <link rel="icon" href="./assets/favicon.svg">
+    <link rel="stylesheet" href="./assets/fonts.css">
+    <link rel="stylesheet" href="./assets/site.css">
+    <link rel="stylesheet" href="./assets/heart-jar.css">
+    <script type="module" src="./app/site-menu.js"></script>
+    <script type="module" src="./app/jar-studio.js"></script>
+  </head>
+  <body class="jar-page">
+    <a class="home-skip" href="#main">Skip to Heart Jar</a>
+    <header class="brand-header">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <details class="brand-menu">
+        <summary id="menuToggle" aria-controls="siteLinks">Menu</summary>
+        <nav id="siteLinks" aria-label="Main navigation">
+          <a href="./">Home</a>
+          <a href="./cards.html">Greeting Cards</a>
+          <a href="./flowers.html">Digital Flowers</a>
+          <a href="./jars.html" aria-current="location">Heart Jars</a>
+          <a href="./occasions.html">My Occasions</a>
+          <a href="./how-it-works.html">About Silent Hello</a>
+        </nav>
+      </details>
+    </header>
+    <main id="main" class="jar-shell">
+      <a class="jar-back" href="./jars.html">← Heart Jars</a>
+      <p id="themeError" role="alert" hidden>This jar is unavailable. Choose a theme from Heart Jars.</p>
+      <div id="jarStudio">
+        <div class="jar-intro"><h1 id="themeName"></h1></div>
+        <div class="jar-studio-layout">
+          <aside class="jar-live" aria-label="Live jar preview">
+            <div id="studioJar"></div>
+            <p id="jarCount" role="status"></p>
+          </aside>
+          <div class="jar-editor">
+            <section class="jar-editor-section" aria-labelledby="personaliseJar">
+              <h2 id="personaliseJar">Personalise your jar</h2>
+              <form id="jarFields">
+                <div class="jar-fields">
+                  <label>Recipient <small>Optional</small><input name="recipient" autocomplete="off"></label>
+                  <label>Jar title<input name="title"></label>
+                  <label>Signature <small>Optional</small><input name="signature"></label>
+                  <label>Opening greeting <small>Optional</small><input name="greeting"></label>
+                </div>
+              </form>
+            </section>
+            <section class="jar-editor-section" aria-labelledby="heartsTitle">
+              <h2 id="heartsTitle">Add hearts</h2>
+              <p>Add 3–20 different messages. Each heart holds one message.</p>
+              <form id="heartEditor">
+                <label for="heartMessage">Heart message</label>
+                <textarea id="heartMessage" rows="3" aria-describedby="heartCount heartError"></textarea>
+                <p id="heartCount">0 / 140</p>
+                <p id="heartError" role="alert"></p>
+                <div class="jar-actions">
+                  <button id="addHeart" class="jar-button primary" type="submit">Add to Jar</button>
+                  <button id="cancelHeart" class="jar-button" type="button" hidden>Cancel edit</button>
+                </div>
+              </form>
+              <ol id="heartList" class="jar-heart-list"></ol>
+              <button id="undoHeart" class="jar-button" type="button" hidden>Undo removal</button>
+            </section>
+            <section class="jar-editor-section" aria-labelledby="sendJarTitle">
+              <h2 id="sendJarTitle">Preview and send</h2>
+              <button id="previewJar" class="jar-button" type="button">Preview Jar</button>
+              <div class="jar-actions jar-share-actions">
+                <button id="shareJar" class="jar-button primary" type="button">Share jar</button>
+                <button id="copyJar" class="jar-button" type="button">Copy link</button>
+                <button id="whatsappJar" class="jar-button" type="button">WhatsApp</button>
+              </div>
+              <p id="shareStatus" role="status"></p>
+              <label id="manualJarLink" hidden>Gift link<input id="jarLink" readonly></label>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+    <dialog id="jarPreview" aria-label="Recipient preview">
+      <button class="jar-button" id="closeJarPreview" type="button">Back to editing</button>
+      <div id="previewGift"></div>
+    </dialog>
+    <template id="jarPresentation">
+      <article class="jar-reveal">
+        <div class="jar-reveal-intro">
+          <h2 data-jar="title"></h2>
+          <p data-jar="recipient" class="jar-dedication"></p>
+          <p data-jar="greeting" class="jar-greeting"></p>
+        </div>
+        <div data-jar="art"></div>
+        <div class="jar-reveal-controls">
+          <button class="jar-button primary" type="button" data-jar="open">Open Your Jar</button>
+          <section data-jar="picker" aria-label="Choose a heart" hidden>
+            <p data-jar="progress" class="jar-progress" role="status"></p>
+            <p data-jar="complete" class="jar-complete" hidden>You’ve opened every heart. They’re all here to revisit.</p>
+            <div data-jar="choices" class="jar-choices" role="group" aria-label="Hearts in your jar"></div>
+            <div data-jar="note" class="jar-note" hidden>
+              <div data-jar="chosen-heart" class="jar-chosen"></div>
+              <div>
+                <h3 data-jar="note-title" tabindex="-1"></h3>
+                <p data-jar="note-text"></p>
+                <div class="jar-actions">
+                  <button type="button" class="jar-button primary" data-jar="next">Pick Another Heart</button>
+                  <button type="button" class="jar-button" data-jar="all">Choose a heart</button>
+                </div>
+              </div>
+            </div>
+            <button class="jar-button jar-replay" type="button" data-jar="replay">Replay opening</button>
+            <p data-jar="storage" class="jar-storage" role="status"></p>
+          </section>
+          <p data-jar="signature" class="jar-signature"></p>
+        </div>
+      </article>
+    </template>
+    <footer class="brand-footer">
+      <a class="brand-wordmark" href="./">Silent Hello</a>
+      <nav aria-label="Site information">
+        <a href="./information.html#privacy">Privacy</a>
+        <a href="./information.html#terms">Terms</a>
+        <a href="./information.html#cookies">Cookies</a>
+        <a href="./information.html#contact">Contact</a>
+      </nav>
+    </footer>
+    <noscript><p class="jar-noscript">Enable JavaScript to use The Heart Jar.</p></noscript>
+  </body>
+</html>
