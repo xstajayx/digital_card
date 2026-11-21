@@ -31,6 +31,8 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 
 Captures use the live catalogue tiles and the real folded-card viewer in Chromium. Mobile and desktop review includes birthday, milestone, kids’ birthday, Christmas, Mother’s Day, Father’s Day, Easter, Valentine’s, anniversary, new baby, new home, sympathy, thinking of you, wedding, engagement, congratulations, graduation, thank you, friendship and humorous designs.
 
+The 11 Node test files passed. Chromium checks covered all 121 catalogue thumbnails and creator renders, plus end-to-end edition checks at 320, 375, 390 and 1440 px. Existing catalogue, creator, folded-card, recipient, stationery, photo, Digital Flowers and Heart Jar checks passed. The desktop creator retry verified the preview frame size stays reserved while artwork loads.
+
 ## Earlier PR visual review
 
 - [New covers beside their original versions, with mobile examples](gift-art-review/covers.webp)

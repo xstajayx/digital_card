@@ -511,7 +511,7 @@ dialog h2 {
   background: #315a4c;
   color: #fff;
 }
-#designPreview iframe.is-physical {
+#designPreview iframe {
   width: 100%;
   max-width: 100%;
   aspect-ratio: 3/4;
