@@ -440,7 +440,7 @@ test("v5 folded document round-trips separate cover/inside fields and v4 stays u
   const v4 = { ...sample, v: 4, openingConfig: defaultOpening() };
   assert.deepEqual(await decodeCard(await encodeCard(v4)), v4);
 });
-test("all six paper surfaces have readable ink and physical artwork/fields are strictly validated", () => {
+test("all seven paper surfaces have readable ink and physical artwork/fields are strictly validated", () => {
   for (const colors of Object.values(PAPERS))
     assert.ok(contrastRatio(...colors) >= 4.5);
   for (const partial of [

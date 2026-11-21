@@ -1,6 +1,7 @@
 import { illustration } from "./illustrations.js";
 export const PAPERS = {
   ivory: ["#fff7e7", "#453a33"],
+  lined: ["#fcf7eb", "#453a33"],
   linen: ["#f1eadc", "#433c34"],
   white: ["#fffefd", "#323238"],
   kraft: ["#dfc29b", "#3a2b20"],
@@ -42,7 +43,8 @@ export function validatePhysical(raw, themeId) {
       "nunito",
       "playfair",
     ].includes(raw.signature) ||
-    typeof raw.effects !== "boolean"
+    typeof raw.effects !== "boolean" ||
+    (Object.hasOwn(raw, "insideDecoration") && typeof raw.insideDecoration !== "boolean")
   )
     throw new Error("Invalid folded card configuration.");
   if (
@@ -68,6 +70,7 @@ export function validatePhysical(raw, themeId) {
     coverGreeting: raw.coverGreeting,
     coverArt: raw.coverArt,
     insideArt: raw.insideArt,
+    ...(raw.insideDecoration === false ? { insideDecoration: false } : {}),
     handwriting: raw.handwriting,
     signature: raw.signature,
     effects: raw.effects,

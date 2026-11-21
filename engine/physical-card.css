@@ -194,6 +194,13 @@
   font-size: 0.55rem;
   color: var(--inside-ink);
 }
+[data-paper="lined"] .paper-left,
+[data-paper="lined"] .paper-right,
+[data-paper="lined"] .paper-inside-face {
+  background-image: repeating-linear-gradient(
+    to bottom, transparent 0 1.55rem, #7b6f611b 1.55rem calc(1.55rem + 1px)
+  );
+}
 [data-paper="linen"] .paper-right,
 [data-paper="linen"] .paper-inside-face {
   background-image:
@@ -271,13 +278,16 @@
   left: calc(50% - 19px);
   width: 38px;
   height: 38px;
-  background: #974452;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 34% 25%, var(--wax-light), var(--wax) 72%);
   border-radius: 47% 45% 44% 50%;
-  color: #ffe2cf;
+  color: #fff2d4;
   box-shadow:
-    inset 0 0 0 3px #ffffff22,
-    0 2px 5px #0003;
-  font: 24px/38px Georgia;
+    inset 0 0 0 2px #fff2,
+    inset 0 1px 4px #fff5,
+    inset 0 -4px 6px #22170b50,
+    0 2px 5px #0004;
   pointer-events: none;
 }
 .paper-envelope-front .paper-envelope-seal {
@@ -459,3 +469,35 @@
   position: static;
   min-width: 0;
 }
+
+
+.paper-envelope-seal svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 0 #2c1c2770);
+}
+.stationery-corner {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: min(38%, 86px);
+  aspect-ratio: 6 / 5;
+  background: var(--stationery-ink);
+  -webkit-mask: var(--stationery-art) center / contain no-repeat;
+  mask: var(--stationery-art) center / contain no-repeat;
+  pointer-events: none;
+  opacity: .22;
+}
+@supports (mask-image: linear-gradient(black, transparent)) or (-webkit-mask-image: linear-gradient(black, transparent)) {
+  .physical-scene[data-motif]:not([data-motif=""]) .stationery-corner:not([hidden]) { display: block; }
+}
+.stationery-top { top: 6px; right: 7px; }
+.stationery-bottom { bottom: 8px; left: 8px; transform: rotate(180deg); }
+.paper-left .stationery-corner { width: min(57%, 134px); opacity: .29; }
+[data-paper="lined"] .stationery-corner { opacity: .095; }
+.local-photo-card .paper-left .stationery-corner { visibility: hidden; }

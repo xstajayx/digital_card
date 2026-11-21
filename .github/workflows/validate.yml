@@ -18,6 +18,7 @@ jobs:
           python-version: "3.12"
       - run: node tests/catalogue.mjs
       - run: node tests/seasonal-banner.mjs
+      - run: node tests/stationery.mjs
       - run: node tests/data.mjs
       - run: node tests/occasions.mjs
       - run: node tests/photo.mjs
@@ -46,6 +47,7 @@ jobs:
       - run: python -u tests/flowers.py
       - run: python -u tests/site-navigation.py
       - run: python -u tests/seasonal-banner.py
+      - run: python -u tests/stationery.py
       - run: python -u tests/heart-jar.py
       - uses: actions/upload-artifact@v4
         if: always()

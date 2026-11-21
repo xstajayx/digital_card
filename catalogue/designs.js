@@ -512,6 +512,7 @@ export const DESIGNS = [
   },
   {
     id: "love-rose-note",
+    stationery: "rose",
     occasionId: "love",
     name: "A rose for your pocket",
     packId: "romance_letter",
@@ -589,6 +590,7 @@ export const DESIGNS = [
   },
   {
     id: "christmas-robin",
+    stationery: "christmas-mistletoe",
     occasionId: "christmas",
     name: "A robin’s hello",
     packId: "christmas_robin_traditional",
