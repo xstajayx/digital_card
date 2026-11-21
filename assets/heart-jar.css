@@ -1,0 +1,194 @@
+.jar-page {
+  margin: 0;
+  background: #f8f4ed;
+  color: #303c33;
+  font: 1rem/1.5 "Nunito", system-ui, sans-serif;
+}
+.jar-page * { box-sizing: border-box; }
+.jar-page [hidden] { display: none !important; }
+.jar-page h1, .jar-page h2, .jar-home-feature h2 {
+  margin: 0;
+  font: 500 clamp(1.55rem, 4vw, 2.2rem)/1.15 "Playfair Display", Georgia, serif;
+  overflow-wrap: anywhere;
+}
+.jar-page h1 { font-size: clamp(2.3rem, 6vw, 4rem); }
+.jar-page a { color: inherit; }
+.jar-page :focus-visible { outline: 2px solid #874a62; outline-offset: 3px; }
+.jar-shell { width: min(100% - 32px, 1110px); margin: 35px auto 56px; }
+.jar-intro { margin-bottom: 24px; }
+.jar-intro p { margin: 8px 0 0; color: #565c53; }
+.jar-collection { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+.jar-tile, .jar-home-feature, .jar-editor-section, .jar-reveal {
+  border: 1px solid #dcd2c5;
+  border-radius: 12px;
+  background: #fffbf4;
+}
+.jar-tile { display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+.jar-tile-body { display: flex; flex-direction: column; align-items: flex-start; padding: 18px; }
+.jar-tile-body h2 { font-size: 1.55rem; }
+.jar-tile-body p { margin: 10px 0 14px; }
+.jar-tile-body a { margin-top: auto; }
+.jar-art {
+  --jar-ink: #7b344b;
+  --jar-tint: #eed4da;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  min-height: 210px;
+  aspect-ratio: 350 / 335;
+  isolation: isolate;
+  background: radial-gradient(ellipse at 48% 41%, #fff9f0 2%, var(--jar-tint) 93%);
+}
+.jar-glass {
+  position: absolute;
+  left: 23%; right: 23%; top: 27%; bottom: 13%;
+  border: 1px solid #87998a85;
+  border-radius: 26% 26% 22% 22% / 16% 16% 13% 13%;
+  background: linear-gradient(95deg, #91a99a46, #fffcf790 14%, #e1eee72e 27%, #f9fff83b 86%, #7595825c), #f3f4e128;
+  box-shadow: 0 20px 19px -15px #5c3a4778, inset 0 -5px 7px #57796c3c, inset 0 3px 4px #ffffffe0;
+}
+.jar-glass::before {
+  content: ""; position: absolute; z-index: 2; top: -2.5%; left: 10%; right: 10%; height: 9%;
+  border-radius: 50%; border: 1px solid #87998a91; box-shadow: inset 0 2px 2px #fffc;
+}
+.jar-glass::after {
+  content: "";
+  position: absolute;
+  inset: 7% 8% 6%;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 22% 26% 20% 15%;
+  background: linear-gradient(94deg, #fff9, #fff2 9%, transparent 13%, transparent 77%, #fff4 84%, #fff9 88%, transparent 95%);
+  border-bottom: 2px solid #ffffffe0;
+}
+.jar-pieces { position: absolute; inset: 4% 4% 4%; overflow: hidden; border-radius: inherit; }
+.jar-pieces svg { width: 25%; position: absolute; left: var(--heart-x); bottom: var(--heart-y); transform: rotate(var(--heart-turn)); filter: drop-shadow(1px 2px 1px #67495138); }
+.jar-drop { animation: jar-drop 680ms cubic-bezier(.22,.7,.3,1) both; }
+.jar-label {
+  position: absolute; z-index: 3; left: 13%; right: 13%; top: 43%;
+  display: grid; justify-items: center; gap: 3px;
+  padding: 5% 6%; text-align: center; overflow-wrap: anywhere;
+  color: var(--jar-ink); background: linear-gradient(110deg,#fffaf0,var(--jar-tint));
+  border: 1px solid #af9289; border-radius: 5px;
+  box-shadow: inset 0 0 0 3px #fff8, 1px 2px 4px #61493c33;
+}
+.jar-label strong {
+  font: 500 clamp(.85rem, 2.2vw, 1.2rem)/1.13 "Playfair Display", Georgia, serif;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+}
+.jar-label span { font-size: .8rem; }
+.jar-lid {
+  position: absolute; z-index: 4; left: 24%; right: 24%; top: 20%; height: 10%;
+  border-radius: 45% 45% 24% 24% / 22% 22% 19% 19%;
+  border: 1px solid #89755a;
+  background: radial-gradient(ellipse at 50% 8%, #e3caa3, transparent 60%),
+    repeating-linear-gradient(105deg,#b2865940 0 1px,transparent 1px 4px),
+    linear-gradient(#d9bd92,#bb946a 75%,#a98662);
+  box-shadow: inset 0 2px 3px #fff9deba, 0 3px 4px #583c353f;
+  transform-origin: 75% 70%;
+}
+.jar-open .jar-lid { transform: translate(32%, -96%) rotate(14deg); }
+.jar-opening .jar-lid { animation: jar-lift 3.3s cubic-bezier(.23,.73,.29,1) both; }
+.jar-opening .jar-pieces { animation: jar-settle 3.4s ease-out both; }
+@keyframes jar-lift {
+  0% { transform: none; }
+  20% { transform: translateY(-17%) rotate(-3deg); }
+  72%, 100% { transform: translate(32%,-96%) rotate(14deg); }
+}
+@keyframes jar-settle {
+  0%, 20%, 100% { transform: none; }
+  43% { transform: translateY(-4%) rotate(2deg); }
+  68% { transform: translateY(1%) rotate(-1deg); }
+}
+@keyframes jar-drop {
+  from { opacity: .2; transform: translateY(-145px) rotate(calc(var(--heart-turn) - 35deg)); }
+  to { opacity: 1; transform: rotate(var(--heart-turn)); }
+}
+.jar-home-feature { margin-top: 30px; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); align-items: center; overflow: hidden; }
+.jar-home-feature .jar-art { aspect-ratio: 1.65; min-height: 230px; }
+.jar-home-feature .jar-glass { left: 32%; right: 32%; }
+.jar-home-feature .jar-lid { left: 33%; right: 33%; }
+.jar-home-content { padding: clamp(18px, 4vw, 44px); }
+.jar-home-content p { max-width: 39ch; margin-bottom: 18px; }
+.jar-button, .jar-small, .jar-choice {
+  display: inline-flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 44px; padding: 7px 13px; color: #354333; background: #fffaf2;
+  border: 1px solid #b8ad9e; border-radius: 6px; font: 800 .94rem/1.2 "Nunito", system-ui, sans-serif;
+  text-decoration: none; cursor: pointer;
+}
+.jar-button.primary { background: #304c3e; color: white; border-color: #304c3e; }
+.jar-button:hover, .jar-small:hover { box-shadow: inset 0 0 0 1px currentColor; }
+.jar-small { padding: 5px 8px; font-size: .85rem; }
+.jar-small:disabled { opacity: .42; cursor: default; }
+.jar-back { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 8px; }
+.jar-studio-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.jar-live { position: sticky; top: 18px; overflow: hidden; border: 1px solid #dcd2c5; border-radius: 10px; background: #fffbf4; }
+.jar-live p { margin: 12px; text-align: center; }
+.jar-editor-section { padding: clamp(14px, 3vw, 24px); margin-bottom: 14px; }
+.jar-editor-section h2 { margin-bottom: 12px; }
+.jar-fields { display: grid; gap: 8px 12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+.jar-editor label { display: block; font-weight: 800; }
+.jar-editor small { color: #565c53; font-weight: 400; }
+.jar-editor input, .jar-editor textarea {
+  display: block; width: 100%; min-height: 44px; margin-top: 4px; padding: 8px 10px;
+  border: 1px solid #aa9c89; border-radius: 5px; background: #fffdfa; color: #303c33; font: inherit;
+}
+.jar-editor textarea { resize: vertical; }
+.jar-actions, .jar-row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.jar-share-actions { margin-top: 10px; }
+.jar-heart-list { overflow-wrap: anywhere; padding-inline-start: 23px; }
+.jar-heart-list li { border-top: 1px solid #e6dbcf; margin-block: 12px; padding: 5px 0 0 3px; }
+.jar-heart-list li p { white-space: pre-wrap; margin: 4px 0 9px; }
+#heartCount, .jar-storage { color: #555b52; font-size: .9rem; }
+#heartError { color: #943d56; }
+#heartError:empty, #shareStatus:empty, .jar-storage:empty { margin: 0; }
+.jar-recipient-header { max-width: 920px; width: calc(100% - 32px); margin: 8px auto; border-bottom: 1px solid #dcd2c5; }
+.jar-recipient { max-width: 860px; }
+.jar-recipient h1 { text-align: center; font-size: clamp(1.75rem,5vw,3rem); margin-bottom: 20px; }
+.jar-reveal { display: grid; overflow: hidden; }
+.jar-reveal-intro, .jar-reveal-controls { text-align: center; padding: 18px; min-width: 0; }
+.jar-reveal-intro p, .jar-signature, .jar-note p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.jar-dedication { font-weight: 800; color: var(--jar-ink); margin: 10px 0 0; }
+.jar-greeting { margin: 9px 0 0; }
+.jar-signature { font: italic 1.1rem "Playfair Display", Georgia, serif; margin: 16px 0 0; }
+.jar-reveal .jar-art { width: min(100%, 425px); margin-inline: auto; border-radius: 10px; }
+.jar-replay { margin-top: 12px; }
+.jar-progress, .jar-complete { margin: 0 0 10px; }
+.jar-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr)); gap: 6px; }
+.jar-choice { position: relative; min-width: 44px; padding: 3px; background: #fffdf7; }
+.jar-choice svg { width: 32px; height: 31px; }
+.jar-choice span { position: absolute; font-weight: 800; font-size: .8rem; }
+.jar-choice[data-seen="true"] { border-color: #735f68; background: #f4eee8; }
+.jar-note { text-align: start; margin-top: 14px; padding: 14px; background: #fff8ed; border: 1px solid #d9c7b9; border-radius: 7px; }
+.jar-note h3 { margin: 0; font: 500 1.35rem "Playfair Display", Georgia, serif; color: var(--jar-ink); }
+.jar-note p { margin: 8px 0 14px; }
+.jar-chosen { width: 62px; margin-bottom: 5px; }
+.jar-chosen svg { width: 100%; animation: jar-reveal-heart 545ms cubic-bezier(.17,.7,.28,1) both; filter: drop-shadow(1px 4px 3px #67495144); }
+@keyframes jar-reveal-heart {
+  from { opacity: .2; transform: translateY(16px) scale(.7) rotate(-26deg); }
+  to { opacity: 1; transform: none; }
+}
+.jar-page dialog { width: min(100% - 20px, 760px); max-height: calc(100dvh - 20px); color: inherit; background: #f8f4ed; border: 1px solid #c6b6a3; border-radius: 10px; padding: 10px; }
+.jar-page dialog::backdrop { background: #2c3c36aa; }
+#previewGift { margin-top: 10px; }
+.jar-noscript { text-align: center; }
+@media (min-width: 900px) {
+  .jar-collection { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 720px) {
+  .jar-reveal { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); align-items: center; }
+  .jar-reveal-intro { grid-column: 1 / -1; }
+  .jar-reveal .jar-art { margin-left: 12px; width: calc(100% - 12px); }
+}
+@media (max-width: 650px) {
+  .jar-studio-layout, .jar-home-feature { grid-template-columns: minmax(0,1fr); }
+  .jar-live { position: static; }
+  .jar-live .jar-art { max-height: 280px; }
+}
+@media (max-width: 400px) {
+  .jar-fields { grid-template-columns: minmax(0,1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jar-opening .jar-lid, .jar-opening .jar-pieces, .jar-drop, .jar-chosen svg { animation: none; }
+  .jar-replay { display: none; }
+}
