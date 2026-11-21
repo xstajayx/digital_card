@@ -12,10 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = Path(os.environ.get("CARD_ARTIFACT_DIR", "/tmp/silent-hello-artifacts")) / "stationery"
 ART.mkdir(parents=True, exist_ok=True)
 CASES = [
-    ("love-rose-note", "rose", "rose"),
+    ("love-rose-note", "rose", "interiors/love-rose-note"),
     ("birthday-balloons", "star", "birthday"),
     ("christmas", "snowflake", "winter"),
-    ("friendship-coffee", "leaf", "coffee"),
+    ("friendship-coffee", "leaf", "interiors/friendship-coffee"),
 ]
 LONG = "Thinking of the afternoon we lost track of time and took the long way home.\n\n" \
     "Thanks for making room for silly stories, slow walks and the good biscuits.\n\n" \
@@ -69,7 +69,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
             errors = []
             context.on("page", lambda page: page.on("pageerror", lambda error: errors.append(str(error))))
             examples = CASES if width == 320 else CASES + [
-                ("love", "heart", "hearts"),
+                ("love", "heart", "interiors/love"),
                 ("moon-cradle", "star", "nursery"),
                 ("forget-me-not", "star", "quiet-stem"),
                 ("all-i-could-afford", "star", "wallet"),

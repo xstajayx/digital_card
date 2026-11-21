@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { catalogueDesign } from "../engine/catalogue.js";
+import { CATALOGUE_THEMES, catalogueDesign } from "../engine/catalogue.js";
 import { stationeryFor } from "../engine/stationery.js";
 import { PAPERS, defaultPhysical, validatePhysical } from "../engine/physical-schema.js";
 import { defaultOpening } from "../engine/openings/config.js";
@@ -10,15 +10,15 @@ import { encodeCard, decodeCard } from "../engine/share-codec.js";
 test("stationery follows the actual design and never uses the sender's greeting or relationship", () => {
   const cases = [
     ["birthday-balloons", "star", "birthday"],
-    ["birthday-garden", "star", ""],
-    ["love-letters", "rose", "rose"],
-    ["love-rose-note", "rose", "rose"],
+    ["birthday-garden", "star", "interiors/birthday-garden"],
+    ["love-letters", "rose", "interiors/love-letters"],
+    ["love-rose-note", "rose", "interiors/love-rose-note"],
     ["christmas", "snowflake", "winter"],
-    ["christmas-robin", "snowflake", "mistletoe"],
-    ["friendship-coffee", "leaf", "coffee"],
-    ["thank-you", "flower", ""],
-    ["congrats", "laurel", "celebrate"],
-    ["easter", "flower", "spring"],
+    ["christmas-robin", "snowflake", "interiors/christmas-robin"],
+    ["friendship-coffee", "leaf", "interiors/friendship-coffee"],
+    ["thank-you", "flower", "interiors/thank-you"],
+    ["congrats", "laurel", "interiors/congrats"],
+    ["easter", "flower", "interiors/easter"],
     ["st-george", "rose", "dragon"],
     ["moon-cradle", "star", "nursery"],
     ["forget-me-not", "star", "quiet-stem"],
@@ -56,8 +56,30 @@ test("old artwork preferences and every paper remain compatible with compact v5 
     assert.deepEqual(reopened.physicalConfig, physicalConfig);
     assert.equal(reopened.message, card.message);
   }
+  const plain = { ...defaultPhysical(), insideArt: "" };
+  assert.deepEqual(validatePhysical(plain, "birthday-balloons"), plain);
   const old = { ...defaultPhysical(), insideArt: "blue-cake" };
   assert.deepEqual(validatePhysical(old, "birthday-balloons"), old);
   assert.deepEqual(validatePhysical({ ...old, insideDecoration: true }, "birthday-balloons"), old);
   assert.throws(() => validatePhysical({ ...old, insideDecoration: "false" }, "birthday-balloons"));
+});
+
+test("all 121 public designs use distinct, local and upright interior sketches", () => {
+  const legacy = JSON.parse(readFileSync(new URL("../themes/themes.json", import.meta.url)));
+  const ids = [...legacy, ...CATALOGUE_THEMES.map(({ id }) => id)];
+  assert.equal(ids.length, 121);
+  const urls = new Set();
+  const drawings = new Set();
+  for (const id of ids) {
+    const { motif, motifUrl } = stationeryFor(id, catalogueDesign(id)?.catalogue);
+    assert.ok(motif && motif !== "botanical", id);
+    assert.ok(motifUrl.startsWith(new URL("../assets/stationery/", import.meta.url).href), id);
+    const svg = readFileSync(new URL(motifUrl), "utf8");
+    assert.match(svg, /^<svg/);
+    assert.doesNotMatch(svg, /rotate\(|scale\(\s*-|matrix\(|<script|<foreignObject|\bhref=/i);
+    assert.ok(!urls.has(motifUrl), id);
+    assert.ok(!drawings.has(svg), id);
+    urls.add(motifUrl);
+    drawings.add(svg);
+  }
 });
