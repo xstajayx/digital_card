@@ -501,3 +501,56 @@
 .paper-left .stationery-corner { width: min(57%, 134px); opacity: .29; }
 [data-paper="lined"] .stationery-corner { opacity: .095; }
 .local-photo-card .paper-left .stationery-corner { visibility: hidden; }
+
+/* New illustrations opt in through the saved artwork ID. */
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) {
+  background: var(--illustrated-paper);
+  color: var(--illustrated-ink);
+  box-shadow: none;
+  gap: 0;
+  padding: 0;
+}
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-ornament {
+  display: none;
+}
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-art {
+  order: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 1 auto;
+  max-height: 72%;
+  aspect-ratio: 16 / 15;
+  object-fit: contain;
+}
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-title {
+  padding: 7% 5% 2%;
+  font-size: clamp(17px, 5vw, 33px);
+}
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-name,
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-brand {
+  order: 3;
+}
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-brand {
+  padding: 3%;
+}
+.paper-front-face:is([data-illustrated="launch"], [data-illustrated="landscape"]) .paper-cover-art {
+  order: -1;
+}
+.paper-front-face:is([data-illustrated="launch"], [data-illustrated="record"]) .paper-cover-title {
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.035em;
+}
+.paper-front-face[data-illustrated="playful"] .paper-cover-title {
+  font-family: Fredoka, sans-serif;
+}
+.paper-front-face[data-illustrated="lullaby"] .paper-cover-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+}
+.paper-front-face[data-illustrated="home"] .paper-cover-title {
+  font-family: Georgia, serif;
+  letter-spacing: .03em;
+}

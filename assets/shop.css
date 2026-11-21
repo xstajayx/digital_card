@@ -693,3 +693,37 @@ dialog h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.shop-thumbnail[data-illustrated] {
+  gap: 0;
+  padding: 0;
+  background-image: none;
+}
+.shop-thumbnail[data-illustrated]:before,
+.shop-thumbnail[data-illustrated] .thumbnail-occasion {
+  display: none;
+}
+.shop-thumbnail[data-illustrated] strong {
+  padding: 8% 5% 3%;
+  font-size: clamp(.8rem, 3vw, 1.35rem);
+}
+.shop-thumbnail[data-illustrated] img {
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+}
+.shop-thumbnail:is([data-illustrated="launch"], [data-illustrated="landscape"]) img {
+  order: -1;
+}
+.shop-thumbnail:is([data-illustrated="launch"], [data-illustrated="record"]) strong {
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+}
+.shop-thumbnail[data-illustrated="playful"] strong {
+  font-family: Fredoka, sans-serif;
+}
+.shop-thumbnail[data-illustrated="lullaby"] strong {
+  font-style: italic;
+}

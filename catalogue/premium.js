@@ -50,6 +50,21 @@ const cards = [
   ["midnight-fireworks", "new-year", "Midnight Fireworks", "Happy New Year", 3, []],
 ];
 const styles = ["gold", "floral", "playful", "heritage"];
+// New artwork IDs are explicit in saved cards. Keep the original choices for older links.
+const illustratedCovers = {
+  "dachshund-parade": ["#ffddba", "#642f31", "playful"],
+  "rocket-post": ["#182f58", "#fff3cb", "launch"],
+  "moon-cradle": ["#dcd6e7", "#4e3753", "lullaby"],
+  "little-greenhouse": ["#e7dcaa", "#294f49", "home"],
+  "record-day": ["#cf8a70", "#251e23", "record"],
+  "kayak-morning": ["#f4d3a2", "#2a4d4a", "landscape"],
+};
+
+function illustratedCover(id, label) {
+  const [paper, ink, layout] = illustratedCovers[id];
+  return { id: `${id}-illustrated`, label, asset: `illustrated/${id}.svg`, cover: { paper, ink, layout } };
+}
+
 
 export const PREMIUM_DESIGNS = cards.map(([id, occasionId, name, greeting, collection]) => ({
   id,
@@ -72,6 +87,7 @@ export const PREMIUM_PACKS = Object.fromEntries(
       illustrationFamily: id,
       styleFamily: styles[collection],
       artwork: [
+        ...(Object.hasOwn(illustratedCovers, id) ? [illustratedCover(id, name)] : []),
         { id, label: name, asset: `packs/${id}.svg` },
         { id: "envelope", label: "Envelope", asset: "library/envelope.svg" },
       ],

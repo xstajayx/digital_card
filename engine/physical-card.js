@@ -305,11 +305,12 @@ export function createPhysicalCard(root, card, onReveal) {
       id === "default" || (id === "" && !empty)
         ? illustration(data.themeId, data.physicalConfig.coverArt) ||
           illustration(data.themeId, data.stickerId) ||
-          items[0]
+          items.find((candidate) => !candidate.cover)
         : illustration(data.themeId, id);
     node.hidden = !item;
     if (item) node.src = illustrationUrl(item);
     else node.removeAttribute("src");
+    return item;
   }
   new ResizeObserver(() => {
     if (enabled) root.dispatchEvent(new CustomEvent("physical-layout"));
@@ -383,7 +384,10 @@ export function createPhysicalCard(root, card, onReveal) {
         : data.recipient
           ? `For ${data.recipient}`
           : "";
-      artwork(art, cfg.coverArt, false);
+      const coverStyle = artwork(art, cfg.coverArt, false)?.cover;
+      front.dataset.illustrated = coverStyle?.layout || "";
+      front.style.setProperty("--illustrated-paper", coverStyle?.paper || "");
+      front.style.setProperty("--illustrated-ink", coverStyle?.ink || "");
       const decoration = cfg.insideDecoration === false ? "" : cfg.insideArt;
       const coordinated = decoration === "default";
       scene.dataset.motif = coordinated ? stationery.motif : "";

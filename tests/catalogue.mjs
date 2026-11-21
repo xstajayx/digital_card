@@ -89,10 +89,10 @@ test("69 packs and 67 original scenes: small original SVGs, local allowlists, ac
       assert.doesNotMatch(item.label, /[·#]\s*\d/);
       const text = readFileSync(new URL(illustrationUrl(item)), "utf8");
       assert.ok(Buffer.byteLength(text) < 7000);
-      assert.match(text, /viewBox="0 0 200 180"/);
+      assert.match(text, item.cover ? /viewBox="0 0 320 300"/ : /viewBox="0 0 200 180"/);
       assert.doesNotMatch(
         text,
-        /<script|<foreignObject|(?:href|src)=|onload=/i,
+        /<script|<foreignObject|(?:href|src)=(?!"#[a-z-]+")|onload=/i,
       );
       if (item.asset.startsWith("packs/")) scenes.add(item.asset);
     }
@@ -242,5 +242,27 @@ test("art and template paths are allowlisted; invalid pack/art input never becom
         ),
       /artwork/,
     );
+  }
+});
+
+test("illustrated covers are additive and saved cards retain their original artwork IDs", async () => {
+  const upgraded = CATALOGUE_THEMES.filter(theme => artPack(theme).artwork[0].cover);
+  assert.equal(upgraded.length, 6);
+  for (const theme of upgraded) {
+    const fresh = designDefaults(theme);
+    assert.equal(fresh.stickerId, `${theme.id}-illustrated`);
+    const { paper, ink } = illustration(theme.id, fresh.stickerId).cover;
+    assert.ok(contrastRatio(paper, ink) >= 4.5, theme.id);
+    assert.equal(illustration(theme.id, theme.id).asset, `packs/${theme.id}.svg`);
+    for (const legacyId of [theme.id, ""]) {
+      const raw = cardContent({
+        ...theme.defaults, ...fresh, theme, stickerId: legacyId,
+        physicalConfig: { ...fresh.physicalConfig, coverArt: legacyId },
+        textSize: 18, watermark: true,
+      });
+      const saved = validateCard(await decodeCard(await encodeCard({ ...raw, v: 5 })), themes);
+      assert.equal(saved.stickerId, legacyId);
+      assert.equal(saved.physicalConfig.coverArt, legacyId);
+    }
   }
 });
