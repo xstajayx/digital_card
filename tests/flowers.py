@@ -96,6 +96,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
             product_links[name] = link
             assert "#f=" in link and "?" not in link
             recipient.goto(link)
+            expect(recipient.locator(".flower-brand")).to_have_text("Silent Hello")
             art = recipient.locator("[data-art]")
             expect(art).to_have_attribute("data-bloom", "bud")
             expect(art.locator("svg")).to_have_attribute("aria-label", sender.locator("#productDescription").text_content())

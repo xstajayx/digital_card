@@ -15,7 +15,7 @@ CASES = [
     ("love-rose-note", "rose", "rose"),
     ("birthday-balloons", "star", "birthday"),
     ("christmas", "snowflake", "winter"),
-    ("friendship-coffee", "leaf", "botanical"),
+    ("friendship-coffee", "leaf", "coffee"),
 ]
 LONG = "Thinking of the afternoon we lost track of time and took the long way home.\n\n" \
     "Thanks for making room for silly stories, slow walks and the good biscuits.\n\n" \
@@ -63,16 +63,28 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
     base = f"http://127.0.0.1:{server.server_port}/digital_card/"
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path=os.environ.get("CARD_CHROMIUM_PATH") or shutil.which("chromium"), args=["--no-sandbox"])
-        for width, height in [(320, 760), (375, 812), (1440, 950)]:
+        for width, height in [(320, 760), (375, 812), (390, 844), (1440, 950)]:
             context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion="reduce",
                 permissions=["clipboard-read", "clipboard-write"])
             errors = []
             context.on("page", lambda page: page.on("pageerror", lambda error: errors.append(str(error))))
-            for id, stamp, motif in CASES:
+            examples = CASES if width == 320 else CASES + [
+                ("love", "heart", "hearts"),
+                ("moon-cradle", "star", "nursery"),
+                ("forget-me-not", "star", "quiet-stem"),
+                ("all-i-could-afford", "star", "wallet"),
+                ("no-expense-spared", "star", "receipt"),
+                ("youd-only-throw-it-away", "star", "recycling"),
+                ("saving-the-planet", "star", "hero-tree"),
+                ("happy-25th-december", "snowflake", "christmas-calendar"),
+                ("happy-four-day-weekend", "flower", "slippers"),
+            ]
+            for id, stamp, motif in examples:
                 sender = context.new_page()
                 sender.goto(base + f"studio.html?design={id}")
                 expect(sender.locator("#studio")).to_have_attribute("data-step", "2")
                 frame = sender.frame_locator("#cardPreview")
+                expect(sender.locator("#stickerGallery, #physical-coverArt")).to_have_count(0)
                 step(sender, 3)
                 toggle = sender.get_by_role("checkbox", name="Inside decoration")
                 expect(toggle).to_be_checked()
@@ -120,6 +132,9 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
                 inside(vf)
                 expect(vf.locator("#headline")).to_have_text("To Alex")
                 expect(vf.locator("#from")).to_have_text("Sam")
+                expect(vf.locator("#watermark")).to_have_text("Silent Hello")
+                expect(vf.locator(".stationery-corner")).to_have_count(1)
+                assert vf.locator(".stationery-corner").evaluate("node => getComputedStyle(node).transform") == "none"
                 assert vf.locator("#message").text_content() == frame.locator("#message").text_content()
                 expected_motif = "" if id == "friendship-coffee" and width == 1440 else motif
                 expect(vf.locator(".physical-scene")).to_have_attribute("data-motif", expected_motif)

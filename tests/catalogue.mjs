@@ -1,3 +1,4 @@
+import { COVER_EDITIONS } from "../catalogue/cover-art.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
@@ -108,7 +109,8 @@ test("curated metadata enables style, relationship, recipient, interest and tone
     assert.ok(meta.tones.length);
     assert.equal(meta.staticSendable, true);
     assert.ok(meta.subtitle);
-    assert.equal(ILLUSTRATIONS[theme.id][0].id, artPack(theme).artwork[0].id);
+    assert.equal(designDefaults(theme).stickerId, ILLUSTRATIONS[theme.id][0].id);
+    assert.ok(ILLUSTRATIONS[theme.id].includes(artPack(theme).artwork[0]));
   }
   for (const interest of [
     "fishing",
@@ -247,7 +249,7 @@ test("art and template paths are allowlisted; invalid pack/art input never becom
 
 test("illustrated covers are additive and saved cards retain their original artwork IDs", async () => {
   const upgraded = CATALOGUE_THEMES.filter(theme => artPack(theme).artwork[0].cover);
-  assert.equal(upgraded.length, 6);
+  assert.equal(upgraded.length, 10);
   for (const theme of upgraded) {
     const fresh = designDefaults(theme);
     assert.equal(fresh.stickerId, `${theme.id}-illustrated`);
@@ -263,6 +265,38 @@ test("illustrated covers are additive and saved cards retain their original artw
       const saved = validateCard(await decodeCard(await encodeCard({ ...raw, v: 5 })), themes);
       assert.equal(saved.stickerId, legacyId);
       assert.equal(saved.physicalConfig.coverArt, legacyId);
+    }
+  }
+});
+
+test("versioned cover editions are contrast-checked, uniquely addressed and retain historical choices", async () => {
+  const ids = Object.keys(COVER_EDITIONS);
+  assert.equal(ids.length, 105);
+  const assets = new Set();
+  for (const id of ids) {
+    const theme = themes.find(item => item.id === id);
+    assert.ok(theme, id);
+    const edition = COVER_EDITIONS[id];
+    assert.equal(ILLUSTRATIONS[id][0], edition);
+    assert.equal(designDefaults(theme).stickerId, edition.id);
+    assert.ok(contrastRatio(edition.cover.paper, edition.cover.ink) >= 4.5, id);
+    const asset = readFileSync(new URL(illustrationUrl(edition)));
+    assert.equal(asset.toString("ascii", 8, 12), "WEBP", id);
+    assert.ok(asset.length < 140_000, id);
+    assert.ok(!assets.has(edition.asset), id);
+    assets.add(edition.asset);
+    const historical = ILLUSTRATIONS[id].find(art => !art.cover);
+    assert.ok(historical, id);
+    for (const choice of [edition.id, historical.id, "", "none"]) {
+      const raw = {
+        v: 5, themeId: id, to: "To Alex", message: "A little joy 🌷", from: "Sam",
+        fontId: theme.defaultFontId, textSize: 18, watermark: true,
+        stickerId: choice === "none" ? "" : choice, openingConfig: defaultOpening(),
+        physicalConfig: { ...defaultPhysical(), coverArt: choice },
+      };
+      const saved = validateCard(await decodeCard(await encodeCard(raw)), themes);
+      assert.equal(saved.physicalConfig.coverArt, choice, id);
+      assert.equal(saved.message, raw.message, id);
     }
   }
 });

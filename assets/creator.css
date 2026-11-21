@@ -538,3 +538,27 @@
     padding-inline: 12px;
   }
 }
+
+.mini-card[data-illustrated] {
+  gap: 4px;
+  padding: 5% 0;
+  background-image: none;
+}
+.mini-card[data-illustrated]::after {
+  content: none;
+}
+.mini-card[data-illustrated] img {
+  height: auto;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 0;
+  object-fit: contain;
+}
+.mini-card[data-illustrated] strong {
+  padding-inline: 6%;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.mini-card:is([data-illustrated="launch"], [data-illustrated="landscape"]) img {
+  order: -1;
+}

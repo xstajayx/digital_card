@@ -32,7 +32,6 @@ async function init() {
       from: "",
       physicalConfig: { ...defaultPhysical(), coverName: "" },
       openingConfig: { ...defaultOpening(), tone: "theme" },
-      stickerId: theme.id === "birthday-balloons" ? "pink-cake" : "",
       fontId: theme.defaultFontId || "fredoka",
       ...designDefaults(theme),
     });

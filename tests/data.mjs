@@ -91,6 +91,13 @@ test("all metadata, palettes and local assets are usable", () => {
       assert.ok(!seen.has(item.id));
       seen.add(item.id);
       assert.doesNotMatch(item.label, /[·#]\s*\d/);
+      if (item.asset.endsWith(".webp")) {
+        const image = readFileSync(fileURLToPath(illustrationUrl(item)));
+        assert.equal(image.toString("ascii", 0, 4), "RIFF");
+        assert.equal(image.toString("ascii", 8, 12), "WEBP");
+        assert.ok(image.length < 140_000);
+        continue;
+      }
       const svg = readFileSync(fileURLToPath(illustrationUrl(item)), "utf8");
       assert.match(svg, /viewBox="0 0 200 180"/);
       assert.doesNotMatch(svg, /<script|<foreignObject|(?:href|src)=|onload=/i);

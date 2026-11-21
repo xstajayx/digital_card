@@ -26,7 +26,7 @@ try:
     page.on('response',lambda r:errors.append(f'{r.status} {r.url}') if r.status>=400 else None)
    context.on('page',observe);page=context.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28)
    step(page,3);page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill(MESSAGE);page.locator('#fromInput').fill('With love, Alex')
-   step(page,4);page.locator('#physicalToggle').check();step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-coverArt').select_option('blue-cake');step(page,4);page.locator('#physical-paper').select_option('linen');step(page,5)
+   step(page,4);page.locator('#physicalToggle').check();step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');step(page,4);page.locator('#physical-paper').select_option('linen');step(page,5)
    f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');assert fit(page)
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');expect(f.locator('.paper-envelope-tag')).to_have_text('For Maya');capture(f,f'envelope-{width}.png')
    f.locator('.paper-book').evaluate('e=>window.originalPaperBook=e');f.locator('.paper-envelope-front').focus()
@@ -34,7 +34,7 @@ try:
    else:page.keyboard.press('Enter')
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','extracting');assert f.locator('.paper-envelope-flap').evaluate('e=>+getComputedStyle(e).zIndex') < f.locator('.paper-book').evaluate('e=>+getComputedStyle(e).zIndex');capture(f,f'extracting-{width}.png');expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover')
    assert f.locator('.paper-book').evaluate('e=>e===window.originalPaperBook'), 'The extracted card must be the same physical component'
-   expect(f.locator('.paper-cover-title')).to_have_text('A birthday full of little wonders');expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/library/blue-cake.svg');capture(f,f'cover-{width}.png')
+   expect(f.locator('.paper-cover-title')).to_have_text('A birthday full of little wonders');expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/covers/birthday-balloons.webp');capture(f,f'cover-{width}.png')
    f.locator('.paper-cover').focus();page.keyboard.press('Enter');expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','unfolding');capture(f,f'unfolding-{width}.png');expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','inside')
    expect(f.locator('#message')).to_have_text(MESSAGE);expect(f.locator('#from')).to_have_text('With love, Alex');expect(f.locator('.paper-right')).to_have_attribute('aria-hidden','false');assert not f.locator('.paper-right').evaluate('e=>e.inert')
    assert 'Pacifico' in f.locator('#message').evaluate('e=>getComputedStyle(e).fontFamily');assert f.locator('#from').evaluate('e=>e.offsetTop>=document.querySelector("#message").offsetTop+document.querySelector("#message").offsetHeight')
@@ -42,7 +42,7 @@ try:
    f.locator('.paper-action').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover');f.locator('.paper-cover').click();expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','inside')
    f.locator('.paper-read').click();expect(f.locator('.paper-reader')).to_be_visible();expect(f.locator('.paper-reader-text')).to_contain_text(MESSAGE);f.locator('.paper-reader-close').click()
    # Explicit drafts retain separate cover, paper and inside choices.
-   page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(28);drafts(page);page.get_by_role('button',name='Restore draft',exact=True).click();step(page,4);expect(page.locator('#physicalToggle')).to_be_checked();expect(page.locator('#physical-paper')).to_have_value('linen');step(page,2);expect(page.locator('#physical-coverArt')).to_have_value('blue-cake');step(page,4)
+   page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(28);drafts(page);page.get_by_role('button',name='Restore draft',exact=True).click();step(page,4);expect(page.locator('#physicalToggle')).to_be_checked();expect(page.locator('#physical-paper')).to_have_value('linen');step(page,2);expect(page.locator('#physical-coverArt, #stickerGallery')).to_have_count(0);step(page,4)
    for paper in ['ivory','linen','white','kraft','pastel','textured','lined']:
     page.locator('#physical-paper').select_option(paper);step(page,5);assert fit(page);expect(f.locator('#cardRoot')).to_have_attribute('data-paper',paper);step(page,4)
    # The cover accepts text only, independently from the inside message.
@@ -57,8 +57,8 @@ try:
    step(page,3);page.locator('#messageInput').fill(MESSAGE);step(page,5);assert fit(page)
    # Every existing design gets a fitting physical cover and inside without redesign.
    count=page.evaluate('''async()=>{const {loadThemes,cardContent}=await import('./engine/card-data.js');const {defaultPhysical}=await import('./engine/physical-schema.js');const {defaultOpening}=await import('./engine/openings/config.js');const w=document.querySelector('#cardPreview').contentWindow;const themes=await loadThemes();for(const theme of themes){w.setCardData({...cardContent({theme,...theme.defaults,fontId:theme.defaultFontId,textSize:18,watermark:true,physicalConfig:defaultPhysical(),openingConfig:defaultOpening()}),palette:theme.palette,features:theme.features});if(!await w.checkFit())throw Error('Physical design does not fit: '+theme.id);await Promise.all([...w.document.querySelectorAll('.paper-cover-art,.paper-left-art,.paper-inside-art')].filter(i=>!i.hidden).map(i=>i.decode()))}return themes.length}''');assert count==121
-   # Turning the enhancement off restores the existing animated renderer.
-   step(page,4);page.locator('#physicalToggle').uncheck();step(page,5);assert fit(page);expect(f.locator('.physical-scene')).to_be_hidden();expect(f.locator('#headline')).to_contain_text('Happy Birthday');assert not f.locator('.card').evaluate('e=>e.parentElement.classList.contains("paper-right")')
+   # Simulate the historical renderer state without exposing the hidden compatibility control.
+   step(page,4);page.locator('#physicalToggle').evaluate("toggle => toggle.click()");step(page,5);assert fit(page);expect(f.locator('.physical-scene')).to_be_hidden();expect(f.locator('#headline')).to_contain_text('Happy Birthday');assert not f.locator('.card').evaluate('e=>e.parentElement.classList.contains("paper-right")')
    assert not errors,errors
    print(f'PASS {width}x{height}: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, seven papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration',flush=True)
    context.close()
