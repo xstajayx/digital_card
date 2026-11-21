@@ -1,0 +1,38 @@
+.seasonal-banner {
+  --season-paper: #e8eadf;
+  --season-ink: #294639;
+  --season-accent: #304c3e;
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+  align-items: center;
+  min-height: 258px;
+  overflow: hidden;
+  border: 1px solid #aa927742;
+  border-radius: 10px;
+  margin: clamp(20px, 4vw, 44px) 0 clamp(20px, 4vw, 38px);
+  background: var(--season-paper);
+  color: var(--season-ink);
+}
+.seasonal-banner[data-promotion="christmas"] { --season-paper: #e1e9df; --season-ink: #273d35; --season-accent: #344e40; }
+.seasonal-banner[data-promotion="valentines"] { --season-paper: #f2e1df; --season-ink: #60364d; --season-accent: #743e56; }
+.seasonal-banner[data-promotion="mothers-day"] { --season-paper: #eee7f0; --season-ink: #453a55; --season-accent: #655175; }
+.seasonal-banner[data-promotion="easter"] { --season-paper: #f1ebd2; --season-ink: #3b4936; --season-accent: #505a3e; }
+.seasonal-banner[data-promotion="fathers-day"] { --season-paper: #e0ebee; --season-ink: #2c414b; --season-accent: #345562; }
+.seasonal-banner[data-promotion="st-george"] { --season-paper: #f2e6dd; --season-ink: #553733; --season-accent: #714941; }
+.seasonal-banner[data-promotion="halloween"] { --season-paper: #ede0ed; --season-ink: #48344b; --season-accent: #65435d; }
+.seasonal-copy { padding: clamp(20px, 4.2vw, 54px); }
+.seasonal-copy h1 {
+  margin: 0;
+  font: 500 clamp(2.12rem, 4.4vw, 3.75rem)/1.08 "Playfair Display", Georgia, serif;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.seasonal-copy p { max-width: 34ch; margin: 12px 0 18px; }
+.seasonal-copy .gift-link { background-color: var(--season-accent); }
+.seasonal-copy .gift-link:hover { text-decoration: underline; }
+.seasonal-banner img { display: block; width: 100%; height: auto; max-height: 292px; object-fit: contain; }
+@media (max-width: 645px) {
+  .seasonal-banner { grid-template-columns: minmax(0, 1fr); }
+  .seasonal-copy { min-height: 195px; padding-bottom: 2px; }
+  .seasonal-banner img { height: clamp(140px, 46vw, 220px); }
+}
