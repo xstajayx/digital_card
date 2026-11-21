@@ -4,9 +4,9 @@ Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 publ
 
 | Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
 | --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 37 | 72 | 0 |
+| 121 | 12 | 109 | 55 | 54 | 0 |
 
-The follow-up introduces 33 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 72 remaining designs.
+The follow-up introduces 51 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 54 remaining designs.
 
 ## Cover additions
 
@@ -78,13 +78,13 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `midnight-fox` | Midnight Fox | christmas | Improve · repeated outline frame | 1 | winter | Plain |
 | `christmas-gold` | Midwinter gold | christmas | Improve · flat pack art | 1 | winter | Plain |
 | `ribbon-bells` | Ribbon Bells | christmas | Improve · repeated outline frame | 1 | winter | Plain |
-| `ski-lodge` | Ski Lodge | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `ski-lodge` | Ski Lodge | christmas | Upgraded in follow-up | — | winter | Plain |
 | `snow-globe-train` | Snow Globe Train | christmas | Upgraded in this PR | — | winter | snow-globe |
-| `christmas-gift` | Wrapped forest wishes | christmas | Improve · shared library artwork | 1 | winter | Plain |
-| `congrats-ribbons` | Let the good news fly | congratulations | Improve · flat pack art | 2 | celebrate | celebrate |
-| `rising-sun` | Rising Sun | congratulations | Improve · repeated outline frame | 2 | celebrate | Plain |
-| `congrats` | You did it | congratulations | Improve · shared library artwork | 2 | celebrate | celebrate |
-| `congrats-toast` | You earned this moment | congratulations | Improve · flat pack art | 2 | celebrate | Plain |
+| `christmas-gift` | Wrapped forest wishes | christmas | Upgraded in follow-up | — | winter | Plain |
+| `congrats-ribbons` | Let the good news fly | congratulations | Upgraded in follow-up | — | celebrate | celebrate |
+| `rising-sun` | Rising Sun | congratulations | Upgraded in follow-up | — | celebrate | Plain |
+| `congrats` | You did it | congratulations | Upgraded in follow-up | — | celebrate | celebrate |
+| `congrats-toast` | You earned this moment | congratulations | Upgraded in follow-up | — | celebrate | Plain |
 | `happy-four-day-weekend` | Happy Four-Day Weekend | easter | Retain · premium | — | spring | slippers |
 | `easter` | Hello, spring | easter | Improve · shared library artwork | 2 | spring | spring |
 | `easter-meadow` | Spring in your step | easter | Improve · flat pack art | 2 | spring | spring |
@@ -104,15 +104,15 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `luck-new-chapter` | Your next great chapter | good-luck | Improve · flat pack art | 2 | botanical | Plain |
 | `laurel-letter` | Laurel Letter | graduation | Improve · repeated outline frame | 2 | celebrate | Plain |
 | `graduation` | On to wonderful things | graduation | Improve · shared library artwork | 2 | celebrate | Plain |
-| `graduation-world` | The world is waiting | graduation | Improve · flat pack art | 2 | celebrate | Plain |
-| `justbecause-book` | A small good thing | just-because | Improve · flat pack art | 2 | botanical | Plain |
-| `just-because` | Little lovely things | just-because | Improve · shared library artwork | 2 | botanical | Plain |
+| `graduation-world` | The world is waiting | graduation | Upgraded in follow-up | — | celebrate | Plain |
+| `justbecause-book` | A small good thing | just-because | Upgraded in follow-up | — | botanical | Plain |
+| `just-because` | Little lovely things | just-because | Upgraded in follow-up | — | botanical | Plain |
 | `no-expense-spared` | No Expense Spared | just-because | Retain · premium | — | botanical | receipt |
-| `justbecause-sea` | Postcard of a feeling | just-because | Improve · flat pack art | 2 | botanical | Plain |
+| `justbecause-sea` | Postcard of a feeling | just-because | Upgraded in follow-up | — | botanical | Plain |
 | `saving-the-planet` | Saving the Planet | just-because | Retain · premium | — | botanical | hero-tree |
 | `youd-only-throw-it-away` | You'd Only Throw It Away | just-because | Retain · premium | — | botanical | recycling |
-| `kids-gamer` | Birthday player one | kids-birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `kids-party` | Little big party | kids-birthday | Improve · shared library artwork | 1 | birthday | birthday |
+| `kids-gamer` | Birthday player one | kids-birthday | Upgraded in follow-up | — | birthday | Plain |
+| `kids-party` | Little big party | kids-birthday | Upgraded in follow-up | — | birthday | birthday |
 | `kids-dinosaur` | Roar, it’s your day | kids-birthday | Improve · flat pack art | 1 | birthday | Plain |
 | `rocket-post` | Rocket Post | kids-birthday | Retain · premium | — | birthday | Plain |
 | `love-rose-note` | A rose for your pocket | love | Improve · flat pack art | 2 | rose | rose |
@@ -127,14 +127,14 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `mum-baking` | The sweetest kind of love | mothers-day | Improve · flat pack art | 1 | botanical | Plain |
 | `tulip-market` | Tulip Market | mothers-day | Upgraded in this PR | — | botanical | tulip |
 | `baby-nest` | A little more love | new-baby | Improve · flat pack art | 1 | botanical | Plain |
-| `new-baby` | Hello, little star | new-baby | Improve · shared library artwork | 1 | botanical | nursery |
+| `new-baby` | Hello, little star | new-baby | Upgraded in follow-up | — | botanical | nursery |
 | `moon-cradle` | Moon Cradle | new-baby | Retain · premium | — | botanical | nursery |
-| `baby-moon` | Moonlight, little one | new-baby | Improve · flat pack art | 1 | botanical | nursery |
-| `home-cottage` | A little place called home | new-home | Improve · flat pack art | 1 | botanical | Plain |
+| `baby-moon` | Moonlight, little one | new-baby | Upgraded in follow-up | — | botanical | nursery |
+| `home-cottage` | A little place called home | new-home | Upgraded in follow-up | — | botanical | Plain |
 | `little-greenhouse` | Little Greenhouse | new-home | Retain · premium | — | botanical | Plain |
-| `home-keys` | The keys to lovely | new-home | Improve · flat pack art | 1 | botanical | Plain |
-| `newyear-toast` | Here’s to what comes next | new-year | Improve · flat pack art | 2 | celebrate | Plain |
-| `midnight-fireworks` | Midnight Fireworks | new-year | Improve · repeated outline frame | 2 | celebrate | Plain |
+| `home-keys` | The keys to lovely | new-home | Upgraded in follow-up | — | botanical | Plain |
+| `newyear-toast` | Here’s to what comes next | new-year | Upgraded in follow-up | — | celebrate | Plain |
+| `midnight-fireworks` | Midnight Fireworks | new-year | Upgraded in follow-up | — | celebrate | Plain |
 | `new-year` | Midnight magic | new-year | Improve · shared library artwork | 2 | celebrate | Plain |
 | `retirement-fishing` | Gone fishing | retirement | Improve · flat pack art | 2 | botanical | Plain |
 | `retirement-travel` | Out of office, into the world | retirement | Improve · flat pack art | 2 | botanical | Plain |
