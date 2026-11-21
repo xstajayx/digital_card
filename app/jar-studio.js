@@ -2,6 +2,7 @@ import { jarTheme, encodeJar, newJarId, noteError, HEART_MAX, HEART_MIN, NOTE_LI
 import { createJarArt } from "./jar-art.js";
 import { presentJar } from "./jar-presentation.js";
 import { bindShareActions } from "./share-actions.js";
+import { bindJarIdeas } from "./jar-ideas.js";
 import { draftNavigation } from "./draft-navigation.js";
 
 const $ = (id) => document.getElementById(id);
@@ -21,6 +22,7 @@ function init(theme) {
   const fields = $("jarFields");
   const input = $("heartMessage");
   const list = $("heartList");
+  const closeIdeas = bindJarIdeas(theme.id, input, notes);
   const dialog = $("jarPreview");
   const art = createJarArt($("studioJar"), theme);
   const warn = draftNavigation();
@@ -46,6 +48,7 @@ function init(theme) {
     dirty();
   });
   function resetEditor() {
+    closeIdeas();
     editing = -1;
     input.value = "";
     $("heartCount").textContent = `0 / ${NOTE_LIMIT}`;
