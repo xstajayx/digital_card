@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260">
+  <ellipse cx="208" cy="201" rx="155" ry="23" fill="#ceadaf" opacity=".36"/>
+  <path d="M84 183q-41 28 41 45t157-10q51-18 73 9" fill="none" stroke="#a3566c" stroke-width="8" stroke-linecap="round"/>
+  <g transform="rotate(-10 197 133)">
+    <rect x="89" y="73" width="202" height="121" rx="7" fill="#9e7680" opacity=".24" transform="translate(6 6)"/>
+    <rect x="89" y="73" width="202" height="121" rx="7" fill="#f7e5ca" stroke="#bb987d" stroke-width="2"/>
+    <path d="m91 190 99-77 99 77m-197-114 98 74 99-74" fill="none" stroke="#ba967f" stroke-width="2"/>
+    <path d="m93 76 97 74 97-74" fill="#f3d9be" stroke="#b88c77" stroke-width="2"/>
+    <circle cx="190" cy="150" r="22" fill="#8f3d57" stroke="#753349" stroke-width="2"/>
+    <circle cx="190" cy="150" r="17" fill="none" stroke="#c07484"/>
+    <path d="M190 159q-17-12-11-19 6-5 11 3 5-8 11-3 6 7-11 19Z" fill="#d99294"/>
+  </g>
+  <path d="M282 211q29-52 65-91m-50 63q31-8 47-2m-37-11q-1-17 8-28m14 1q14-5 25-26" fill="none" stroke="#687951" stroke-width="2"/>
+  <path d="M307 169q16-34 27-20 5 13-27 20m-8 14q21-17 40-6-12 15-40 6m17-27q-9-31 5-32 10 10-5 32m20-22q4-27 16-25 8 13-16 25" fill="#859167"/>
+  <path d="m87 43 11 19m-16-5 21-9m231 23 11 19m-16-5 21-9" stroke="#bc826c" stroke-linecap="round" stroke-width="2"/>
+</svg>

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./assets/fonts.css" />
     <meta name="description" content="Send a folded digital greeting card or flowers that bloom when opened." />
     <link rel="stylesheet" href="./assets/site.css" />
+    <link rel="stylesheet" href="./assets/seasonal-banner.css" />
     <script type="module" src="./app/site-menu.js"></script>
     <link rel="stylesheet" href="./assets/heart-jar.css">
     <script type="module" src="./app/jars.js"></script>
@@ -35,10 +36,14 @@
       </details>
     </header>
     <main id="main" class="home-gifts">
-      <div class="home-intro">
-        <h1>Send a little joy</h1>
-        <p>Thoughtful little gifts for the people you love.</p>
-      </div>
+      <section id="seasonalBanner" class="seasonal-banner" aria-labelledby="seasonalTitle" data-promotion="evergreen">
+        <div class="seasonal-copy">
+          <h1 id="seasonalTitle">Send a Little Joy</h1>
+          <p>Beautiful digital cards for life’s big moments and little surprises.</p>
+          <a class="gift-link" href="./cards.html">Explore Greeting Cards</a>
+        </div>
+        <img src="./assets/seasonal/evergreen.svg" width="420" height="260" alt="An illustrated greeting card tucked into a sage-green envelope." fetchpriority="high" />
+      </section>
       <div class="home-collections">
         <section class="home-collection" aria-labelledby="homeCardsTitle">
           <div class="home-art home-card-art" aria-hidden="true">
@@ -84,6 +89,7 @@
       </nav>
     </footer>
     <script type="module" src="./app/home-route.js"></script>
+    <script type="module" src="./app/seasonal-banner.js"></script>
     <script type="module" src="./app/assistant-on-visit.js"></script>
     <script type="module" src="./app/pwa.js"></script>
   </body>
