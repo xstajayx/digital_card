@@ -4,9 +4,9 @@ Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 publ
 
 | Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
 | --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 73 | 36 | 0 |
+| 121 | 12 | 109 | 91 | 18 | 0 |
 
-The follow-up introduces 69 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 36 remaining designs.
+The follow-up introduces 87 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 18 remaining designs.
 
 ## Cover additions
 
@@ -71,13 +71,13 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `christmas-robin` | A robin’s hello | christmas | Upgraded in follow-up | — | mistletoe | mistletoe |
 | `christmas-snow` | A winter’s hush | christmas | Upgraded in follow-up | — | winter | winter |
 | `christmas-wreath` | At your door | christmas | Upgraded in follow-up | — | winter | mistletoe |
-| `festive-orange` | Festive Orange | christmas | Improve · repeated outline frame | 1 | winter | Plain |
-| `christmas` | Forest & wishes | christmas | Improve · shared library artwork | 1 | winter | winter |
+| `festive-orange` | Festive Orange | christmas | Upgraded in follow-up | — | winter | Plain |
+| `christmas` | Forest & wishes | christmas | Upgraded in follow-up | — | winter | winter |
 | `happy-25th-december` | Happy 25th December | christmas | Retain · premium | — | winter | christmas-calendar |
-| `christmas-village` | Home for the holidays | christmas | Improve · flat pack art | 1 | winter | Plain |
-| `midnight-fox` | Midnight Fox | christmas | Improve · repeated outline frame | 1 | winter | Plain |
-| `christmas-gold` | Midwinter gold | christmas | Improve · flat pack art | 1 | winter | Plain |
-| `ribbon-bells` | Ribbon Bells | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `christmas-village` | Home for the holidays | christmas | Upgraded in follow-up | — | winter | Plain |
+| `midnight-fox` | Midnight Fox | christmas | Upgraded in follow-up | — | winter | Plain |
+| `christmas-gold` | Midwinter gold | christmas | Upgraded in follow-up | — | winter | Plain |
+| `ribbon-bells` | Ribbon Bells | christmas | Upgraded in follow-up | — | winter | Plain |
 | `ski-lodge` | Ski Lodge | christmas | Upgraded in follow-up | — | winter | Plain |
 | `snow-globe-train` | Snow Globe Train | christmas | Upgraded in this PR | — | winter | snow-globe |
 | `christmas-gift` | Wrapped forest wishes | christmas | Upgraded in follow-up | — | winter | Plain |
@@ -113,20 +113,20 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `youd-only-throw-it-away` | You'd Only Throw It Away | just-because | Retain · premium | — | botanical | recycling |
 | `kids-gamer` | Birthday player one | kids-birthday | Upgraded in follow-up | — | birthday | Plain |
 | `kids-party` | Little big party | kids-birthday | Upgraded in follow-up | — | birthday | birthday |
-| `kids-dinosaur` | Roar, it’s your day | kids-birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `kids-dinosaur` | Roar, it’s your day | kids-birthday | Upgraded in follow-up | — | birthday | Plain |
 | `rocket-post` | Rocket Post | kids-birthday | Retain · premium | — | birthday | Plain |
-| `love-rose-note` | A rose for your pocket | love | Improve · flat pack art | 2 | rose | rose |
-| `love` | Blushing hearts | love | Improve · shared library artwork | 2 | rose | hearts |
-| `love-letters` | Love letters | love | Improve · shared library artwork | 2 | rose | rose |
-| `love-bookish` | My favourite story | love | Improve · flat pack art | 2 | rose | Plain |
-| `birthday-milestone` | A golden chapter | milestone-birthday | Improve · shared library artwork | 1 | birthday | Plain |
-| `milestone-toast` | A toast to you | milestone-birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `milestone-candles` | Light up your next chapter | milestone-birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `mothers-day` | A garden of love | mothers-day | Improve · shared library artwork | 1 | botanical | Plain |
-| `mum-garden` | Love that keeps growing | mothers-day | Improve · flat pack art | 1 | botanical | Plain |
-| `mum-baking` | The sweetest kind of love | mothers-day | Improve · flat pack art | 1 | botanical | Plain |
+| `love-rose-note` | A rose for your pocket | love | Upgraded in follow-up | — | rose | rose |
+| `love` | Blushing hearts | love | Upgraded in follow-up | — | rose | hearts |
+| `love-letters` | Love letters | love | Upgraded in follow-up | — | rose | rose |
+| `love-bookish` | My favourite story | love | Upgraded in follow-up | — | rose | Plain |
+| `birthday-milestone` | A golden chapter | milestone-birthday | Upgraded in follow-up | — | birthday | Plain |
+| `milestone-toast` | A toast to you | milestone-birthday | Upgraded in follow-up | — | birthday | Plain |
+| `milestone-candles` | Light up your next chapter | milestone-birthday | Upgraded in follow-up | — | birthday | Plain |
+| `mothers-day` | A garden of love | mothers-day | Upgraded in follow-up | — | botanical | Plain |
+| `mum-garden` | Love that keeps growing | mothers-day | Upgraded in follow-up | — | botanical | Plain |
+| `mum-baking` | The sweetest kind of love | mothers-day | Upgraded in follow-up | — | botanical | Plain |
 | `tulip-market` | Tulip Market | mothers-day | Upgraded in this PR | — | botanical | tulip |
-| `baby-nest` | A little more love | new-baby | Improve · flat pack art | 1 | botanical | Plain |
+| `baby-nest` | A little more love | new-baby | Upgraded in follow-up | — | botanical | Plain |
 | `new-baby` | Hello, little star | new-baby | Upgraded in follow-up | — | botanical | nursery |
 | `moon-cradle` | Moon Cradle | new-baby | Retain · premium | — | botanical | nursery |
 | `baby-moon` | Moonlight, little one | new-baby | Upgraded in follow-up | — | botanical | nursery |
