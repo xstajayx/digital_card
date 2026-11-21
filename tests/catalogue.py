@@ -65,7 +65,7 @@ try:
    expect(page.locator('#designPreview')).to_be_visible()
    f=page.frame_locator('#shopPreview')
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','cover')
-   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/packs/robin-winter.svg')
+   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/covers/christmas-robin.webp')
    for stage in ['envelope','inside','cover']:
     page.locator(f'#previewStages [data-stage="{stage}"]').click()
     expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state',stage)
@@ -75,14 +75,14 @@ try:
    expect(page.locator('.occasion-tile')).to_have_count(28)
    f=page.frame_locator('#cardPreview')
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true')
-   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/packs/fishing-lake.svg')
+   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/covers/birthday-fishing.webp')
    expect(page.locator('#physical-coverArt, #stickerGallery')).to_have_count(0)
    expect(f.locator('.paper-cover-name')).to_have_text('')
    # Rapid design changes: last choice owns artwork, envelope, font and palette.
    page.locator('.steps [data-step="1"]').click()
    for design in ['birthday-garden','birthday-gaming','birthday-football','birthday-fishing']:
     page.locator(f'[data-theme="{design}"]').click()
-   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/packs/fishing-lake.svg')
+   expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/covers/birthday-fishing.webp')
    page.locator('.steps [data-step="3"]').click()
    message='A quiet lake, a good book, and a whole day just for you.\n\nHappy birthday! 🐟 café'
    page.locator('#toInput').fill('Jamie');page.locator('#messageInput').fill(message);page.locator('#fromInput').fill('With love')
@@ -93,7 +93,7 @@ try:
    expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope')
    vf.locator('.paper-envelope-front').click();expect(vf.locator('#cardRoot')).to_have_attribute('data-physical-state','cover')
    expect(vf.locator('.paper-cover-name')).to_have_text('')
-   expect(vf.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/packs/fishing-lake.svg')
+   expect(vf.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/covers/birthday-fishing.webp')
    viewer.screenshot(path=str(ART/f'recipient-cover-{width}.png'))
    vf.locator('.paper-cover').click();expect(vf.locator('#message')).to_have_text(message)
    assert not viewer.locator('.steps').count()

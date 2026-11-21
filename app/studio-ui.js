@@ -112,7 +112,7 @@ export function createUI({ state, preview }) {
         copy[key] = theme.defaults[key];
     }
     const recommended = designDefaults(theme);
-    const coverArt = ILLUSTRATIONS[theme.id]?.[0]?.id || "";
+    const coverArt = recommended.stickerId;
     state.set({
       ...copy,
       theme,

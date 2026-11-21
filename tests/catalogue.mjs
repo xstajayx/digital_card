@@ -271,12 +271,14 @@ test("illustrated covers are additive and saved cards retain their original artw
 
 test("versioned cover editions are contrast-checked, uniquely addressed and retain historical choices", async () => {
   const ids = Object.keys(COVER_EDITIONS);
+  assert.equal(ids.length, 105);
   const assets = new Set();
   for (const id of ids) {
     const theme = themes.find(item => item.id === id);
     assert.ok(theme, id);
     const edition = COVER_EDITIONS[id];
     assert.equal(ILLUSTRATIONS[id][0], edition);
+    assert.equal(designDefaults(theme).stickerId, edition.id);
     assert.ok(contrastRatio(edition.cover.paper, edition.cover.ink) >= 4.5, id);
     const asset = readFileSync(new URL(illustrationUrl(edition)));
     assert.equal(asset.toString("ascii", 8, 12), "WEBP", id);

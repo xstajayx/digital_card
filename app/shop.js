@@ -78,7 +78,6 @@ async function openPreview(theme, href) {
         textSize: 18,
         watermark: true,
         fontId: theme.defaultFontId,
-        stickerId: ILLUSTRATIONS[theme.id][0].id,
         physicalConfig: {
           ...defaultPhysical(),
           coverName: "",

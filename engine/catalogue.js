@@ -58,8 +58,8 @@ export function designMetadata(theme) {
 // Used only for NEW cards/design choices. Decoding v1-v5 never applies defaults.
 export function designDefaults(theme) {
   const pack = artPack(theme);
-  if (!pack) return {};
-  const coverArt = ILLUSTRATIONS[theme.id][0].id;
+  const coverArt = ILLUSTRATIONS[theme.id]?.[0]?.id || "";
+  if (!pack) return { stickerId: coverArt };
   return {
     stickerId: coverArt,
     fontId: pack.fonts[0],

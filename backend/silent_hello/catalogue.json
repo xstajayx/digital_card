@@ -2,6 +2,7 @@
   "birthday-balloons": {
     "birthday": true,
     "illustrations": [
+      "birthday-balloons-cover-v2",
       "pink-cake",
       "blue-cake",
       "yellow-cake",
@@ -13,6 +14,7 @@
   "birthday-midnight": {
     "birthday": true,
     "illustrations": [
+      "birthday-midnight-cover-v2",
       "pink-cake",
       "blue-cake",
       "yellow-cake",
@@ -24,6 +26,7 @@
   "kids-party": {
     "birthday": true,
     "illustrations": [
+      "kids-party-cover-v2",
       "balloons",
       "party-hat",
       "bear",
@@ -33,6 +36,7 @@
   "birthday-milestone": {
     "birthday": true,
     "illustrations": [
+      "birthday-milestone-cover-v2",
       "pink-cake",
       "blue-cake",
       "yellow-cake",
@@ -44,6 +48,7 @@
   "love": {
     "birthday": false,
     "illustrations": [
+      "love-cover-v2",
       "red-heart",
       "pink-heart",
       "purple-heart",
@@ -54,6 +59,7 @@
   "love-letters": {
     "birthday": false,
     "illustrations": [
+      "love-letters-cover-v2",
       "red-heart",
       "pink-heart",
       "purple-heart",
@@ -64,6 +70,7 @@
   "valentines-day": {
     "birthday": false,
     "illustrations": [
+      "valentines-day-cover-v2",
       "red-heart",
       "pink-heart",
       "purple-heart",
@@ -74,6 +81,7 @@
   "anniversary": {
     "birthday": false,
     "illustrations": [
+      "anniversary-cover-v2",
       "red-heart",
       "pink-heart",
       "purple-heart",
@@ -84,6 +92,7 @@
   "wedding": {
     "birthday": false,
     "illustrations": [
+      "wedding-cover-v2",
       "rings",
       "bouquet",
       "pink-heart"
@@ -92,6 +101,7 @@
   "engagement": {
     "birthday": false,
     "illustrations": [
+      "engagement-cover-v2",
       "rings",
       "bouquet",
       "pink-heart"
@@ -100,6 +110,7 @@
   "mothers-day": {
     "birthday": false,
     "illustrations": [
+      "mothers-day-cover-v2",
       "flower",
       "bouquet",
       "pink-heart"
@@ -108,6 +119,7 @@
   "fathers-day": {
     "birthday": false,
     "illustrations": [
+      "fathers-day-cover-v2",
       "tie",
       "mug",
       "trophy"
@@ -116,6 +128,7 @@
   "new-baby": {
     "birthday": false,
     "illustrations": [
+      "new-baby-cover-v2",
       "pram",
       "bottle",
       "stars",
@@ -125,6 +138,7 @@
   "thank-you": {
     "birthday": false,
     "illustrations": [
+      "thank-you-cover-v2",
       "bouquet",
       "ribbon",
       "stars"
@@ -133,6 +147,7 @@
   "congrats": {
     "birthday": false,
     "illustrations": [
+      "congrats-cover-v2",
       "trophy",
       "stars",
       "fireworks"
@@ -141,6 +156,7 @@
   "graduation": {
     "birthday": false,
     "illustrations": [
+      "graduation-cover-v2",
       "cap",
       "diploma",
       "stars"
@@ -149,6 +165,7 @@
   "good-luck": {
     "birthday": false,
     "illustrations": [
+      "good-luck-cover-v2",
       "stars",
       "clover"
     ]
@@ -156,6 +173,7 @@
   "get-well": {
     "birthday": false,
     "illustrations": [
+      "get-well-cover-v2",
       "bandage",
       "tea",
       "pink-heart"
@@ -164,6 +182,7 @@
   "thinking-of-you": {
     "birthday": false,
     "illustrations": [
+      "thinking-of-you-cover-v2",
       "cloud",
       "pink-heart",
       "envelope"
@@ -172,6 +191,7 @@
   "sorry": {
     "birthday": false,
     "illustrations": [
+      "sorry-cover-v2",
       "pink-heart",
       "envelope",
       "flower"
@@ -180,6 +200,7 @@
   "friendship": {
     "birthday": false,
     "illustrations": [
+      "friendship-cover-v2",
       "sun",
       "envelope",
       "bouquet"
@@ -188,6 +209,7 @@
   "christmas": {
     "birthday": false,
     "illustrations": [
+      "christmas-cover-v2",
       "tree",
       "present",
       "snowflake",
@@ -197,6 +219,7 @@
   "christmas-snow": {
     "birthday": false,
     "illustrations": [
+      "christmas-snow-cover-v2",
       "tree",
       "present",
       "snowflake",
@@ -206,6 +229,7 @@
   "new-year": {
     "birthday": false,
     "illustrations": [
+      "new-year-cover-v2",
       "fireworks",
       "stars",
       "present"
@@ -214,6 +238,7 @@
   "easter": {
     "birthday": false,
     "illustrations": [
+      "easter-cover-v2",
       "eggs",
       "flower",
       "sun"
@@ -222,6 +247,7 @@
   "just-because": {
     "birthday": false,
     "illustrations": [
+      "just-because-cover-v2",
       "sun",
       "envelope",
       "flower"
@@ -230,6 +256,7 @@
   "birthday-envelope": {
     "birthday": true,
     "illustrations": [
+      "birthday-envelope-cover-v2",
       "pink-cake",
       "blue-cake",
       "yellow-cake",
@@ -241,6 +268,7 @@
   "christmas-gift": {
     "birthday": false,
     "illustrations": [
+      "christmas-gift-cover-v2",
       "tree",
       "present",
       "snowflake",

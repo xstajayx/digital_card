@@ -2,11 +2,11 @@
 
 Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 public card designs across 28 occasions using the same legacy themes and catalogue definitions as the static storefront. The interior columns describe automatic decoration. Older links with an explicit inside-art choice continue to use that choice.
 
-| Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
-| --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 91 | 18 | 0 |
+| Total designs | Premium at baseline | Upgraded before follow-up | Upgraded in follow-up | Premium after this PR | Remaining | Blocked |
+| --- | --- | --- | --- | --- | --- | --- |
+| 121 | 12 | 4 | 105 | 121 | 0 | 0 |
 
-The follow-up introduces 87 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 18 remaining designs.
+The follow-up introduces 105 original gouache-style scenes designed for the individual cards. The artwork was generated during development and reviewed tile by tile before cropping and export. The illustrations remain local WebP assets and the catalogue lazily loads them. Every thumbnail was reviewed in the running catalogue for crop, title legibility and placement. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. All 121 catalogue covers have been reviewed.
 
 ## Cover additions
 
@@ -23,7 +23,15 @@ The old automatic renderer repeated its motif across the corners and rotated the
 
 The creator uses the selected design’s cover automatically. Photograph placement retains the cover and inside modes. Old links and drafts keep their stored choices. The card imprint reads **Silent Hello**, and flowers and Heart Jars use their existing recipient wordmark as the single mark.
 
-## Visual review
+## Full-catalogue follow-up review
+
+- [Featured catalogue, mobile](catalogue-review/catalogue-featured-375.webp) and [featured catalogue, desktop](catalogue-review/catalogue-featured-1440.webp)
+- [All 121 cards, page 1](catalogue-review/catalogue-all-1.webp), [page 2](catalogue-review/catalogue-all-2.webp), [page 3](catalogue-review/catalogue-all-3.webp), [page 4](catalogue-review/catalogue-all-4.webp), [page 5](catalogue-review/catalogue-all-5.webp), [page 6](catalogue-review/catalogue-all-6.webp)
+- [Representative open covers at mobile and desktop widths](catalogue-review/recipient-covers.webp)
+
+Captures use the live catalogue tiles and the real folded-card viewer in Chromium. Mobile and desktop review includes birthday, milestone, kids’ birthday, Christmas, Mother’s Day, Father’s Day, Easter, Valentine’s, anniversary, new baby, new home, sympathy, thinking of you, wedding, engagement, congratulations, graduation, thank you, friendship and humorous designs.
+
+## Earlier PR visual review
 
 - [New covers beside their original versions, with mobile examples](gift-art-review/covers.webp)
 - [Curated catalogue capture](gift-art-review/catalogue.webp)
@@ -86,18 +94,18 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `congrats` | You did it | congratulations | Upgraded in follow-up | — | celebrate | celebrate |
 | `congrats-toast` | You earned this moment | congratulations | Upgraded in follow-up | — | celebrate | Plain |
 | `happy-four-day-weekend` | Happy Four-Day Weekend | easter | Retain · premium | — | spring | slippers |
-| `easter` | Hello, spring | easter | Improve · shared library artwork | 2 | spring | spring |
-| `easter-meadow` | Spring in your step | easter | Improve · flat pack art | 2 | spring | spring |
-| `diamond-rays` | Diamond Rays | engagement | Improve · repeated outline frame | 2 | hearts | Plain |
-| `engagement-toast` | The loveliest yes | engagement | Improve · flat pack art | 2 | hearts | Plain |
-| `engagement` | The next chapter | engagement | Improve · shared library artwork | 2 | hearts | Plain |
-| `dad-tractor` | Outstanding in his field | fathers-day | Improve · flat pack art | 2 | botanical | Plain |
-| `fathers-day` | Simply the best | fathers-day | Improve · shared library artwork | 2 | botanical | Plain |
-| `dad-fishing` | The great catch | fathers-day | Improve · flat pack art | 2 | botanical | Plain |
-| `friendship-pets` | My favourite companion | friendship | Improve · flat pack art | 2 | botanical | Plain |
-| `friendship-coffee` | Our usual table | friendship | Improve · flat pack art | 2 | botanical | coffee |
-| `friendship` | You’re my sunshine | friendship | Improve · shared library artwork | 2 | botanical | Plain |
-| `well-tea` | A little comfort | get-well | Improve · flat pack art | 2 | botanical | coffee |
+| `easter` | Hello, spring | easter | Upgraded in follow-up | — | spring | spring |
+| `easter-meadow` | Spring in your step | easter | Upgraded in follow-up | — | spring | spring |
+| `diamond-rays` | Diamond Rays | engagement | Upgraded in follow-up | — | hearts | Plain |
+| `engagement-toast` | The loveliest yes | engagement | Upgraded in follow-up | — | hearts | Plain |
+| `engagement` | The next chapter | engagement | Upgraded in follow-up | — | hearts | Plain |
+| `dad-tractor` | Outstanding in his field | fathers-day | Upgraded in follow-up | — | botanical | Plain |
+| `fathers-day` | Simply the best | fathers-day | Upgraded in follow-up | — | botanical | Plain |
+| `dad-fishing` | The great catch | fathers-day | Upgraded in follow-up | — | botanical | Plain |
+| `friendship-pets` | My favourite companion | friendship | Upgraded in follow-up | — | botanical | Plain |
+| `friendship-coffee` | Our usual table | friendship | Upgraded in follow-up | — | botanical | coffee |
+| `friendship` | You’re my sunshine | friendship | Upgraded in follow-up | — | botanical | Plain |
+| `well-tea` | A little comfort | get-well | Upgraded in follow-up | — | botanical | coffee |
 | `citrus-blossom` | Citrus Blossom | get-well | Upgraded in follow-up | — | botanical | Plain |
 | `get-well` | Rest & little joys | get-well | Upgraded in follow-up | — | botanical | Plain |
 | `good-luck` | A little good fortune | good-luck | Upgraded in follow-up | — | botanical | Plain |
@@ -135,12 +143,12 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `home-keys` | The keys to lovely | new-home | Upgraded in follow-up | — | botanical | Plain |
 | `newyear-toast` | Here’s to what comes next | new-year | Upgraded in follow-up | — | celebrate | Plain |
 | `midnight-fireworks` | Midnight Fireworks | new-year | Upgraded in follow-up | — | celebrate | Plain |
-| `new-year` | Midnight magic | new-year | Improve · shared library artwork | 2 | celebrate | Plain |
-| `retirement-fishing` | Gone fishing | retirement | Improve · flat pack art | 2 | botanical | Plain |
-| `retirement-travel` | Out of office, into the world | retirement | Improve · flat pack art | 2 | botanical | Plain |
-| `retirement-garden` | Time to grow | retirement | Improve · flat pack art | 2 | botanical | Plain |
-| `sorry-letter` | A little note, a lot of heart | sorry | Improve · flat pack art | 2 | botanical | Plain |
-| `sorry` | From the heart | sorry | Improve · shared library artwork | 2 | botanical | Plain |
+| `new-year` | Midnight magic | new-year | Upgraded in follow-up | — | celebrate | Plain |
+| `retirement-fishing` | Gone fishing | retirement | Upgraded in follow-up | — | botanical | Plain |
+| `retirement-travel` | Out of office, into the world | retirement | Upgraded in follow-up | — | botanical | Plain |
+| `retirement-garden` | Time to grow | retirement | Upgraded in follow-up | — | botanical | Plain |
+| `sorry-letter` | A little note, a lot of heart | sorry | Upgraded in follow-up | — | botanical | Plain |
+| `sorry` | From the heart | sorry | Upgraded in follow-up | — | botanical | Plain |
 | `forget-me-not` | Forget Me Not | sympathy | Upgraded in this PR | — | botanical | quiet-stem |
 | `sympathy-dove` | Held in love | sympathy | Upgraded in follow-up | — | botanical | quiet-stem |
 | `sympathy-lilies` | Quietly beside you | sympathy | Upgraded in follow-up | — | botanical | quiet-stem |

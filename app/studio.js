@@ -1,4 +1,3 @@
-import { ILLUSTRATIONS } from "../engine/illustrations.js";
 import { designDefaults } from "../engine/catalogue.js";
 import { bindHostedCards } from "./hosted-cards.js";
 import { bindCreator } from "./creator.js";
@@ -33,7 +32,6 @@ async function init() {
       from: "",
       physicalConfig: { ...defaultPhysical(), coverName: "" },
       openingConfig: { ...defaultOpening(), tone: "theme" },
-      stickerId: ILLUSTRATIONS[theme.id]?.[0]?.id || "",
       fontId: theme.defaultFontId || "fredoka",
       ...designDefaults(theme),
     });
