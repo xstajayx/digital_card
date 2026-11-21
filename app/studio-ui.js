@@ -47,7 +47,6 @@ export function createUI({ state, preview }) {
     filter = "All",
     search = "",
     designKey = "",
-    stickerKey = "",
     revision = 0;
   const themes = state.get().themes;
   const occasions = [
@@ -113,6 +112,7 @@ export function createUI({ state, preview }) {
         copy[key] = theme.defaults[key];
     }
     const recommended = designDefaults(theme);
+    const coverArt = ILLUSTRATIONS[theme.id]?.[0]?.id || "";
     state.set({
       ...copy,
       theme,
@@ -121,7 +121,7 @@ export function createUI({ state, preview }) {
             physicalConfig: {
               ...current.physicalConfig,
               ...(recommended.physicalConfig || {}),
-              coverArt: recommended.stickerId || "",
+              coverArt,
               insideArt: "default",
               ...(current.fontChosen
                 ? {
@@ -135,7 +135,7 @@ export function createUI({ state, preview }) {
       ...(recommended.openingConfig && current.physicalConfig
         ? { openingConfig: recommended.openingConfig }
         : {}),
-      stickerId: recommended.stickerId || "",
+      stickerId: coverArt,
       paperOverride: "",
       inkOverride: "",
       fontId: current.fontChosen
@@ -247,42 +247,6 @@ export function createUI({ state, preview }) {
     }
     $("themeGallery").replaceChildren(fragment);
   }
-  function chooseIllustration(id) {
-    const s = state.get();
-    state.set({
-      stickerId: id,
-      ...(s.physicalConfig
-        ? { physicalConfig: { ...s.physicalConfig, coverArt: id || "none" } }
-        : {}),
-    });
-  }
-  function renderIllustrations(items) {
-    const fragment = document.createDocumentFragment();
-    const none = button("sticker-tile none-option");
-    none.dataset.sticker = "";
-    const icon = document.createElement("span");
-    icon.className = "none-icon";
-    icon.ariaHidden = "true";
-    icon.textContent = "∅";
-    none.append(icon, document.createTextNode("None"));
-    none.onclick = () => chooseIllustration("");
-    fragment.append(none);
-    for (const item of items) {
-      const node = button("sticker-tile");
-      node.dataset.sticker = item.id;
-      const image = document.createElement("img");
-      image.src = illustrationUrl(item);
-      image.alt = "";
-      image.width = 67;
-      image.height = 55;
-      const label = document.createElement("span");
-      label.textContent = item.label;
-      node.append(image, label);
-      node.onclick = () => chooseIllustration(item.id);
-      fragment.append(node);
-    }
-    $("stickerGallery").replaceChildren(fragment);
-  }
   palettes.forEach(([name, paper, ink]) => {
     const node = button("palette-preset");
     node.setAttribute("aria-label", `${name} colours`);
@@ -361,7 +325,6 @@ export function createUI({ state, preview }) {
       textSize: 18,
       paperOverride: "",
       inkOverride: "",
-      stickerId: "",
       birthdayNumberEnabled: false,
       birthdayNumber: "",
       giftEnabled: false,
@@ -379,33 +342,15 @@ export function createUI({ state, preview }) {
     $("rememberOccasionPrompt").hidden = true;
     $("occasionSavedStatus").textContent = "";
     document.querySelector(".transport-link")?.remove();
-    const theme = current.theme,
-      items = ILLUSTRATIONS[theme.id] || [];
+    const theme = current.theme;
     if (theme.occasionId !== designKey) {
       designKey = theme.occasionId;
       renderDesigns(current);
-    }
-    const nextStickers = JSON.stringify(items);
-    if (nextStickers !== stickerKey) {
-      stickerKey = nextStickers;
-      renderIllustrations(items);
     }
     if (changed.includes("theme")) {
       selection($("occasionGallery"), theme.occasionId, "occasion");
       selection($("themeGallery"), theme.id, "theme");
     }
-    selection(
-      $("stickerGallery"),
-      current.physicalConfig
-        ? current.physicalConfig.coverArt === "none"
-          ? ""
-          : current.physicalConfig.coverArt ||
-            current.stickerId ||
-            items[0]?.id ||
-            ""
-        : current.stickerId,
-      "sticker",
-    );
     // Do not assign unchanged values: preserve selection, caret and input composition.
     for (const [id, key] of Object.entries(fields))
       if (changed.includes(key) && $(id).value !== current[key])

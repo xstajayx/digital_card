@@ -247,7 +247,7 @@ test("art and template paths are allowlisted; invalid pack/art input never becom
 
 test("illustrated covers are additive and saved cards retain their original artwork IDs", async () => {
   const upgraded = CATALOGUE_THEMES.filter(theme => artPack(theme).artwork[0].cover);
-  assert.equal(upgraded.length, 6);
+  assert.equal(upgraded.length, 10);
   for (const theme of upgraded) {
     const fresh = designDefaults(theme);
     assert.equal(fresh.stickerId, `${theme.id}-illustrated`);

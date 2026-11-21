@@ -75,10 +75,10 @@ export function bindPhotoEditor(state, preview, onSaved = () => {}) {
     box.append(label);
     return input;
   }
-  const type = field("type", "Card type", "select", [
-    ["illustrated", "Traditional illustrated card"],
-    ["cover", "Photo cover card · local preview"],
-    ["memory", "Photo memory card · local preview"],
+  const type = field("type", "Photograph placement", "select", [
+    ["illustrated", "No photograph"],
+    ["cover", "On the cover"],
+    ["memory", "Inside the card"],
   ]);
   const controls = node("div", "photo-controls");
   box.append(controls);

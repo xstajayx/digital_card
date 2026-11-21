@@ -79,7 +79,6 @@ def choose(page, theme):
     page.locator(f'[data-occasion="{theme["occasionId"]}"]').click()
     page.locator(f'[data-theme="{theme["id"]}"]').click()
     step(page, 4)
-    page.locator(".none-option").click()
     step(page, 5)
     assert fit(page), f"Default message did not fit: {theme['id']}"
     expect(frame(page).locator("#themeStyles")).to_have_attribute("href", BASE + f'themes/{theme["id"]}/theme.css')
@@ -137,34 +136,13 @@ try:
             page.get_by_role("button", name="All", exact=True).click()
             step(page,5); assert fit(page); finish_animation(page); step(page,1)
             page.screenshot(path=str(ARTIFACTS / f"studio-occasions-{width}.png"), full_page=True)
-            # Every design through real editor controls, with and without artwork.
+            # Legacy renderer still displays the automatic design illustration.
             for theme in THEMES:
                 choose(page, theme)
-                without = geometry(page)
-                assert abs(without["height"] / without["width"] - 5 / 3) < 0.01
-                assert without["scroll"] <= 1, (theme["id"], width, without)
-                step(page, 4)
-                expect(page.locator("#fontSelect option")).to_have_count(6)
-                tiles = page.locator(".sticker-tile")
-                choices = range(1, tiles.count()) if width == 1440 else [1]
-                for index in choices:
-                    tiles.nth(index).click()
-                    step(page, 5)
-                    assert fit(page), f"Illustrated default failed: {theme['id']} / {index} / {width}"
-                    expect(frame(page).locator("#stickerImg")).to_be_visible()
-                    assert frame(page).locator("#stickerImg").evaluate("e => e.complete && e.naturalWidth > 0")
-                    finish_animation(page)
-                    art = geometry(page)
-                    assert art["centred"] < 1 and art["separation"] >= 11
-                    assert art["panel"] < without["panel"], "No illustration must free space for text"
-                    assert art["scroll"] <= 1
-                    if width == 1440 and index == 1 and theme["id"] in ["birthday-midnight", "love-letters", "christmas", "wedding"]:
-                        frame(page).locator("#cardRoot").screenshot(path=str(ARTIFACTS / f'design-{theme["id"]}.png'))
-                    step(page, 4)
-                page.locator(".none-option").click()
-                step(page, 5)
-                assert fit(page)
-            record(f"{width}x{height}: all 28 occasions / 28 legacy designs, fonts available, artwork loads, proportional layout and no overlap")
+                expect(page.locator("#stickerGallery")).to_have_count(0)
+                expect(frame(page).locator("#stickerImg")).to_be_visible()
+                expect(frame(page).locator("#stickerImg")).to_have_js_property("complete", True)
+            record(f"{width}x{height}: 28 legacy designs retain their automatic illustration")
 
             choose(page, THEMES[0])
             step(page, 3)
@@ -189,7 +167,7 @@ try:
             record(f"{width}x{height}: six loaded fonts affect headline/body/signature; Pacifico multiline, Unicode and paragraphs fit")
 
             # Neither gallery node identity nor animation count changes while typing.
-            page.evaluate("window.savedOccasion=document.querySelector('.occasion-tile');window.savedSticker=document.querySelector('.sticker-tile')")
+            page.evaluate("window.savedOccasion=document.querySelector('.occasion-tile');window.savedTheme=document.querySelector('.theme-tile')")
             before_replay = frame(page).locator("#cardRoot").get_attribute("data-replays")
             before_updates = int(frame(page).locator("#cardRoot").get_attribute("data-updates"))
             step(page, 3)
@@ -197,7 +175,7 @@ try:
             page.locator("#messageInput").press("End")
             page.locator("#messageInput").press_sequentially(" More joy!", delay=20)
             expect(page.locator("#messageInput")).to_be_focused()
-            assert page.evaluate("savedOccasion===document.querySelector('.occasion-tile') && savedSticker===document.querySelector('.sticker-tile')")
+            assert page.evaluate("savedOccasion===document.querySelector('.occasion-tile') && savedTheme===document.querySelector('.theme-tile')")
             step(page, 4)
             page.locator("#paperColorInput").fill("#edf5ff")
             page.locator("#inkColorInput").fill("#263449")
@@ -252,7 +230,7 @@ try:
             expect(page.locator("#fontSelect")).to_have_value("fredoka")
             expect(page.locator("#giftToggle")).not_to_be_checked()
             expect(page.locator("#textSize")).to_have_value("18")
-            expect(page.locator(".none-option")).to_have_attribute("aria-pressed", "true")
+            expect(page.locator("#stickerGallery")).to_have_count(0)
             step(page, 3)
             expect(page.locator("#toInput")).to_have_value("Maya")
             expect(page.locator("#fromInput")).to_have_value("With love, Alex")
@@ -266,7 +244,6 @@ try:
             font(page,"quicksand")
             page.locator("#textSize").select_option("16")
             page.locator("#paperColorInput").fill("#edf5ff"); page.locator("#inkColorInput").fill("#263449")
-            page.locator('[data-sticker="purple-cake"]').click()
             page.locator("#watermarkToggle").uncheck()
             page.locator("#giftToggle").check(); page.locator("#giftInput").fill("https://example.com/gift")
             step(page, 5)

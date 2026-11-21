@@ -1,6 +1,6 @@
 import { defaultPhysical, PAPERS } from "../engine/physical-schema.js";
+import { stationeryFor } from "../engine/stationery.js";
 import { defaultOpening } from "../engine/openings/config.js";
-import { ILLUSTRATIONS } from "../engine/illustrations.js";
 export function bindPhysicalPicker(state, preview) {
   const box = document.createElement("fieldset");
   box.className = "picker-section";
@@ -55,7 +55,6 @@ export function bindPhysicalPicker(state, preview) {
     "coverGreeting",
     "Front-cover greeting (blank uses the design greeting)",
   );
-  field("coverArt", "Front-cover artwork", []);
   const decoration = document.createElement("input");
   decoration.type = "checkbox";
   decoration.id = "insideDecoration";
@@ -150,22 +149,13 @@ export function bindPhysicalPicker(state, preview) {
     });
   };
   document.querySelector('[data-panel="4"] .extras').before(box);
-  let themeId = "";
   state.subscribe((s) => {
     toggle.checked = true;
     controls.hidden = !s.physicalConfig;
-    if (themeId !== s.theme.id) {
-      themeId = s.theme.id;
-      fields.coverArt.replaceChildren();
-      const choices = [
-        ["", "Selected illustration / design artwork"],
-        ["none", "No artwork"],
-        ...(ILLUSTRATIONS[s.theme.id] || []).map(({ id, label }) => [id, label]),
-      ];
-      for (const [value, label] of choices)
-        fields.coverArt.add(new Option(label, value));
-    }
-    decorationLabel.hidden = !s.physicalConfig;
+    const insideArt = s.physicalConfig?.insideArt;
+    const canDecorate = !!(insideArt && insideArt !== "default") ||
+      !!stationeryFor(s.theme.id, s.theme.catalogue).motif;
+    decorationLabel.hidden = !s.physicalConfig || !canDecorate;
     if (s.physicalConfig) {
       for (const [key, field] of Object.entries(fields))
         if (field.value !== s.physicalConfig[key])

@@ -82,6 +82,7 @@ async function init() {
     new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["data-physical-state", "data-opening-state"] });
     if (action) new MutationObserver(sync).observe(action, { childList: true });
     sync();
+    $("viewerWordmark").hidden = card.watermark;
     $("replayButton").onclick = () => { preview.play(); sync(); };
 
   } catch (error) {

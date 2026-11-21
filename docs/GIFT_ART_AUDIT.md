@@ -1,0 +1,160 @@
+# Catalogue and interior artwork audit
+
+Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 public card designs across 28 occasions using the same legacy themes and catalogue definitions as the static storefront. The interior columns describe automatic decoration. Older links with an explicit inside-art choice continue to use that choice.
+
+| Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
+| --- | --- | --- | --- | --- | --- |
+| 121 | 12 | 109 | 4 | 105 | 0 |
+
+The remaining work is original illustration and visual review. Existing assets and the local payload format support incremental replacements. Preserve the Cheeky & Clever and Little Joys covers. Start the follow-up with the high-visibility groups marked priority 1, then progress through the remaining occasions and reused art packs. A shared legacy illustration can stay in the payload allowlist even when newly created cards use a distinct scene.
+
+## Cover additions
+
+- **Tulip Market** uses a paper-wrapped market bouquet on a warm counter.
+- **Forget Me Not** uses a quiet botanical study with soft foliage and blue flowers.
+- **Snow Globe Train** uses a miniature train circling a snowy landscape.
+- **Interlocking Rings** uses layered gold rings and restrained engraving-inspired foliage.
+
+Each cover has a new explicit `-illustrated` artwork ID. Old IDs still point to their original assets. Empty historical cover fields retain their original fallback. No payload version or site hosting changes were necessary.
+
+## Interior and creator treatment
+
+The old automatic renderer repeated its motif across the corners and rotated the lower copy, including recognisable subjects. The revised renderer uses at most one upright corner and leaves the inside clean when there is no deliberate design match. Dense text suppresses the corner. The existing toggle stays available where a sketch can be shown. Coordinated seal colour and embossing still use the original occasion profiles.
+
+The creator uses the selected design’s cover automatically. Photograph placement retains the cover and inside modes. Old links and drafts keep their stored choices. The card imprint reads **Silent Hello**, and flowers and Heart Jars use their existing recipient wordmark as the single mark.
+
+## Visual review
+
+- [New covers beside their original versions, with mobile examples](gift-art-review/covers.webp)
+- [Curated catalogue capture](gift-art-review/catalogue.webp)
+- [Interior before and after](gift-art-review/interior-before-after.webp)
+- [Mobile inside pages and all six Cheeky & Clever sketches](gift-art-review/interiors.webp)
+- [Desktop spreads showing both pages](gift-art-review/interiors-desktop.webp)
+- [Creator controls](gift-art-review/creator.webp)
+- [Card maker’s mark](gift-art-review/interiors.webp), [Digital Flowers](gift-art-review/flower-recipient.webp), and [Heart Jar](gift-art-review/jar-recipient.webp)
+
+## Card-by-card inventory
+
+| Stable ID | Name | Occasion | Cover status | Follow-up priority | Previous automatic motif | Current automatic motif |
+| --- | --- | --- | --- | --- | --- | --- |
+| `anniversary-toast` | Here’s to us | anniversary | Improve · flat pack art | 2 | rose | Plain |
+| `anniversary-roses` | Love, in every letter | anniversary | Improve · flat pack art | 2 | rose | rose |
+| `paired-swans` | Paired Swans | anniversary | Improve · repeated outline frame | 2 | rose | Plain |
+| `anniversary` | Still, always you | anniversary | Improve · shared library artwork | 2 | rose | hearts |
+| `belated-coffee` | Better latte than never | belated-birthday | Improve · flat pack art | 2 | botanical | coffee |
+| `belated-snail` | Slow post, big love | belated-birthday | Improve · flat pack art | 2 | botanical | Plain |
+| `birthday-car` | A classic in every way | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-beer` | A pint of birthday cheer | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-books` | A very good chapter | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-coffee` | A whole latte love | birthday | Improve · flat pack art | 1 | birthday | coffee |
+| `birthday-gilded` | Botanical gold | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `champagne-stars` | Champagne Stars | birthday | Improve · repeated outline frame | 1 | birthday | Plain |
+| `dachshund-parade` | Dachshund Parade | birthday | Retain · premium | — | birthday | birthday |
+| `birthday-tractor` | Field of birthday dreams | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `kayak-morning` | Kayak Morning | birthday | Retain · premium | — | birthday | Plain |
+| `birthday-gin` | Let the good times be-gin | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-gaming` | Level up | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-baking` | Made with love | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-football` | Match-day wishes | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-midnight` | Midnight wishes | birthday | Improve · shared library artwork | 1 | birthday | Plain |
+| `birthday-balloons` | Pastel party | birthday | Improve · shared library artwork | 1 | birthday | birthday |
+| `birthday-pets` | Paws for celebration | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `peony-study` | Peony Study | birthday | Improve · repeated outline frame | 1 | birthday | Plain |
+| `record-day` | Record Day | birthday | Retain · premium | — | birthday | Plain |
+| `birthday-fishing` | Reel-y good birthday | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-envelope` | Sealed golden wishes | birthday | Improve · shared library artwork | 1 | birthday | birthday |
+| `birthday-garden` | The birthday garden | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `all-i-could-afford` | This Is All I Could Afford | birthday | Retain · premium | — | birthday | wallet |
+| `birthday-music` | Your kind of happy | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `christening-bloom` | Blessings in bloom | christening | Improve · flat pack art | 2 | botanical | Plain |
+| `christening-dove` | Wings of kindness | christening | Improve · flat pack art | 2 | botanical | Plain |
+| `christmas-robin` | A robin’s hello | christmas | Improve · flat pack art | 1 | mistletoe | mistletoe |
+| `christmas-snow` | A winter’s hush | christmas | Improve · shared library artwork | 1 | winter | winter |
+| `christmas-wreath` | At your door | christmas | Improve · flat pack art | 1 | winter | mistletoe |
+| `festive-orange` | Festive Orange | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `christmas` | Forest & wishes | christmas | Improve · shared library artwork | 1 | winter | winter |
+| `happy-25th-december` | Happy 25th December | christmas | Retain · premium | — | winter | christmas-calendar |
+| `christmas-village` | Home for the holidays | christmas | Improve · flat pack art | 1 | winter | Plain |
+| `midnight-fox` | Midnight Fox | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `christmas-gold` | Midwinter gold | christmas | Improve · flat pack art | 1 | winter | Plain |
+| `ribbon-bells` | Ribbon Bells | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `ski-lodge` | Ski Lodge | christmas | Improve · repeated outline frame | 1 | winter | Plain |
+| `snow-globe-train` | Snow Globe Train | christmas | Upgraded in this PR | — | winter | snow-globe |
+| `christmas-gift` | Wrapped forest wishes | christmas | Improve · shared library artwork | 1 | winter | Plain |
+| `congrats-ribbons` | Let the good news fly | congratulations | Improve · flat pack art | 2 | celebrate | celebrate |
+| `rising-sun` | Rising Sun | congratulations | Improve · repeated outline frame | 2 | celebrate | Plain |
+| `congrats` | You did it | congratulations | Improve · shared library artwork | 2 | celebrate | celebrate |
+| `congrats-toast` | You earned this moment | congratulations | Improve · flat pack art | 2 | celebrate | Plain |
+| `happy-four-day-weekend` | Happy Four-Day Weekend | easter | Retain · premium | — | spring | slippers |
+| `easter` | Hello, spring | easter | Improve · shared library artwork | 2 | spring | spring |
+| `easter-meadow` | Spring in your step | easter | Improve · flat pack art | 2 | spring | spring |
+| `diamond-rays` | Diamond Rays | engagement | Improve · repeated outline frame | 2 | hearts | Plain |
+| `engagement-toast` | The loveliest yes | engagement | Improve · flat pack art | 2 | hearts | Plain |
+| `engagement` | The next chapter | engagement | Improve · shared library artwork | 2 | hearts | Plain |
+| `dad-tractor` | Outstanding in his field | fathers-day | Improve · flat pack art | 2 | botanical | Plain |
+| `fathers-day` | Simply the best | fathers-day | Improve · shared library artwork | 2 | botanical | Plain |
+| `dad-fishing` | The great catch | fathers-day | Improve · flat pack art | 2 | botanical | Plain |
+| `friendship-pets` | My favourite companion | friendship | Improve · flat pack art | 2 | botanical | Plain |
+| `friendship-coffee` | Our usual table | friendship | Improve · flat pack art | 2 | botanical | coffee |
+| `friendship` | You’re my sunshine | friendship | Improve · shared library artwork | 2 | botanical | Plain |
+| `well-tea` | A little comfort | get-well | Improve · flat pack art | 2 | botanical | coffee |
+| `citrus-blossom` | Citrus Blossom | get-well | Improve · repeated outline frame | 2 | botanical | Plain |
+| `get-well` | Rest & little joys | get-well | Improve · shared library artwork | 2 | botanical | Plain |
+| `good-luck` | A little good fortune | good-luck | Improve · shared library artwork | 2 | botanical | Plain |
+| `luck-new-chapter` | Your next great chapter | good-luck | Improve · flat pack art | 2 | botanical | Plain |
+| `laurel-letter` | Laurel Letter | graduation | Improve · repeated outline frame | 2 | celebrate | Plain |
+| `graduation` | On to wonderful things | graduation | Improve · shared library artwork | 2 | celebrate | Plain |
+| `graduation-world` | The world is waiting | graduation | Improve · flat pack art | 2 | celebrate | Plain |
+| `justbecause-book` | A small good thing | just-because | Improve · flat pack art | 2 | botanical | Plain |
+| `just-because` | Little lovely things | just-because | Improve · shared library artwork | 2 | botanical | Plain |
+| `no-expense-spared` | No Expense Spared | just-because | Retain · premium | — | botanical | receipt |
+| `justbecause-sea` | Postcard of a feeling | just-because | Improve · flat pack art | 2 | botanical | Plain |
+| `saving-the-planet` | Saving the Planet | just-because | Retain · premium | — | botanical | hero-tree |
+| `youd-only-throw-it-away` | You'd Only Throw It Away | just-because | Retain · premium | — | botanical | recycling |
+| `kids-gamer` | Birthday player one | kids-birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `kids-party` | Little big party | kids-birthday | Improve · shared library artwork | 1 | birthday | birthday |
+| `kids-dinosaur` | Roar, it’s your day | kids-birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `rocket-post` | Rocket Post | kids-birthday | Retain · premium | — | birthday | Plain |
+| `love-rose-note` | A rose for your pocket | love | Improve · flat pack art | 2 | rose | rose |
+| `love` | Blushing hearts | love | Improve · shared library artwork | 2 | rose | hearts |
+| `love-letters` | Love letters | love | Improve · shared library artwork | 2 | rose | rose |
+| `love-bookish` | My favourite story | love | Improve · flat pack art | 2 | rose | Plain |
+| `birthday-milestone` | A golden chapter | milestone-birthday | Improve · shared library artwork | 1 | birthday | Plain |
+| `milestone-toast` | A toast to you | milestone-birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `milestone-candles` | Light up your next chapter | milestone-birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `mothers-day` | A garden of love | mothers-day | Improve · shared library artwork | 1 | botanical | Plain |
+| `mum-garden` | Love that keeps growing | mothers-day | Improve · flat pack art | 1 | botanical | Plain |
+| `mum-baking` | The sweetest kind of love | mothers-day | Improve · flat pack art | 1 | botanical | Plain |
+| `tulip-market` | Tulip Market | mothers-day | Upgraded in this PR | — | botanical | tulip |
+| `baby-nest` | A little more love | new-baby | Improve · flat pack art | 1 | botanical | Plain |
+| `new-baby` | Hello, little star | new-baby | Improve · shared library artwork | 1 | botanical | nursery |
+| `moon-cradle` | Moon Cradle | new-baby | Retain · premium | — | botanical | nursery |
+| `baby-moon` | Moonlight, little one | new-baby | Improve · flat pack art | 1 | botanical | nursery |
+| `home-cottage` | A little place called home | new-home | Improve · flat pack art | 1 | botanical | Plain |
+| `little-greenhouse` | Little Greenhouse | new-home | Retain · premium | — | botanical | Plain |
+| `home-keys` | The keys to lovely | new-home | Improve · flat pack art | 1 | botanical | Plain |
+| `newyear-toast` | Here’s to what comes next | new-year | Improve · flat pack art | 2 | celebrate | Plain |
+| `midnight-fireworks` | Midnight Fireworks | new-year | Improve · repeated outline frame | 2 | celebrate | Plain |
+| `new-year` | Midnight magic | new-year | Improve · shared library artwork | 2 | celebrate | Plain |
+| `retirement-fishing` | Gone fishing | retirement | Improve · flat pack art | 2 | botanical | Plain |
+| `retirement-travel` | Out of office, into the world | retirement | Improve · flat pack art | 2 | botanical | Plain |
+| `retirement-garden` | Time to grow | retirement | Improve · flat pack art | 2 | botanical | Plain |
+| `sorry-letter` | A little note, a lot of heart | sorry | Improve · flat pack art | 2 | botanical | Plain |
+| `sorry` | From the heart | sorry | Improve · shared library artwork | 2 | botanical | Plain |
+| `forget-me-not` | Forget Me Not | sympathy | Upgraded in this PR | — | botanical | quiet-stem |
+| `sympathy-dove` | Held in love | sympathy | Improve · flat pack art | 1 | botanical | quiet-stem |
+| `sympathy-lilies` | Quietly beside you | sympathy | Improve · flat pack art | 1 | botanical | quiet-stem |
+| `thank-you` | Kindness in bloom | thank-you | Improve · shared library artwork | 2 | botanical | Plain |
+| `thanks-peonies` | Kindness, in full bloom | thank-you | Improve · flat pack art | 2 | botanical | Plain |
+| `olive-branch` | Olive Branch | thank-you | Improve · repeated outline frame | 2 | botanical | Plain |
+| `thanks-coffee` | Thanks a latte | thank-you | Improve · flat pack art | 2 | botanical | coffee |
+| `thanks-gold` | You’re golden | thank-you | Improve · flat pack art | 2 | botanical | Plain |
+| `thinking-of-you` | A note of comfort | thinking-of-you | Improve · shared library artwork | 2 | botanical | Plain |
+| `thinking-coast` | Across the quiet miles | thinking-of-you | Improve · flat pack art | 2 | botanical | Plain |
+| `wildflower-post` | Wildflower Post | thinking-of-you | Improve · repeated outline frame | 2 | botanical | Plain |
+| `valentines-day` | Be my Valentine | valentines | Improve · shared library artwork | 2 | rose | hearts |
+| `valentine-roses` | Love in bloom | valentines | Improve · flat pack art | 2 | rose | rose |
+| `wedding-gold` | Golden promises | wedding | Improve · flat pack art | 2 | hearts | Plain |
+| `interlocking-rings` | Interlocking Rings | wedding | Upgraded in this PR | — | hearts | rings |
+| `wedding` | Together in bloom | wedding | Improve · shared library artwork | 2 | hearts | Plain |
+| `wedding-arch` | Under the blossom arch | wedding | Improve · flat pack art | 2 | hearts | Plain |

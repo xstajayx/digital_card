@@ -1,4 +1,4 @@
-"""Exercise the six upgraded covers and their original v5 artwork IDs."""
+"""Exercise the four upgraded covers and their original v5 artwork IDs."""
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,12 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = Path(os.environ.get("CARD_ARTIFACT_DIR", "/tmp/silent-hello-artifacts")) / "premium-artwork"
 ART.mkdir(parents=True, exist_ok=True)
 DESIGNS = {
-    "dachshund-parade": "Dachshund Parade",
-    "rocket-post": "Rocket Post",
-    "moon-cradle": "Moon Cradle",
-    "little-greenhouse": "Little Greenhouse",
-    "record-day": "Record Day",
-    "kayak-morning": "Kayak Morning",
+    "tulip-market": "Tulip Market",
+    "forget-me-not": "Forget Me Not",
+    "snow-globe-train": "Snow Globe Train",
+    "interlocking-rings": "Interlocking Rings",
 }
 
 
@@ -89,6 +87,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT.
                     cover.press("Enter")
                     expect(frame.locator("#cardRoot")).to_have_attribute("data-physical-state", "inside")
                     expect(frame.locator("#message")).to_have_text("A little joy for you!")
+                    expect(frame.locator("#watermark")).to_have_text("Silent Hello")
             if width == 1440:
                 page.goto(base + "cards.html")
                 expect(page.locator(".shop-card")).to_have_count(121)
@@ -104,6 +103,6 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT.
                 grid.screenshot(path=ART / "catalogue.png")
             assert not errors, errors
             context.close()
-            print(f"PASS {width}px: six catalogue previews, sender links, recipient folds and artwork", flush=True)
+            print(f"PASS {width}px: four catalogue previews, sender links, recipient folds and artwork", flush=True)
         browser.close()
     server.shutdown()

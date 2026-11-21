@@ -35,14 +35,9 @@ export function createPhysicalCard(root, card, onReveal) {
     "This card needs a little more room. Use Read comfortably below to read every word.",
   );
   right.append(tooLong);
-  const addCorners = (page) => ["top", "bottom"].map((edge) => {
-    const node = make("span", `stationery-corner stationery-${edge}`);
-    node.ariaHidden = "true";
-    page.append(node);
-    return node;
-  });
-  addCorners(left);
-  const rightCorners = addCorners(right);
+  const corner = make("span", "stationery-corner");
+  corner.ariaHidden = "true";
+  right.append(corner);
   const cover = make("button", "paper-cover");
   cover.type = "button";
   cover.setAttribute("aria-label", "Open folded card");
@@ -60,7 +55,6 @@ export function createPhysicalCard(root, card, onReveal) {
     title,
     art,
     name,
-    make("span", "paper-cover-brand", "Silent Hello"),
   );
   inside.append(insideArt);
   cover.append(front, inside);
@@ -391,7 +385,7 @@ export function createPhysicalCard(root, card, onReveal) {
       const decoration = cfg.insideDecoration === false ? "" : cfg.insideArt;
       const coordinated = decoration === "default";
       scene.dataset.motif = coordinated ? stationery.motif : "";
-      scene.style.setProperty("--stationery-art", coordinated ? `url("${stationery.motifUrl}")` : "none");
+      scene.style.setProperty("--stationery-art", coordinated && stationery.motifUrl ? `url("${stationery.motifUrl}")` : "none");
       scene.style.setProperty("--stationery-ink", stationery.wax);
       // Explicit illustration selections from older cards still resolve through the existing allowlist.
       artwork(leftArt, coordinated ? "" : decoration, true);
@@ -432,15 +426,13 @@ export function createPhysicalCard(root, card, onReveal) {
         const node = card.querySelector(selector);
         return node.textContent && node.getClientRects().length ? [node.getBoundingClientRect()] : [];
       });
-      for (const corner of rightCorners) {
-        corner.hidden = dense;
-        if (dense) continue;
-        const bounds = corner.getBoundingClientRect();
-        corner.hidden = areas.some((area) =>
-          bounds.top < area.bottom + 4 && bounds.bottom > area.top - 4 &&
-          bounds.left < area.right + 4 && bounds.right > area.left - 4,
-        );
-      }
+      corner.hidden = dense;
+      if (dense) return;
+      const bounds = corner.getBoundingClientRect();
+      corner.hidden = areas.some((area) =>
+        bounds.top < area.bottom + 4 && bounds.bottom > area.top - 4 &&
+        bounds.left < area.right + 4 && bounds.right > area.left - 4,
+      );
     },
     fitCover() {
       let size = 30;

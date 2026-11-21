@@ -154,14 +154,6 @@
   color: inherit;
   flex: 0 0 auto;
 }
-.paper-cover-brand {
-  font:
-    0.6rem/1.4 Nunito,
-    sans-serif;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  flex: 0 0 auto;
-}
 .is-open .paper-cover {
   transform: rotateY(-178deg);
   pointer-events: none;
@@ -485,6 +477,8 @@
   display: none;
   position: absolute;
   z-index: 1;
+  top: 6px;
+  right: 7px;
   width: min(38%, 86px);
   aspect-ratio: 6 / 5;
   background: var(--stationery-ink);
@@ -496,11 +490,7 @@
 @supports (mask-image: linear-gradient(black, transparent)) or (-webkit-mask-image: linear-gradient(black, transparent)) {
   .physical-scene[data-motif]:not([data-motif=""]) .stationery-corner:not([hidden]) { display: block; }
 }
-.stationery-top { top: 6px; right: 7px; }
-.stationery-bottom { bottom: 8px; left: 8px; transform: rotate(180deg); }
-.paper-left .stationery-corner { width: min(57%, 134px); opacity: .29; }
 [data-paper="lined"] .stationery-corner { opacity: .095; }
-.local-photo-card .paper-left .stationery-corner { visibility: hidden; }
 
 /* New illustrations opt in through the saved artwork ID. */
 .paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) {
@@ -528,12 +518,8 @@
   padding: 7% 5% 2%;
   font-size: clamp(17px, 5vw, 33px);
 }
-.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-name,
-.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-brand {
+.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-name {
   order: 3;
-}
-.paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-brand {
-  padding: 3%;
 }
 .paper-front-face:is([data-illustrated="launch"], [data-illustrated="landscape"]) .paper-cover-art {
   order: -1;

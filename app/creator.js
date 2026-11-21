@@ -13,8 +13,7 @@ export function bindCreator(state, preview) {
   const style = document.querySelector('[data-panel="4"]');
   const more = style.querySelector(".extras-content");
   const cover = $("coverFields");
-  for (const id of ["physical-coverGreeting", "physical-coverArt"])
-    cover.append($(id).closest("label"));
+  cover.append($("physical-coverGreeting").closest("label"));
   $("physical-coverGreeting")
     .closest("label")
     .querySelector("span").textContent = "Front-cover greeting";
@@ -68,15 +67,11 @@ export function bindCreator(state, preview) {
   $("physicalToggle").closest("label").hidden = true;
   $("physicalToggle").tabIndex = -1;
   physicalBox.querySelector("p.helper")?.remove();
-  // Keep legacy opening and artwork controls wired for old drafts, but hide them
-  // from the standard creator until their mobile presentation is redesigned.
+  // Historical opening settings remain wired for restored drafts.
   openingBox.hidden = true;
   openingBox.setAttribute("aria-hidden", "true");
   openingBox.querySelectorAll("select, input, button").forEach((control) => { control.tabIndex = -1; });
-  const coverArtField = $("physical-coverArt").closest("label");
-  coverArtField.hidden = true;
-  coverArtField.setAttribute("aria-hidden", "true");
-  $("physical-coverArt").tabIndex = -1;
+
   more.append(
     $("textSize").closest("label"),
     style.querySelector(".colour-fields"),
@@ -155,8 +150,7 @@ export function bindCreator(state, preview) {
   state.subscribe((s) => {
     const cfg = s.physicalConfig;
     legacyNotice.hidden = !!cfg;
-    for (const id of ["physical-coverGreeting", "physical-coverArt"])
-      $(id).disabled = !cfg;
+    $("physical-coverGreeting").disabled = !cfg;
     const enabled =
       cfg &&
       (editingName ??

@@ -407,7 +407,6 @@ p {
   margin: 0 auto 6px;
 }
 .occasion-tile:hover,
-.sticker-tile:hover,
 .theme-tile:hover {
   border-color: #829a83;
 }
@@ -682,42 +681,6 @@ legend {
   color: #973e2e;
   font-size: 0.8rem;
   line-height: 1.6;
-}
-.sticker-grid {
-  clear: both;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 14px;
-}
-.sticker-tile {
-  border: 1px solid var(--border);
-  background: white;
-  border-radius: 7px;
-  padding: 9px 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 98px;
-  font-size: 0.65rem;
-  line-height: 1.35;
-}
-.sticker-tile img {
-  width: 67px;
-  height: 55px;
-  object-fit: contain;
-}
-.none-icon {
-  font-size: 1.8rem;
-  line-height: 55px;
-  color: #7d897b;
-}
-.sticker-tile[aria-pressed="true"] {
-  border-color: var(--green);
-  box-shadow: inset 0 0 0 1px var(--green);
-  background: #f4f6ef;
 }
 .extras {
   border-block: 1px solid var(--border);
@@ -1298,7 +1261,6 @@ iframe {
 }
 @media (forced-colors: active) {
   .occasion-tile[aria-pressed="true"],
-  .sticker-tile[aria-pressed="true"],
   .theme-tile[aria-pressed="true"] {
     outline: 2px solid Highlight;
   }

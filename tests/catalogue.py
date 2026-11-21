@@ -76,7 +76,7 @@ try:
    f=page.frame_locator('#cardPreview')
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true')
    expect(f.locator('.paper-cover-art')).to_have_attribute('src',BASE+'stickers/packs/fishing-lake.svg')
-   expect(page.locator('#physical-coverArt')).to_have_value('fishing-lake')
+   expect(page.locator('#physical-coverArt, #stickerGallery')).to_have_count(0)
    expect(f.locator('.paper-cover-name')).to_have_text('')
    # Rapid design changes: last choice owns artwork, envelope, font and palette.
    page.locator('.steps [data-step="1"]').click()

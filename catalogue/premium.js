@@ -52,6 +52,10 @@ const cards = [
 const styles = ["gold", "floral", "playful", "heritage"];
 // New artwork IDs are explicit in saved cards. Keep the original choices for older links.
 const illustratedCovers = {
+  "tulip-market": ["#f2deba", "#69433b", "home"],
+  "forget-me-not": ["#e6e8df", "#374a43", "lullaby"],
+  "snow-globe-train": ["#263e50", "#fff5d9", "landscape"],
+  "interlocking-rings": ["#334941", "#fff2cf", "home"],
   "dachshund-parade": ["#ffddba", "#642f31", "playful"],
   "rocket-post": ["#182f58", "#fff3cb", "launch"],
   "moon-cradle": ["#dcd6e7", "#4e3753", "lullaby"],
