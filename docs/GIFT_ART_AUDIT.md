@@ -4,9 +4,9 @@ Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 publ
 
 | Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
 | --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 22 | 87 | 0 |
+| 121 | 12 | 109 | 37 | 72 | 0 |
 
-The follow-up introduces 18 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 87 remaining designs.
+The follow-up introduces 33 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 72 remaining designs.
 
 ## Cover additions
 
@@ -37,12 +37,12 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 
 | Stable ID | Name | Occasion | Cover status | Follow-up priority | Previous automatic motif | Current automatic motif |
 | --- | --- | --- | --- | --- | --- | --- |
-| `anniversary-toast` | Here’s to us | anniversary | Improve · flat pack art | 2 | rose | Plain |
-| `anniversary-roses` | Love, in every letter | anniversary | Improve · flat pack art | 2 | rose | rose |
-| `paired-swans` | Paired Swans | anniversary | Improve · repeated outline frame | 2 | rose | Plain |
-| `anniversary` | Still, always you | anniversary | Improve · shared library artwork | 2 | rose | hearts |
-| `belated-coffee` | Better latte than never | belated-birthday | Improve · flat pack art | 2 | botanical | coffee |
-| `belated-snail` | Slow post, big love | belated-birthday | Improve · flat pack art | 2 | botanical | Plain |
+| `anniversary-toast` | Here’s to us | anniversary | Upgraded in follow-up | — | rose | Plain |
+| `anniversary-roses` | Love, in every letter | anniversary | Upgraded in follow-up | — | rose | rose |
+| `paired-swans` | Paired Swans | anniversary | Upgraded in follow-up | — | rose | Plain |
+| `anniversary` | Still, always you | anniversary | Upgraded in follow-up | — | rose | hearts |
+| `belated-coffee` | Better latte than never | belated-birthday | Upgraded in follow-up | — | botanical | coffee |
+| `belated-snail` | Slow post, big love | belated-birthday | Upgraded in follow-up | — | botanical | Plain |
 | `birthday-car` | A classic in every way | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `birthday-beer` | A pint of birthday cheer | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `birthday-books` | A very good chapter | birthday | Upgraded in follow-up | — | birthday | Plain |
@@ -148,13 +148,13 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `thanks-peonies` | Kindness, in full bloom | thank-you | Improve · flat pack art | 2 | botanical | Plain |
 | `olive-branch` | Olive Branch | thank-you | Improve · repeated outline frame | 2 | botanical | Plain |
 | `thanks-coffee` | Thanks a latte | thank-you | Improve · flat pack art | 2 | botanical | coffee |
-| `thanks-gold` | You’re golden | thank-you | Improve · flat pack art | 2 | botanical | Plain |
-| `thinking-of-you` | A note of comfort | thinking-of-you | Improve · shared library artwork | 2 | botanical | Plain |
-| `thinking-coast` | Across the quiet miles | thinking-of-you | Improve · flat pack art | 2 | botanical | Plain |
-| `wildflower-post` | Wildflower Post | thinking-of-you | Improve · repeated outline frame | 2 | botanical | Plain |
-| `valentines-day` | Be my Valentine | valentines | Improve · shared library artwork | 2 | rose | hearts |
-| `valentine-roses` | Love in bloom | valentines | Improve · flat pack art | 2 | rose | rose |
-| `wedding-gold` | Golden promises | wedding | Improve · flat pack art | 2 | hearts | Plain |
+| `thanks-gold` | You’re golden | thank-you | Upgraded in follow-up | — | botanical | Plain |
+| `thinking-of-you` | A note of comfort | thinking-of-you | Upgraded in follow-up | — | botanical | Plain |
+| `thinking-coast` | Across the quiet miles | thinking-of-you | Upgraded in follow-up | — | botanical | Plain |
+| `wildflower-post` | Wildflower Post | thinking-of-you | Upgraded in follow-up | — | botanical | Plain |
+| `valentines-day` | Be my Valentine | valentines | Upgraded in follow-up | — | rose | hearts |
+| `valentine-roses` | Love in bloom | valentines | Upgraded in follow-up | — | rose | rose |
+| `wedding-gold` | Golden promises | wedding | Upgraded in follow-up | — | hearts | Plain |
 | `interlocking-rings` | Interlocking Rings | wedding | Upgraded in this PR | — | hearts | rings |
-| `wedding` | Together in bloom | wedding | Improve · shared library artwork | 2 | hearts | Plain |
-| `wedding-arch` | Under the blossom arch | wedding | Improve · flat pack art | 2 | hearts | Plain |
+| `wedding` | Together in bloom | wedding | Upgraded in follow-up | — | hearts | Plain |
+| `wedding-arch` | Under the blossom arch | wedding | Upgraded in follow-up | — | hearts | Plain |
