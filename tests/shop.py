@@ -18,16 +18,16 @@ try:
   for width,height in [(360,800),(390,844),(768,1024),(1440,900)]:
    context=b.new_context(viewport={'width':width,'height':height});errors=[]
    context.on('page',lambda pg:pg.on('pageerror',lambda e:errors.append(str(e))))
-   pg=context.new_page();pg.goto(base+"cards.html");expect(pg.locator('.shop-card')).to_have_count(121)
+   pg=context.new_page();pg.goto(base+"cards.html");expect(pg.locator('.shop-card')).to_have_count(127)
    expect(pg.locator('.shop-card:visible')).to_have_count(12)
    first_page=pg.locator('.shop-card:visible').evaluate_all('cards=>cards.map(card=>card.dataset.id)')
    expect(pg.locator('#previousCards')).to_be_disabled()
    pg.locator('#nextCards').click()
-   expect(pg.locator('#catalogueStatus')).to_have_text('Showing 13–24 of 121 cards')
+   expect(pg.locator('#catalogueStatus')).to_have_text('Showing 13–24 of 127 cards')
    assert not set(first_page).intersection(pg.locator('.shop-card:visible').evaluate_all('cards=>cards.map(card=>card.dataset.id)'))
    expect(pg.locator('#catalogueResults')).to_be_focused()
    pg.locator('#previousCards').click()
-   expect(pg.locator('#catalogueStatus')).to_have_text('Showing 1–12 of 121 cards')
+   expect(pg.locator('#catalogueStatus')).to_have_text('Showing 1–12 of 127 cards')
    pg.locator('.shop-card:visible img').evaluate_all("images=>images.forEach(i=>i.loading='eager')");pg.wait_for_function("[...document.querySelectorAll('.shop-card:not([hidden]) img')].every(i=>i.complete&&i.naturalWidth>0)")
    pg.locator('#search').fill('birthday');assert pg.locator('.shop-card:visible').count()>=4
    pg.locator('#filters').evaluate('e=>e.reset()');expect(pg.locator('.shop-card:visible')).to_have_count(12)

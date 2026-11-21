@@ -47,7 +47,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT.
             page.on("pageerror", lambda error: errors.append(str(error)))
             for design, name in DESIGNS.items():
                 page.goto(base + "cards.html")
-                expect(page.locator(".shop-card")).to_have_count(121)
+                expect(page.locator(".shop-card")).to_have_count(127)
                 page.locator("#search").fill(name)
                 expect(page.locator("#catalogueStatus")).to_have_text("Showing 1–1 of 1 cards")
                 tile = page.locator(f'.shop-card[data-id="{design}"]')
@@ -90,7 +90,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT.
                     expect(frame.locator("#watermark")).to_have_text("Silent Hello")
             if width == 1440:
                 page.goto(base + "cards.html")
-                expect(page.locator(".shop-card")).to_have_count(121)
+                expect(page.locator(".shop-card")).to_have_count(127)
                 grid = page.locator("#cardGrid")
                 # Keep application-rendered tiles and their original order in a curated contact sheet.
                 grid.evaluate("""(grid, ids) => {

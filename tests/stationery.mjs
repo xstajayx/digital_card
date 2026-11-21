@@ -64,10 +64,10 @@ test("old artwork preferences and every paper remain compatible with compact v5 
   assert.throws(() => validatePhysical({ ...old, insideDecoration: "false" }, "birthday-balloons"));
 });
 
-test("all 121 public designs use distinct, local and upright interior sketches", () => {
+test("all 127 public designs use distinct, local and upright interior sketches", () => {
   const legacy = JSON.parse(readFileSync(new URL("../themes/themes.json", import.meta.url)));
   const ids = [...legacy, ...CATALOGUE_THEMES.map(({ id }) => id)];
-  assert.equal(ids.length, 121);
+  assert.equal(ids.length, 127);
   const urls = new Set();
   const drawings = new Set();
   for (const id of ids) {
