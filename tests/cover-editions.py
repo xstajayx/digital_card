@@ -48,7 +48,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT.paren
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto(base + "cards.html")
-            expect(page.locator(".shop-card")).to_have_count(121)
+            expect(page.locator(".shop-card")).to_have_count(127)
             check_width(page)
             if width in [375, 1440]:
                 captured = page.evaluate("""async () => {
@@ -63,7 +63,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT.paren
                     }));
                     return entries.map(node => node.dataset.id);
                 }""")
-                assert len(captured) == 121 and len(set(captured)) == 121
+                assert len(captured) == 127 and len(set(captured)) == 127
                 grid = page.locator("#cardGrid")
                 for start in range(0, len(captured), 24) if width == 1440 else []:
                     grid.evaluate("""(grid, ids) => {
@@ -81,7 +81,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT.paren
 
             for design in ["birthday-gaming", "new-baby", "christmas-robin"]:
                 page.goto(base + "cards.html")
-                expect(page.locator(".shop-card")).to_have_count(121)
+                expect(page.locator(".shop-card")).to_have_count(127)
                 tile = page.locator(f'.shop-card[data-id="{design}"]')
                 name = tile.locator("h3").text_content()
                 page.locator("#search").fill(name)

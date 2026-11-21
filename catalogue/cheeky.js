@@ -1,3 +1,5 @@
+import { CHRISTMAS_CARDS } from "./cheeky-christmas.js";
+
 export const CHEEKY_COLLECTION = {
   id: "cheeky-clever",
   name: "Cheeky & Clever",
@@ -5,6 +7,7 @@ export const CHEEKY_COLLECTION = {
 };
 
 const cards = [
+  ...CHRISTMAS_CARDS,
   {
     id: "all-i-could-afford",
     occasionId: "birthday",
@@ -67,16 +70,17 @@ const cards = [
   },
 ];
 
-export const CHEEKY_DESIGNS = cards.map(({ id, occasionId, name, cover, message }) => ({
+export const CHEEKY_DESIGNS = cards.map(({ id, occasionId, name, cover, message, stationery }) => ({
   id, occasionId, name, greeting: cover, coverGreeting: cover, message, packId: id,
   collection: CHEEKY_COLLECTION.id,
+  ...(stationery ? { stationery } : {}),
   subtitle: CHEEKY_COLLECTION.name,
   relationships: ["friend", "family", "dad", "brother", "colleague"],
   recipientTypes: ["teen", "adult"],
   tones: ["funny", "playful"],
 }));
 
-export const CHEEKY_PACKS = Object.fromEntries(cards.map(({ id, art, colors, font }) => {
+export const CHEEKY_PACKS = Object.fromEntries(cards.map(({ id, art, colors, font, layout }) => {
   const [paper, ink, accent, accent2, gold] = colors;
   return [id, {
     id,
@@ -85,7 +89,9 @@ export const CHEEKY_PACKS = Object.fromEntries(cards.map(({ id, art, colors, fon
     palette: { paper, ink, accent, accent2, gold },
     fonts: [font],
     artwork: [
-      { id, label: art, asset: `packs/${id}.svg` },
+      layout
+        ? { id, label: art, asset: `covers/${id}.webp`, cover: { paper, ink, layout } }
+        : { id, label: art, asset: `packs/${id}.svg` },
       { id: "envelope", label: "Envelope", asset: "library/envelope.svg" },
     ],
     envelope: { type: "envelope", tone: "theme", wrap: "plain", seal: true, effect: "fade" },

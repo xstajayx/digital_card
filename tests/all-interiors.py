@@ -82,7 +82,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
                     return [theme.id, stationery.motif, stationery.motifUrl];
                 }));
             }""")
-            assert len(designs) == 121
+            assert len(designs) == 127
             for number, (design, motif, source) in enumerate(designs, start=1):
                 sender.goto(base + f"studio.html?design={design}", wait_until="domcontentloaded")
                 expect(sender.locator("#studio")).to_have_attribute("data-step", "2")
@@ -136,9 +136,9 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=ROOT)) as 
                 assert DENSE in recipient.locator("#fullMessageText").text_content()
                 assert recipient.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
                 if number % 20 == 0:
-                    print(f"PASS {width}px {number}/121 designs", flush=True)
+                    print(f"PASS {width}px {number}/127 designs", flush=True)
             assert not errors, errors
-            print(f"PASS {width}px: all 121 designs, real creator toggle, viewer parity, short ivory and dense lined messages", flush=True)
+            print(f"PASS {width}px: all 127 designs, real creator toggle, viewer parity, short ivory and dense lined messages", flush=True)
             context.close()
         browser.close()
     server.shutdown()

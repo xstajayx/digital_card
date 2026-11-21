@@ -31,9 +31,9 @@ const ids = JSON.parse(read("themes/themes.json"));
 const legacy = ids.map((id) => JSON.parse(read(`themes/${id}/theme.json`)));
 const themes = [...legacy, ...CATALOGUE_THEMES];
 
-test("121 unique designs, 28 occasions, all original IDs and all requested categories", () => {
-  assert.equal(themes.length, 121);
-  assert.equal(new Set(themes.map((t) => t.id)).size, 121);
+test("127 unique designs, 28 occasions, all original IDs and all requested categories", () => {
+  assert.equal(themes.length, 127);
+  assert.equal(new Set(themes.map((t) => t.id)).size, 127);
   assert.equal(new Set(themes.map((t) => t.occasionId)).size, 28);
   for (const id of ids) assert.ok(themes.find((t) => t.id === id));
   for (const id of [
@@ -72,8 +72,8 @@ test("121 unique designs, 28 occasions, all original IDs and all requested categ
     );
   }
 });
-test("69 packs and 67 original scenes: small original SVGs, local allowlists, accurate metadata", () => {
-  assert.equal(Object.keys(ART_PACKS).length, 69);
+test("75 packs and 73 original scenes: small original assets, local allowlists, accurate metadata", () => {
+  assert.equal(Object.keys(ART_PACKS).length, 75);
   const scenes = new Set();
   for (const pack of Object.values(ART_PACKS)) {
     assert.ok(pack.artwork.length >= 2);
@@ -88,7 +88,15 @@ test("69 packs and 67 original scenes: small original SVGs, local allowlists, ac
     for (const item of pack.artwork) {
       assert.match(item.id, /^[a-z0-9-]+$/);
       assert.doesNotMatch(item.label, /[·#]\s*\d/);
-      const text = readFileSync(new URL(illustrationUrl(item)), "utf8");
+      const file = readFileSync(new URL(illustrationUrl(item)));
+      if (item.asset.endsWith(".webp")) {
+        assert.ok(item.cover, item.id);
+        assert.ok(file.length < 140_000, item.id);
+        assert.equal(file.toString("ascii", 8, 12), "WEBP");
+        scenes.add(item.asset);
+        continue;
+      }
+      const text = file.toString("utf8");
       assert.ok(Buffer.byteLength(text) < 7000);
       assert.match(text, item.cover ? /viewBox="0 0 320 300"/ : /viewBox="0 0 200 180"/);
       assert.doesNotMatch(
@@ -98,7 +106,7 @@ test("69 packs and 67 original scenes: small original SVGs, local allowlists, ac
       if (item.asset.startsWith("packs/")) scenes.add(item.asset);
     }
   }
-  assert.equal(scenes.size, 67);
+  assert.equal(scenes.size, 73);
 });
 test("curated metadata enables style, relationship, recipient, interest and tone browsing", () => {
   for (const theme of CATALOGUE_THEMES) {
@@ -248,7 +256,7 @@ test("art and template paths are allowlisted; invalid pack/art input never becom
 });
 
 test("illustrated covers are additive and saved cards retain their original artwork IDs", async () => {
-  const upgraded = CATALOGUE_THEMES.filter(theme => artPack(theme).artwork[0].cover);
+  const upgraded = CATALOGUE_THEMES.filter(theme => artPack(theme).artwork[0].cover && artPack(theme).artwork[0].asset.endsWith(".svg"));
   assert.equal(upgraded.length, 10);
   for (const theme of upgraded) {
     const fresh = designDefaults(theme);

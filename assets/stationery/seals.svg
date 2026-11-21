@@ -6,4 +6,6 @@
   <symbol id="flower" viewBox="0 0 24 24"><path d="M12 7c-5-8-11-2-5 3-9-1-7 7 1 6-3 8 5 8 6 1 7 5 11-2 4-5 7-5 0-10-4-4Z"/><circle cx="12.5" cy="12" r="2.4"/></symbol>
   <symbol id="rose" viewBox="0 0 24 24"><path d="M12 19c-8 0-10-8-7-11 0-5 7-6 9-3 5-1 8 5 5 8 0 4-4 6-7 6Zm-5-7c0-4 6-5 8-3s0 5-3 5-4-4 0-4m0 9v3m0-2 4-2"/></symbol>
   <symbol id="laurel" viewBox="0 0 24 24"><path d="M12 21C5 17 3 12 5 5m7 16c7-4 9-9 7-16M5 11 2 8m4 7-4-1m5-1 1-4m11 2 3-3m-4 7 4-1m-5-1-1-4"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2m-4-10v1m0 14v1M4 12h1m14 0h1"/></symbol>
+  <symbol id="wave" viewBox="0 0 24 24"><path d="M3 15c4 0 6-2 8-6 2-4 6-4 8-1-4 0-5 4-1 5 1 0 2 0 3-1M3 19c3 2 5 2 9 0 4-2 6-2 9 0"/></symbol>
 </svg>

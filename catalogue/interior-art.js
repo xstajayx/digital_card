@@ -1,5 +1,11 @@
 // The keys are stable card IDs. Each value is a local, upright interior sketch.
 export const INTERIOR_MOTIFS = {
+  "christmas-through-time": "interiors/christmas-through-time",
+  "operation-mince-pie": "interiors/operation-mince-pie",
+  "christmas-beyond-stars": "interiors/christmas-beyond-stars",
+  "santa-3000": "interiors/santa-3000",
+  "turbo-christmas": "interiors/turbo-christmas",
+  "something-in-snow": "interiors/something-in-snow",
   "all-i-could-afford": "wallet",
   "anniversary": "interiors/anniversary",
   "anniversary-roses": "interiors/anniversary-roses",

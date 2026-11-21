@@ -35,7 +35,7 @@ try:
     page.on('response',lambda r:errors.append(f'HTTP {r.status}: {r.url}') if r.status>=400 else None)
    context.on('page',observe)
    page=context.new_page();page.goto(BASE+"cards.html")
-   expect(page.locator('.shop-card')).to_have_count(121)
+   expect(page.locator('.shop-card')).to_have_count(127)
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
    page.locator('.shop-card:not([hidden]) img').evaluate_all("items=>items.forEach(i=>i.loading='eager')")
    page.wait_for_function("[...document.querySelectorAll('.shop-card:not([hidden]) img')].every(i=>i.complete&&i.naturalWidth)")
@@ -44,7 +44,7 @@ try:
     page.locator('#filters').evaluate('e=>e.reset()')
     page.locator('#'+id).select_option(value)
     expect(page.locator('.shop-card:visible').first).to_be_visible()
-    assert page.locator('.shop-card:visible').count()<121
+    assert page.locator('.shop-card:visible').count()<127
    page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(12)
    page.locator('#search').fill('no such design xxxxx');expect(page.locator('#catalogueStatus')).to_contain_text('No matching')
    page.locator('#filters').evaluate('e=>e.reset()');expect(page.locator('.shop-card:visible')).to_have_count(12)
@@ -114,14 +114,14 @@ try:
      const img=w.document.querySelector('.paper-cover-art');await img.decode();
      if(w.document.querySelector('.paper-cover-name').textContent)throw Error('Cover name leak');
     }return themes.length;
-   }''');assert count==93
+   }''');assert count==99
    # Milestone entry applies default pack art and prominent ordinal without a name.
    page.goto(BASE+'studio.html?design=milestone-candles');expect(page.locator('.occasion-tile')).to_have_count(28)
    page.locator('#birthdayNumberInput').fill('40');f=page.frame_locator('#cardPreview')
    expect(f.locator('.paper-cover-title')).to_have_text('Happy 40th Birthday!')
    assert not errors,errors
    assert not external,external
-   print(f'PASS {width}x{height}: 121 thumbnails, filters, folded preview, creator defaults, rapid design changes, static v5 recipient journey, all 93 catalogue covers/fonts/assets fit, milestone; zero external/backend requests or console errors',flush=True)
+   print(f'PASS {width}x{height}: 127 thumbnails, filters, folded preview, creator defaults, rapid design changes, static v5 recipient journey, all 99 catalogue covers/fonts/assets fit, milestone; zero external/backend requests or console errors',flush=True)
    context.close()
   browser.close()
 finally:server.shutdown();server.server_close()
