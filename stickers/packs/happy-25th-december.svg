@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <title>A matter-of-fact December calendar with the twenty-fifth circled</title>
+  <defs>
+    <linearGradient id="sheet" x2="1" y2="1"><stop stop-color="#fff8e8"/><stop offset="1" stop-color="#e9d5bf"/></linearGradient>
+  </defs>
+  <path d="M38 144Q107 128 159 144L176 153Q100 167 28 154Z" fill="#855e59" opacity=".17"/>
+  <g transform="rotate(-5 98 90)">
+    <path d="M51 39H150L163 148H42Z" fill="#a88a77" stroke="#765a55" stroke-width="2"/>
+    <path d="M36 42Q36 36 43 36H147Q154 36 154 42V143H36Z" fill="url(#sheet)" stroke="#80645e" stroke-width="2"/>
+    <path d="M36 43Q36 36 43 36H147Q154 36 154 43V66H36Z" fill="#6a514f"/>
+    <path d="M55 42V32q0-6 5-6t5 6v10m58 0V32q0-6 5-6t5 6v10" fill="none" stroke="#cba587" stroke-width="3"/>
+    <text x="95" y="59" text-anchor="middle" letter-spacing="2" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#fff3d8">DECEMBER</text>
+    <path d="M45 84h100m-100 14h100m-100 14h100m-100 14h100M60 72v65m14-65v65m14-65v65m14-65v65m14-65v65m14-65v65" fill="none" stroke="#b7a18f" opacity=".72"/>
+    <g fill="#5c4b4a" font-family="system-ui,sans-serif" font-size="6" text-anchor="middle">
+      <text x="81" y="94">16</text><text x="95" y="94">17</text><text x="109" y="94">18</text><text x="123" y="94">19</text>
+      <text x="67" y="108">22</text><text x="81" y="108">23</text><text x="95" y="108">24</text><text x="109" y="108" font-size="8" font-weight="800">25</text><text x="123" y="108">26</text><text x="137" y="108">27</text>
+      <text x="67" y="122">29</text><text x="81" y="122">30</text><text x="95" y="122">31</text>
+    </g>
+    <path d="M100 99q12-7 18 0 5 9-4 13-11 4-15-4-2-4 1-9Z" fill="none" stroke="#a84248" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <path d="M149 145l29-37" stroke="#753d44" stroke-width="7" stroke-linecap="round"/>
+  <path d="M149 145l-2 4 6-2" fill="#aa7b5c" stroke="#aa7b5c"/>
+  <path d="M176 111l4-5" stroke="#d1a686" stroke-width="6" stroke-linecap="round"/>
+</svg>

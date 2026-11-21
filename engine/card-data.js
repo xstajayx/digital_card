@@ -82,7 +82,7 @@ export function cardContent(current) {
   return {
     ...current,
     themeId: current.theme.id,
-    coverDefault: greetingFor(
+    coverDefault: current.theme.catalogue?.coverGreeting ?? greetingFor(
       current.theme,
       "",
       current.birthdayNumberEnabled ?? !!current.birthdayNumber,

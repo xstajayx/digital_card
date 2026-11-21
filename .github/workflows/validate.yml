@@ -31,6 +31,7 @@ jobs:
         env:
           CARD_ARTIFACT_DIR: ${{ runner.temp }}/card-studio-artifacts
       - run: python -u tests/catalogue.py
+      - run: python -u tests/cheeky.py
       - run: python -u tests/shop.py
       - run: python -u tests/interactive.py
       - run: python -u tests/physical.py

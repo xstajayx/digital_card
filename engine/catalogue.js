@@ -14,6 +14,7 @@ export const CATALOGUE_THEMES = DESIGNS.map((design) => {
     id: design.id,
     name: design.name,
     greeting: design.greeting,
+    defaults: design.message ? { ...occasion.defaults, message: design.message } : occasion.defaults,
     style: pack.styleFamily,
     defaultFontId: pack.fonts[0],
     palette: pack.palette,

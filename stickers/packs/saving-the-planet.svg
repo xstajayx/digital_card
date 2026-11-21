@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <title>A very heroic woodland tree wearing a cape and a medal</title>
+  <defs>
+    <linearGradient id="cape" x2="1" y2="1"><stop stop-color="#c77453"/><stop offset="1" stop-color="#863d35"/></linearGradient>
+    <linearGradient id="leaves" x2="0" y2="1"><stop stop-color="#a0b075"/><stop offset="1" stop-color="#52735c"/></linearGradient>
+  </defs>
+  <path d="M11 132l23-40 17 40m101 5 20-38 18 35M25 144l15-27 13 23m92 0 12-30 14 27" fill="#b6bc9b" opacity=".75"/>
+  <ellipse cx="92" cy="151" rx="76" ry="12" fill="#768964" opacity=".24"/>
+  <path d="M105 71Q139 73 159 95Q178 115 177 131Q151 124 143 138Q125 129 101 142L87 104Z" fill="url(#cape)" stroke="#8b4a40" stroke-width="2"/>
+  <path d="M110 84q46 22 46 41m-48-28q30 14 33 36" fill="none" stroke="#f4a06b" stroke-opacity=".6" stroke-width="2"/>
+  <path d="M91 68L83 143L70 151H116L108 143L109 73Z" fill="#80583d" stroke="#584a35" stroke-width="2"/>
+  <path d="M92 99l-5 46m12-30 2 28" stroke="#b28855" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M48 84Q37 74 53 55Q48 40 70 37Q73 22 92 24Q109 21 115 36Q137 36 135 54Q153 63 142 81Q137 100 115 96Q107 107 94 99Q75 105 66 94Q55 97 48 84Z" fill="url(#leaves)" stroke="#4b7057" stroke-width="2"/>
+  <path d="M62 49q7-8 15-5m21-7q9 0 13 8M52 74q11-5 20 3m49-16q10-3 15 6" fill="none" stroke="#d8d99a" stroke-linecap="round" stroke-width="2" opacity=".67"/>
+  <path d="M79 92l18 24 22-23" fill="none" stroke="#e6d17e" stroke-width="5"/>
+  <circle cx="99" cy="120" r="12" fill="#e2b968" stroke="#976741" stroke-width="1.5"/>
+  <path d="M99 112l2.5 5 5.5.8-4 4 1 5-5-2.5-5 2.5 1-5-4-4 5.5-.8Z" fill="#fff0b0"/>
+  <path d="M25 57q9-12 19-14m-24 31q8-9 17-10m117-26q10 1 17 8" fill="none" stroke="#9da474" stroke-linecap="round" stroke-width="2"/>
+</svg>

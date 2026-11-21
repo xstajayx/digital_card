@@ -1,8 +1,10 @@
 // Original local artwork and curated recommendations. IDs are stable public content.
+import { CHEEKY_PACKS } from "./cheeky.js";
 import { STYLE_FAMILIES } from "./styles.js";
 import { PREMIUM_PACKS } from "./premium.js";
 const PACKS = {
   ...PREMIUM_PACKS,
+  ...CHEEKY_PACKS,
   birthday_cake_classic: {
     id: "birthday_cake_classic",
     illustrationFamily: "pink-cake",

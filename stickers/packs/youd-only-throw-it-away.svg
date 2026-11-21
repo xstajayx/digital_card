@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <title>A lovely card making an express trip to the recycling bin</title>
+  <defs>
+    <linearGradient id="bin" x2="1" y2="1"><stop stop-color="#6f9c88"/><stop offset="1" stop-color="#2e5b55"/></linearGradient>
+    <linearGradient id="paper" x2="1" y2="1"><stop stop-color="#fffdf1"/><stop offset="1" stop-color="#ebd3ba"/></linearGradient>
+  </defs>
+  <ellipse cx="111" cy="157" rx="60" ry="10" fill="#35584f" opacity=".16"/>
+  <path d="M58 90H148L141 146Q139 154 130 155H80Q69 154 67 145Z" fill="url(#bin)" stroke="#2b5750" stroke-width="2"/>
+  <path d="M67 101l8 41m64-39-5 40M82 102l4 44m38-44-3 44" stroke="#c2d5a9" stroke-opacity=".35" stroke-width="2"/>
+  <path d="M56 90Q58 80 101 80Q147 80 150 90Q143 98 103 99Q61 98 56 90Z" fill="#203a36" stroke="#598d7a" stroke-width="3"/>
+  <path d="M66 89Q110 84 141 91" stroke="#bad1b7" stroke-opacity=".45" fill="none"/>
+  <g stroke="#e9e9c9" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M94 122l7-12 7 5m4 4 7 11-8 3m-6 3H91l1-9"/>
+  </g>
+  <g transform="rotate(-29 101 55)">
+    <path d="M67 27h59v57H67Z" fill="#fff7df" stroke="#8f7f69" stroke-width="1.5"/>
+    <path d="M72 21h56v62H72Z" fill="url(#paper)" stroke="#8f7f69" stroke-width="1.5"/>
+    <path d="M78 28h44v47H78Z" fill="none" stroke="#b5886d" stroke-width="1"/>
+    <path d="M99 49c-13-10-17 4 0 14 17-10 13-24 0-14Z" fill="#c77968"/>
+    <path d="M85 35h30m-27 5h24m-26 29h29" stroke="#75907b" stroke-linecap="round"/>
+  </g>
+  <path d="M133 21q24 4 25 26m-19 -9q13 3 11 17M49 49q-16 9-11 26" fill="none" stroke="#a77459" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5"/>
+  <circle cx="80" cy="155" r="5" fill="#30423c"/><circle cx="129" cy="155" r="5" fill="#30423c"/>
+</svg>

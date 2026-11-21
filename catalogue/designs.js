@@ -1,7 +1,9 @@
 // Curated designs compose occasion copy + art pack + cover treatment.
+import { CHEEKY_DESIGNS } from "./cheeky.js";
 import { PREMIUM_DESIGNS } from "./premium.js";
 export const DESIGNS = [
   ...PREMIUM_DESIGNS,
+  ...CHEEKY_DESIGNS,
   {
     id: "birthday-garden",
     occasionId: "birthday",
