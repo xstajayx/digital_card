@@ -26,7 +26,7 @@ try:
     page.on('response',lambda r:errors.append(f'{r.status} {r.url}') if r.status>=400 else None)
    context.on('page',observe);page=context.new_page();page.goto(BASE+'studio.html');expect(page.locator('.occasion-tile')).to_have_count(28)
    step(page,3);page.locator('#toInput').fill('Maya');page.locator('#messageInput').fill(MESSAGE);page.locator('#fromInput').fill('With love, Alex')
-   step(page,4);page.locator('#physicalToggle').check();step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-coverArt').select_option('blue-cake');step(page,4);page.locator('#physical-insideArt').select_option('purple-cake');page.locator('#physical-paper').select_option('linen');step(page,5)
+   step(page,4);page.locator('#physicalToggle').check();step(page,2);page.locator('#physical-coverGreeting').fill('A birthday full of little wonders');page.locator('#physical-coverArt').select_option('blue-cake');step(page,4);page.locator('#physical-paper').select_option('linen');step(page,5)
    f=page.frame_locator('#cardPreview');expect(f.locator('#cardRoot')).to_have_attribute('data-physical','true');assert fit(page)
    expect(f.locator('#cardRoot')).to_have_attribute('data-physical-state','envelope');expect(f.locator('.paper-envelope-tag')).to_have_text('For Maya');capture(f,f'envelope-{width}.png')
    f.locator('.paper-book').evaluate('e=>window.originalPaperBook=e');f.locator('.paper-envelope-front').focus()
@@ -43,7 +43,7 @@ try:
    f.locator('.paper-read').click();expect(f.locator('.paper-reader')).to_be_visible();expect(f.locator('.paper-reader-text')).to_contain_text(MESSAGE);f.locator('.paper-reader-close').click()
    # Explicit drafts retain separate cover, paper and inside choices.
    page.get_by_role('button',name='Save draft',exact=True).click();page.reload();expect(page.locator('.occasion-tile')).to_have_count(28);drafts(page);page.get_by_role('button',name='Restore draft',exact=True).click();step(page,4);expect(page.locator('#physicalToggle')).to_be_checked();expect(page.locator('#physical-paper')).to_have_value('linen');step(page,2);expect(page.locator('#physical-coverArt')).to_have_value('blue-cake');step(page,4)
-   for paper in ['ivory','linen','white','kraft','pastel','textured']:
+   for paper in ['ivory','linen','white','kraft','pastel','textured','lined']:
     page.locator('#physical-paper').select_option(paper);step(page,5);assert fit(page);expect(f.locator('#cardRoot')).to_have_attribute('data-paper',paper);step(page,4)
    # The cover accepts text only, independently from the inside message.
    step(page,2);page.locator('#physical-coverGreeting').fill('<img src=x onerror=alert(1)>');step(page,5);assert fit(page);assert f.locator('.paper-cover-title img').count()==0;expect(f.locator('#message')).to_have_text(MESSAGE)
@@ -60,7 +60,7 @@ try:
    # Turning the enhancement off restores the existing animated renderer.
    step(page,4);page.locator('#physicalToggle').uncheck();step(page,5);assert fit(page);expect(f.locator('.physical-scene')).to_be_hidden();expect(f.locator('#headline')).to_contain_text('Happy Birthday');assert not f.locator('.card').evaluate('e=>e.parentElement.classList.contains("paper-right")')
    assert not errors,errors
-   print(f'PASS {width}x{height}: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, six papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration',flush=True)
+   print(f'PASS {width}x{height}: envelope/extraction/same cover/unfold/close/reopen, complete handwriting/Unicode/signature, seven papers, v5 draft/share/recipient, reduced motion/skip, long-text reader and legacy restoration',flush=True)
    context.close()
   browser.close()
 finally:server.shutdown();server.server_close()

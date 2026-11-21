@@ -307,6 +307,7 @@ async function measure(generation) {
   sizes(size, preferred);
   while (!fits() && size > 14) sizes(--size, preferred);
   const valid = fits() && (!physical.enabled || physical.fitCover());
+  if (physical.enabled) physical.fitDecoration();
   root.dataset.fits = String(valid);
   root.dataset.ready = "true";
   root.dataset.fitSize = String(size);

@@ -56,13 +56,26 @@ export function bindPhysicalPicker(state, preview) {
     "Front-cover greeting (blank uses the design greeting)",
   );
   field("coverArt", "Front-cover artwork", []);
-  field("insideArt", "Inside-left illustration", []);
+  const decoration = document.createElement("input");
+  decoration.type = "checkbox";
+  decoration.id = "insideDecoration";
+  const decorationLabel = document.createElement("label");
+  decorationLabel.className = "toggle";
+  decorationLabel.append(decoration, document.createTextNode("Inside decoration"));
+  document.getElementById("fromInput").closest("label").after(decorationLabel);
+  decoration.onchange = () => {
+    const { insideDecoration, ...config } = state.get().physicalConfig;
+    if (decoration.checked) {
+      if (!config.insideArt) config.insideArt = "default";
+    } else config.insideDecoration = false;
+    state.set({ physicalConfig: config });
+  };
   field(
     "paper",
     "Inside paper",
     Object.keys(PAPERS).map((x) => [
       x,
-      { pastel: "Soft pastel", textured: "Premium textured" }[x] || x,
+      { lined: "Lined", pastel: "Soft pastel", textured: "Premium textured" }[x] || x,
     ]),
   );
   field("handwriting", "Inside lettering", [
@@ -143,33 +156,22 @@ export function bindPhysicalPicker(state, preview) {
     controls.hidden = !s.physicalConfig;
     if (themeId !== s.theme.id) {
       themeId = s.theme.id;
-      for (const key of ["coverArt", "insideArt"]) {
-        fields[key].replaceChildren();
-        const choices =
-          key === "coverArt"
-            ? [
-                ["", "Selected illustration / design artwork"],
-                ["none", "No artwork"],
-              ]
-            : [
-                ["default", "Coordinated illustration"],
-                ["", "Blank inside-left page"],
-              ];
-        for (const item of ILLUSTRATIONS[s.theme.id] || [])
-          choices.push([item.id, item.label]);
-        for (const [value, label] of choices) {
-          const option = document.createElement("option");
-          option.value = value;
-          option.textContent = label;
-          fields[key].append(option);
-        }
-      }
+      fields.coverArt.replaceChildren();
+      const choices = [
+        ["", "Selected illustration / design artwork"],
+        ["none", "No artwork"],
+        ...(ILLUSTRATIONS[s.theme.id] || []).map(({ id, label }) => [id, label]),
+      ];
+      for (const [value, label] of choices)
+        fields.coverArt.add(new Option(label, value));
     }
+    decorationLabel.hidden = !s.physicalConfig;
     if (s.physicalConfig) {
       for (const [key, field] of Object.entries(fields))
         if (field.value !== s.physicalConfig[key])
           field.value = s.physicalConfig[key];
       effects.checked = s.physicalConfig.effects;
+      decoration.checked = s.physicalConfig.insideDecoration !== false && !!s.physicalConfig.insideArt;
     }
   });
 }

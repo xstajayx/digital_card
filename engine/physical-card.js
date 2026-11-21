@@ -1,3 +1,5 @@
+import { catalogueDesign } from "./catalogue.js";
+import { stationeryFor } from "./stationery.js";
 import { PAPERS } from "./physical-schema.js";
 import {
   ILLUSTRATIONS,
@@ -33,6 +35,14 @@ export function createPhysicalCard(root, card, onReveal) {
     "This card needs a little more room. Use Read comfortably below to read every word.",
   );
   right.append(tooLong);
+  const addCorners = (page) => ["top", "bottom"].map((edge) => {
+    const node = make("span", `stationery-corner stationery-${edge}`);
+    node.ariaHidden = "true";
+    page.append(node);
+    return node;
+  });
+  addCorners(left);
+  const rightCorners = addCorners(right);
   const cover = make("button", "paper-cover");
   cover.type = "button";
   cover.setAttribute("aria-label", "Open folded card");
@@ -60,7 +70,14 @@ export function createPhysicalCard(root, card, onReveal) {
   envelope.setAttribute("aria-label", "Open envelope");
   const tag = make("span", "paper-envelope-tag"),
     flap = make("div", "paper-envelope-flap"),
-    seal = make("span", "paper-envelope-seal", "♡");
+    seal = make("span", "paper-envelope-seal");
+  seal.ariaHidden = "true";
+  const svgNS = "http://www.w3.org/2000/svg";
+  const sealIcon = document.createElementNS(svgNS, "svg");
+  sealIcon.setAttribute("viewBox", "0 0 24 24");
+  const stamp = document.createElementNS(svgNS, "use");
+  sealIcon.append(stamp);
+  seal.append(sealIcon);
   envelope.append(tag);
   flap.ariaHidden = "true";
   back.ariaHidden = "true";
@@ -340,6 +357,11 @@ export function createPhysicalCard(root, card, onReveal) {
       ].entries())
         scene.style.setProperty(key, tone[i]);
       seal.hidden = data.openingConfig?.seal === false;
+      const stationery = stationeryFor(data.themeId, catalogueDesign(data.themeId)?.catalogue);
+      seal.dataset.stamp = stationery.stamp;
+      seal.style.setProperty("--wax", stationery.wax);
+      seal.style.setProperty("--wax-light", stationery.light);
+      stamp.setAttribute("href", stationery.sealUrl);
       const address = envelopeAddress(data.recipient);
       tag.textContent = address;
       front.style.setProperty(
@@ -362,8 +384,14 @@ export function createPhysicalCard(root, card, onReveal) {
           ? `For ${data.recipient}`
           : "";
       artwork(art, cfg.coverArt, false);
-      artwork(leftArt, cfg.insideArt, true);
-      artwork(insideArt, cfg.insideArt, true);
+      const decoration = cfg.insideDecoration === false ? "" : cfg.insideArt;
+      const coordinated = decoration === "default";
+      scene.dataset.motif = coordinated ? stationery.motif : "";
+      scene.style.setProperty("--stationery-art", coordinated ? `url("${stationery.motifUrl}")` : "none");
+      scene.style.setProperty("--stationery-ink", stationery.wax);
+      // Explicit illustration selections from older cards still resolve through the existing allowlist.
+      artwork(leftArt, coordinated ? "" : decoration, true);
+      artwork(insideArt, coordinated ? "" : decoration, true);
       const family = {
         fredoka: "Fredoka",
         poppins: "Poppins",
@@ -391,6 +419,24 @@ export function createPhysicalCard(root, card, onReveal) {
     },
     async readyFonts() {
       await document.fonts.load(getComputedStyle(title).font);
+    },
+    fitDecoration() {
+      if (!scene.dataset.motif) return;
+      const text = [data.headline, data.message, data.from].filter(Boolean).join("\n");
+      const dense = text.length > 300 || text.split("\n").length > 8;
+      const areas = ["#headline", "#message", "#from"].flatMap((selector) => {
+        const node = card.querySelector(selector);
+        return node.textContent && node.getClientRects().length ? [node.getBoundingClientRect()] : [];
+      });
+      for (const corner of rightCorners) {
+        corner.hidden = dense;
+        if (dense) continue;
+        const bounds = corner.getBoundingClientRect();
+        corner.hidden = areas.some((area) =>
+          bounds.top < area.bottom + 4 && bounds.bottom > area.top - 4 &&
+          bounds.left < area.right + 4 && bounds.right > area.left - 4,
+        );
+      }
     },
     fitCover() {
       let size = 30;
