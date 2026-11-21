@@ -1,3 +1,4 @@
+import { ILLUSTRATIONS } from "./illustrations.js";
 // The catalogue composes local content; no API, media upload or runtime HTML.
 import { ART_PACKS } from "../catalogue/art-packs.js";
 import { DESIGNS } from "../catalogue/designs.js";
@@ -58,14 +59,15 @@ export function designMetadata(theme) {
 export function designDefaults(theme) {
   const pack = artPack(theme);
   if (!pack) return {};
+  const coverArt = ILLUSTRATIONS[theme.id][0].id;
   return {
-    stickerId: pack.artwork[0].id,
+    stickerId: coverArt,
     fontId: pack.fonts[0],
     openingConfig: { ...pack.envelope },
     physicalConfig: {
       ...defaultPhysical(),
       coverName: "",
-      coverArt: pack.artwork[0].id,
+      coverArt,
       handwriting: pack.fonts[0],
       signature: pack.fonts[0],
       effects: false,

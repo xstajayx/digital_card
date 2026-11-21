@@ -4,9 +4,9 @@ Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 publ
 
 | Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
 | --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 4 | 105 | 0 |
+| 121 | 12 | 109 | 22 | 87 | 0 |
 
-The remaining work is original illustration and visual review. Existing assets and the local payload format support incremental replacements. Preserve the Cheeky & Clever and Little Joys covers. Start the follow-up with the high-visibility groups marked priority 1, then progress through the remaining occasions and reused art packs. A shared legacy illustration can stay in the payload allowlist even when newly created cards use a distinct scene.
+The follow-up introduces 18 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 87 remaining designs.
 
 ## Cover additions
 
@@ -43,27 +43,27 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `anniversary` | Still, always you | anniversary | Improve · shared library artwork | 2 | rose | hearts |
 | `belated-coffee` | Better latte than never | belated-birthday | Improve · flat pack art | 2 | botanical | coffee |
 | `belated-snail` | Slow post, big love | belated-birthday | Improve · flat pack art | 2 | botanical | Plain |
-| `birthday-car` | A classic in every way | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-beer` | A pint of birthday cheer | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-books` | A very good chapter | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-coffee` | A whole latte love | birthday | Improve · flat pack art | 1 | birthday | coffee |
-| `birthday-gilded` | Botanical gold | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `champagne-stars` | Champagne Stars | birthday | Improve · repeated outline frame | 1 | birthday | Plain |
+| `birthday-car` | A classic in every way | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-beer` | A pint of birthday cheer | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-books` | A very good chapter | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-coffee` | A whole latte love | birthday | Upgraded in follow-up | — | birthday | coffee |
+| `birthday-gilded` | Botanical gold | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `champagne-stars` | Champagne Stars | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `dachshund-parade` | Dachshund Parade | birthday | Retain · premium | — | birthday | birthday |
-| `birthday-tractor` | Field of birthday dreams | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-tractor` | Field of birthday dreams | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `kayak-morning` | Kayak Morning | birthday | Retain · premium | — | birthday | Plain |
-| `birthday-gin` | Let the good times be-gin | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-gaming` | Level up | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-baking` | Made with love | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-football` | Match-day wishes | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-midnight` | Midnight wishes | birthday | Improve · shared library artwork | 1 | birthday | Plain |
-| `birthday-balloons` | Pastel party | birthday | Improve · shared library artwork | 1 | birthday | birthday |
-| `birthday-pets` | Paws for celebration | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `peony-study` | Peony Study | birthday | Improve · repeated outline frame | 1 | birthday | Plain |
+| `birthday-gin` | Let the good times be-gin | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-gaming` | Level up | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-baking` | Made with love | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-football` | Match-day wishes | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-midnight` | Midnight wishes | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-balloons` | Pastel party | birthday | Upgraded in follow-up | — | birthday | birthday |
+| `birthday-pets` | Paws for celebration | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `peony-study` | Peony Study | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `record-day` | Record Day | birthday | Retain · premium | — | birthday | Plain |
-| `birthday-fishing` | Reel-y good birthday | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `birthday-envelope` | Sealed golden wishes | birthday | Improve · shared library artwork | 1 | birthday | birthday |
-| `birthday-garden` | The birthday garden | birthday | Improve · flat pack art | 1 | birthday | Plain |
+| `birthday-fishing` | Reel-y good birthday | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `birthday-envelope` | Sealed golden wishes | birthday | Upgraded in follow-up | — | birthday | birthday |
+| `birthday-garden` | The birthday garden | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `all-i-could-afford` | This Is All I Could Afford | birthday | Retain · premium | — | birthday | wallet |
 | `birthday-music` | Your kind of happy | birthday | Improve · flat pack art | 1 | birthday | Plain |
 | `christening-bloom` | Blessings in bloom | christening | Improve · flat pack art | 2 | botanical | Plain |

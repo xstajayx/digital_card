@@ -511,7 +511,7 @@
   min-height: 0;
   flex: 0 1 auto;
   max-height: 72%;
-  aspect-ratio: 16 / 15;
+  aspect-ratio: auto 16 / 15;
   object-fit: contain;
 }
 .paper-front-face[data-illustrated]:where(:not([data-illustrated=""])) .paper-cover-title {

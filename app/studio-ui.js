@@ -1,4 +1,4 @@
-import { artPack, designDefaults } from "../engine/catalogue.js";
+import { designDefaults } from "../engine/catalogue.js";
 import { hostedShareURL } from "./hosted-cards.js";
 import { assertPreparedShareable } from "./prepared-editor.js";
 import { assertPhotoShareable } from "./photo-card.js";
@@ -225,12 +225,18 @@ export function createUI({ state, preview }) {
       title.textContent = theme.greeting;
       const small = document.createElement("small");
       small.textContent = "A little something, just for you.";
-      if (artPack(theme)) {
+      const artwork = ILLUSTRATIONS[theme.id]?.[0];
+      if (artwork) {
         const image = document.createElement("img");
-        image.src = illustrationUrl(artPack(theme).artwork[0]);
+        image.src = illustrationUrl(artwork);
         image.alt = "";
         image.loading = "lazy";
-        mini.dataset.artPack = theme.catalogue.packId;
+        mini.dataset.artPack = "";
+        if (artwork.cover) {
+          mini.dataset.illustrated = artwork.cover.layout;
+          mini.style.setProperty("--tile-paper", artwork.cover.paper);
+          mini.style.setProperty("--tile-ink", artwork.cover.ink);
+        }
         mini.append(title, image);
       } else mini.append(symbol, title, small);
       const label = document.createElement("span");

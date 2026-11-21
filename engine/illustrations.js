@@ -1,3 +1,4 @@
+import { COVER_EDITIONS } from "../catalogue/cover-art.js";
 import { ART_PACKS } from "../catalogue/art-packs.js";
 import { DESIGNS } from "../catalogue/designs.js";
 // Local, transparent original vectors. Legacy payload IDs resolve only through this catalogue.
@@ -232,3 +233,7 @@ ILLUSTRATIONS["christmas-gift"] = ILLUSTRATIONS.christmas;
 // Additive allowlist: preserve every legacy collection and alias.
 for (const design of DESIGNS)
   ILLUSTRATIONS[design.id] = ART_PACKS[design.packId].artwork;
+
+// Per-design editions must not modify shared art packs or aliased legacy arrays.
+for (const [id, item] of Object.entries(COVER_EDITIONS))
+  ILLUSTRATIONS[id] = [item, ...ILLUSTRATIONS[id]];

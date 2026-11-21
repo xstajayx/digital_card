@@ -3,7 +3,6 @@ import { ILLUSTRATIONS, illustrationUrl } from "../engine/illustrations.js";
 import { createCardController } from "../engine/preview.js";
 import {
   FEATURED_COLLECTIONS,
-  artPack,
   designDefaults,
   designMetadata,
   matchesDesign,
@@ -204,8 +203,7 @@ async function init() {
       return rank(a) - rank(b);
     });
     for (const theme of ordered) {
-      const meta = designMetadata(theme),
-        pack = artPack(theme);
+      const meta = designMetadata(theme);
       const article = make("article", "shop-card");
       article.dataset.id = theme.id;
       const thumbnail = make("div", "shop-thumbnail");
@@ -220,7 +218,7 @@ async function init() {
         make("span", "thumbnail-occasion", theme.occasion),
         make("strong", null, theme.greeting),
       );
-      const item = pack?.artwork[0] || ILLUSTRATIONS[theme.id][0];
+      const item = ILLUSTRATIONS[theme.id][0];
       if (item.cover) {
         thumbnail.dataset.illustrated = item.cover.layout;
         thumbnail.style.backgroundColor = item.cover.paper;
