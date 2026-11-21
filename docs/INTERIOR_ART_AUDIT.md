@@ -4,6 +4,10 @@ Baseline `c7162ae` includes merged PR #62. Its explicit motif map left 82 public
 
 New cards come with decoration on. The same card renderer handles the live creator preview and recipient view. The renderer uses a single upper-right corner and hides the sketch when it would compete with writing. Lined paper uses a lighter opacity. Existing saved **Off**, blank interiors and explicit older artwork choices keep their meaning. Historical links with automatic decoration use the design’s current sketch.
 
+The browser audit exercises the live creator’s checkbox for every design and opens its shared link at 320 and 1440 px. It checks that the short-message illustration matches the creator, is upright and clears the greeting, body and signature. A dense multiline message verifies that ruled paper and the complete message remain available when the sketch is hidden.
+
+[Five mobile and desktop recipient examples](stationery-review/all-designs-samples.webp)
+
 | Card ID | Design | Interior on baseline | Coordinated motif | Creator toggle |
 | --- | --- | --- | --- | --- |
 | `anniversary-toast` | Here’s to us | Plain | [Clinking glasses on a wisteria terrace](../assets/stationery/interiors/anniversary-toast.svg) | On / Off |
