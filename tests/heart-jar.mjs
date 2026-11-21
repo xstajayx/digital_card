@@ -41,3 +41,27 @@ test("progress persists independently and fails safely when storage is blocked",
   assert.equal(saveHearts(gift, new Set([2])), false);
   assert.equal(readHearts(gift).size, 0);
 });
+
+
+test("every jar theme has 30 distinct ideas within the note limit", async () => {
+  const { JAR_IDEAS } = await import("../engine/jar-ideas.js");
+  assert.deepEqual(Object.keys(JAR_IDEAS).sort(), JAR_THEMES.map(({ id }) => id).sort());
+  const all = Object.values(JAR_IDEAS).flat();
+  assert.equal(new Set(all).size, all.length);
+  for (const ideas of Object.values(JAR_IDEAS)) {
+    assert.ok(ideas.length >= 30);
+    assert.ok(ideas.every((idea) => idea.trim() && idea.length <= NOTE_LIMIT));
+  }
+});
+
+test("idea batches skip used and recent messages and handle exhausted lists", async () => {
+  const { JAR_IDEAS, jarIdeaBatch } = await import("../engine/jar-ideas.js");
+  const used = new Set(JAR_IDEAS.love.slice(0, 2));
+  const first = jarIdeaBatch("love", used, new Set());
+  const second = jarIdeaBatch("love", used, new Set(first), first);
+  for (const idea of second) assert.ok(!used.has(idea) && !first.includes(idea));
+  const cycled = jarIdeaBatch("love", used, new Set(JAR_IDEAS.love), second);
+  assert.equal(cycled.length, 4);
+  assert.ok(cycled.every((idea) => !used.has(idea) && !second.includes(idea)));
+  assert.deepEqual(jarIdeaBatch("love", new Set(JAR_IDEAS.love), new Set()), []);
+});

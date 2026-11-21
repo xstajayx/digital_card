@@ -60,9 +60,26 @@
                 <p id="heartError" role="alert"></p>
                 <div class="jar-actions">
                   <button id="addHeart" class="jar-button primary" type="submit">Add to Jar</button>
+                  <button id="jarIdeasToggle" class="jar-button" type="button" aria-expanded="false" aria-controls="jarIdeas">Give me some ideas</button>
                   <button id="cancelHeart" class="jar-button" type="button" hidden>Cancel edit</button>
                 </div>
               </form>
+              <section id="jarIdeas" class="jar-idea-panel" aria-labelledby="jarIdeasTitle" hidden>
+                <div class="jar-idea-heading">
+                  <h3 id="jarIdeasTitle" tabindex="-1">Message ideas</h3>
+                  <button id="jarIdeasClose" class="jar-small" type="button" aria-label="Hide message ideas">Hide</button>
+                </div>
+                <ul id="jarIdeasList" class="jar-idea-list"></ul>
+                <div id="jarIdeasConfirm" class="jar-idea-confirm" role="group" aria-labelledby="jarIdeasReplacePrompt" hidden>
+                  <p id="jarIdeasReplacePrompt">Replace the text in your message editor with this idea?</p>
+                  <div class="jar-actions">
+                    <button id="jarIdeasKeep" class="jar-button" type="button" aria-describedby="jarIdeasReplacePrompt">Keep my text</button>
+                    <button id="jarIdeasReplace" class="jar-button primary" type="button">Use this idea</button>
+                  </div>
+                </div>
+                <button id="jarIdeasMore" class="jar-button" type="button">Show me more ideas</button>
+              </section>
+              <p id="jarIdeasStatus" class="jar-idea-status" role="status"></p>
               <ol id="heartList" class="jar-heart-list"></ol>
               <button id="undoHeart" class="jar-button" type="button" hidden>Undo removal</button>
             </section>

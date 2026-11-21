@@ -192,3 +192,36 @@
   .jar-opening .jar-lid, .jar-opening .jar-pieces, .jar-drop, .jar-chosen svg { animation: none; }
   .jar-replay { display: none; }
 }
+
+.jar-return { text-align: center; font-size: .875rem; margin: 20px 0 0; }
+.jar-return a { display: inline-flex; align-items: center; gap: .35em; min-height: 44px; text-underline-offset: 5px; }
+.jar-idea-panel {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #dcd2c5;
+  border-radius: 8px;
+  background: #f8f3eb;
+}
+.jar-idea-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.jar-idea-heading h3 { margin: 0; font: 500 1.15rem "Playfair Display", Georgia, serif; }
+.jar-idea-list { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 6px; }
+.jar-idea-option {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid #cdbfb0;
+  border-radius: 6px;
+  color: #303c33;
+  background: #fffbf4;
+  text-align: start;
+  font: inherit;
+  cursor: pointer;
+}
+.jar-idea-option:hover { border-color: #874a62; }
+.jar-idea-confirm { margin: 8px 0; border-top: 1px solid #dcd2c5; padding-top: 8px; }
+.jar-idea-confirm p { margin: 0 0 8px; }
+.jar-idea-status { font-size: .9rem; }
+.jar-idea-status:empty { margin: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .jar-idea-option { transition: border-color 150ms ease; }
+}
