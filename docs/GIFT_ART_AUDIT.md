@@ -1,6 +1,6 @@
 # Catalogue and interior artwork audit
 
-Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 public card designs across 28 occasions using the same legacy themes and catalogue definitions as the static storefront. The interior columns describe automatic decoration. Older links with an explicit inside-art choice continue to use that choice.
+Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 public card designs across 28 occasions using the same legacy themes and catalogue definitions as the static storefront. The interior columns record automatic decoration at the time of PR #62. See the [new interior artwork audit](INTERIOR_ART_AUDIT.md) for current assignments. Older links with an explicit inside-art choice continue to use that choice.
 
 | Total designs | Premium at baseline | Upgraded before follow-up | Upgraded in follow-up | Premium after this PR | Remaining | Blocked |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -45,7 +45,7 @@ The 11 Node test files passed. Chromium checks covered all 121 catalogue thumbna
 
 ## Card-by-card inventory
 
-| Stable ID | Name | Occasion | Cover status | Follow-up priority | Previous automatic motif | Current automatic motif |
+| Stable ID | Name | Occasion | Cover status | Follow-up priority | Previous automatic motif | Automatic motif in PR #62 |
 | --- | --- | --- | --- | --- | --- | --- |
 | `anniversary-toast` | Here’s to us | anniversary | Upgraded in follow-up | — | rose | Plain |
 | `anniversary-roses` | Love, in every letter | anniversary | Upgraded in follow-up | — | rose | rose |
