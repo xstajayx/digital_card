@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <title>An almost empty leather wallet</title>
+  <defs>
+    <linearGradient id="leather" x2="0" y2="1"><stop stop-color="#b86f50"/><stop offset="1" stop-color="#704033"/></linearGradient>
+    <linearGradient id="coin" x2="1" y2="1"><stop stop-color="#ffe0a0"/><stop offset="1" stop-color="#b47941"/></linearGradient>
+  </defs>
+  <ellipse cx="98" cy="144" rx="78" ry="16" fill="#74503e" opacity=".14"/>
+  <g transform="rotate(-10 96 93)">
+    <path d="M24 51Q25 43 35 43H160Q173 44 174 54V123Q173 136 160 138L35 131Q25 129 24 120Z" fill="#58352d" stroke="#4f332b" stroke-width="2"/>
+    <path d="M24 57Q74 37 101 65Q130 43 174 54L172 107L102 122L25 111Z" fill="#402a25"/>
+    <path d="M31 60Q75 46 98 71L96 115L31 110Z" fill="#98614b"/>
+    <path d="M105 72Q134 51 167 58L166 108L106 123Z" fill="#745044"/>
+    <path d="M34 73Q70 60 91 77M112 83Q136 70 165 69M34 87Q73 75 91 90" fill="none" stroke="#cf9371" stroke-width="2" opacity=".65"/>
+    <path d="M26 91Q62 80 99 99Q137 83 173 90L174 125Q171 136 160 137L104 142L36 134Q25 132 25 120Z" fill="url(#leather)" stroke="#674037" stroke-width="2"/>
+    <path d="M32 98Q67 91 99 106Q138 91 166 96V124L104 135L37 127Z" fill="none" stroke="#e6b18b" stroke-dasharray="2.5 3" opacity=".78"/>
+    <path d="M104 104V133" stroke="#704536" stroke-width="2" opacity=".65"/>
+    <path d="M43 104l15 1m87 -3 12 -1" stroke="#e5ac87" stroke-linecap="round" opacity=".55"/>
+  </g>
+  <g transform="rotate(-17 140 148)">
+    <ellipse cx="143" cy="150" rx="18" ry="8" fill="#775440" opacity=".22"/>
+    <ellipse cx="141" cy="147" rx="16" ry="9" fill="#a6653d"/>
+    <ellipse cx="141" cy="144" rx="16" ry="8.5" fill="url(#coin)" stroke="#a66e42"/>
+    <ellipse cx="141" cy="144" rx="11.7" ry="5.5" fill="none" stroke="#af7548"/>
+    <path d="M139 146l3-5m-5 2 7 1" stroke="#9a623a" stroke-linecap="round"/>
+  </g>
+</svg>

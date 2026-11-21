@@ -30,9 +30,9 @@ const ids = JSON.parse(read("themes/themes.json"));
 const legacy = ids.map((id) => JSON.parse(read(`themes/${id}/theme.json`)));
 const themes = [...legacy, ...CATALOGUE_THEMES];
 
-test("115 unique designs, 28 occasions, all original IDs and all requested categories", () => {
-  assert.equal(themes.length, 115);
-  assert.equal(new Set(themes.map((t) => t.id)).size, 115);
+test("121 unique designs, 28 occasions, all original IDs and all requested categories", () => {
+  assert.equal(themes.length, 121);
+  assert.equal(new Set(themes.map((t) => t.id)).size, 121);
   assert.equal(new Set(themes.map((t) => t.occasionId)).size, 28);
   for (const id of ids) assert.ok(themes.find((t) => t.id === id));
   for (const id of [
@@ -71,8 +71,8 @@ test("115 unique designs, 28 occasions, all original IDs and all requested categ
     );
   }
 });
-test("63 packs and 61 original scenes: small original SVGs, local allowlists, accurate metadata", () => {
-  assert.equal(Object.keys(ART_PACKS).length, 63);
+test("69 packs and 67 original scenes: small original SVGs, local allowlists, accurate metadata", () => {
+  assert.equal(Object.keys(ART_PACKS).length, 69);
   const scenes = new Set();
   for (const pack of Object.values(ART_PACKS)) {
     assert.ok(pack.artwork.length >= 2);
@@ -97,7 +97,7 @@ test("63 packs and 61 original scenes: small original SVGs, local allowlists, ac
       if (item.asset.startsWith("packs/")) scenes.add(item.asset);
     }
   }
-  assert.equal(scenes.size, 61);
+  assert.equal(scenes.size, 67);
 });
 test("curated metadata enables style, relationship, recipient, interest and tone browsing", () => {
   for (const theme of CATALOGUE_THEMES) {

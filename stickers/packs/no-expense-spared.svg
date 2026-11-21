@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <title>A luxury gift elegantly labelled £0</title>
+  <defs>
+    <linearGradient id="velvet" x2="1" y2="1"><stop stop-color="#92748c"/><stop offset="1" stop-color="#3c314e"/></linearGradient>
+    <linearGradient id="foil" x2="1" y2="1"><stop stop-color="#ffe6a9"/><stop offset=".48" stop-color="#ac7944"/><stop offset=".76" stop-color="#f5c97f"/><stop offset="1" stop-color="#b1824d"/></linearGradient>
+  </defs>
+  <ellipse cx="99" cy="151" rx="74" ry="13" fill="#111c1b" opacity=".38"/>
+  <path d="M29 75L51 57H143L167 78L157 143Q157 151 148 152H49Q38 151 37 142Z" fill="#55405b" stroke="#d7b47b" stroke-width="2"/>
+  <path d="M44 83H153V143H44Z" fill="url(#velvet)"/>
+  <path d="M29 76L52 58H146L167 77L146 86H44Z" fill="#a48096" stroke="#d7b47b" stroke-width="2"/>
+  <path d="M85 58H111L114 151H87Z" fill="url(#foil)"/>
+  <path d="M30 76Q96 91 167 77L163 92Q93 105 33 91Z" fill="none" stroke="#f6d898" stroke-opacity=".75"/>
+  <path d="M97 62C73 61 52 53 57 39C61 29 78 36 97 57M98 61C118 63 138 55 140 43C141 33 122 30 99 57M98 60Q81 73 69 70M100 61Q111 75 119 75" fill="none" stroke="url(#foil)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M107 64Q145 64 145 105" fill="none" stroke="#f6d998" stroke-width="1.8"/>
+  <g transform="rotate(12 147 119)">
+    <path d="M123 106L136 94H169V142H123Z" fill="#fff0cf" stroke="#ad7843" stroke-width="1.5"/>
+    <circle cx="135" cy="104" r="2" fill="#765739"/>
+    <text x="146" y="129" fill="#44344a" text-anchor="middle" font-family="Georgia,serif" font-size="22">£0</text>
+    <path d="M130 135H161" stroke="#bd9568"/>
+  </g>
+  <path d="M29 41v14m-7-7h14m143 7v15m-7-7h14m-32-34v10m-5-5h10" stroke="#dfbd78" stroke-linecap="round" opacity=".83"/>
+</svg>

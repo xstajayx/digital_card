@@ -1,4 +1,5 @@
-// Four illustrated collections for the static folded-card catalogue.
+// Illustrated collections for the static folded-card catalogue.
+import { CHEEKY_COLLECTION } from "./cheeky.js";
 export const PREMIUM_COLLECTIONS = [
   {
     "id": "gilded-moments",
@@ -19,7 +20,8 @@ export const PREMIUM_COLLECTIONS = [
     "id": "winter-atelier",
     "name": "Winter Atelier",
     "description": "Winter scenes and warm festive details."
-  }
+  },
+  CHEEKY_COLLECTION,
 ];
 const cards = [
   ["champagne-stars", "birthday", "Champagne Stars", "Happy Birthday", 0, []],

@@ -28,3 +28,20 @@ body:has(.shop-intro) .shop-card { overflow:hidden; border-radius:18px; transiti
  body:has(.shop-intro) #catalogue .collection-tile { min-height:58px; }
 }
 @media (prefers-reduced-motion:reduce) { body:has(.shop-intro) .shop-card { transition:none; } }
+
+body:has(.shop-intro) #catalogue .collection-tile[data-collection="cheeky-clever"] span {
+  display: block;
+  margin-top: 4px;
+  font-size: .78rem;
+  line-height: 1.4;
+}
+@media (min-width: 1050px) {
+  body:has(.shop-intro) #catalogue .collection-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (max-width: 680px) {
+  body:has(.shop-intro) #catalogue .collection-tile[data-collection="cheeky-clever"] {
+    grid-column: 1 / -1;
+  }
+}
