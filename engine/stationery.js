@@ -1,3 +1,5 @@
+import { INTERIOR_MOTIFS } from "../catalogue/interior-art.js";
+
 // Profile, wax base, raised wax highlight, embossing.
 const profiles = {
   romance: ["#713249", "#a45063", "heart"],
@@ -26,31 +28,12 @@ const legacyProfiles = {
   "birthday-envelope": "birthday", "kids-party": "birthday",
   "christmas-snow": "christmas", "christmas-gift": "christmas", congrats: "congratulations",
 };
-// Opt in only where the sketch has a clear relationship to the design.
-const interiorMotifs = {
-  love: "hearts", "valentines-day": "hearts", "love-letters": "rose", "love-rose-note": "rose",
-  "valentine-roses": "rose", "anniversary-roses": "rose", "anniversary": "hearts",
-  "birthday-balloons": "birthday", "kids-party": "birthday", "dachshund-parade": "birthday",
-  "birthday-envelope": "birthday", "christmas": "winter", "christmas-snow": "winter",
-  "christmas-robin": "mistletoe", "christmas-wreath": "mistletoe",
-  "moon-cradle": "nursery", "new-baby": "nursery", "baby-moon": "nursery",
-  "tulip-market": "tulip", "snow-globe-train": "snow-globe",
-  "interlocking-rings": "rings",
-  "forget-me-not": "quiet-stem", "sympathy-lilies": "quiet-stem", "sympathy-dove": "quiet-stem",
-  "easter": "spring", "easter-meadow": "spring", "easter-eggs": "spring", "st-george": "dragon",
-  "friendship-coffee": "coffee", "birthday-coffee": "coffee", "thanks-coffee": "coffee",
-  "belated-coffee": "coffee", "well-tea": "coffee",
-  "congrats-ribbons": "celebrate", "congrats": "celebrate",
-  "all-i-could-afford": "wallet", "no-expense-spared": "receipt",
-  "youd-only-throw-it-away": "recycling", "saving-the-planet": "hero-tree",
-  "happy-25th-december": "christmas-calendar", "happy-four-day-weekend": "slippers",
-};
 export function stationeryFor(themeId, design) {
   const suggested = design?.stationery || occasionProfiles[design?.occasionId] ||
     legacyProfiles[themeId] || occasionProfiles[themeId];
   const id = Object.hasOwn(profiles, suggested) ? suggested : "general";
   const [wax, light, stamp] = profiles[id];
-  const motif = Object.hasOwn(interiorMotifs, themeId) ? interiorMotifs[themeId] : "";
+  const motif = Object.hasOwn(INTERIOR_MOTIFS, themeId) ? INTERIOR_MOTIFS[themeId] : "";
   return {
     id, wax, light, stamp, motif,
     sealUrl: new URL(`../assets/stationery/seals.svg#${stamp}`, import.meta.url).href,
