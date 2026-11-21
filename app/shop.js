@@ -221,6 +221,11 @@ async function init() {
         make("strong", null, theme.greeting),
       );
       const item = pack?.artwork[0] || ILLUSTRATIONS[theme.id][0];
+      if (item.cover) {
+        thumbnail.dataset.illustrated = item.cover.layout;
+        thumbnail.style.backgroundColor = item.cover.paper;
+        thumbnail.style.color = item.cover.ink;
+      }
       const image = make("img");
       image.src = illustrationUrl(item);
       image.alt = "";

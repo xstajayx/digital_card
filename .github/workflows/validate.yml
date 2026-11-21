@@ -48,6 +48,7 @@ jobs:
       - run: python -u tests/site-navigation.py
       - run: python -u tests/seasonal-banner.py
       - run: python -u tests/stationery.py
+      - run: python -u tests/premium-artwork.py
       - run: python -u tests/heart-jar.py
       - uses: actions/upload-artifact@v4
         if: always()
