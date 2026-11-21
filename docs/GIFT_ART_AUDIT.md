@@ -4,9 +4,9 @@ Baseline is `2dd892c`, after PRs #60 and #61. The table inventories the 121 publ
 
 | Total designs | Premium at baseline | Needing improvement at baseline | Upgraded here | Remaining | Technically blocked |
 | --- | --- | --- | --- | --- | --- |
-| 121 | 12 | 109 | 55 | 54 | 0 |
+| 121 | 12 | 109 | 73 | 36 | 0 |
 
-The follow-up introduces 51 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 54 remaining designs.
+The follow-up introduces 69 original, individually commissioned gouache-style cover scenes. The production art was generated during development, reviewed per design and exported to local WebP files. New links explicitly store the stable `-cover-v2` ID. Historical asset IDs and unversioned automatic fallback remain available. The inventory identifies the 36 remaining designs.
 
 ## Cover additions
 
@@ -65,12 +65,12 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `birthday-envelope` | Sealed golden wishes | birthday | Upgraded in follow-up | — | birthday | birthday |
 | `birthday-garden` | The birthday garden | birthday | Upgraded in follow-up | — | birthday | Plain |
 | `all-i-could-afford` | This Is All I Could Afford | birthday | Retain · premium | — | birthday | wallet |
-| `birthday-music` | Your kind of happy | birthday | Improve · flat pack art | 1 | birthday | Plain |
-| `christening-bloom` | Blessings in bloom | christening | Improve · flat pack art | 2 | botanical | Plain |
-| `christening-dove` | Wings of kindness | christening | Improve · flat pack art | 2 | botanical | Plain |
-| `christmas-robin` | A robin’s hello | christmas | Improve · flat pack art | 1 | mistletoe | mistletoe |
-| `christmas-snow` | A winter’s hush | christmas | Improve · shared library artwork | 1 | winter | winter |
-| `christmas-wreath` | At your door | christmas | Improve · flat pack art | 1 | winter | mistletoe |
+| `birthday-music` | Your kind of happy | birthday | Upgraded in follow-up | — | birthday | Plain |
+| `christening-bloom` | Blessings in bloom | christening | Upgraded in follow-up | — | botanical | Plain |
+| `christening-dove` | Wings of kindness | christening | Upgraded in follow-up | — | botanical | Plain |
+| `christmas-robin` | A robin’s hello | christmas | Upgraded in follow-up | — | mistletoe | mistletoe |
+| `christmas-snow` | A winter’s hush | christmas | Upgraded in follow-up | — | winter | winter |
+| `christmas-wreath` | At your door | christmas | Upgraded in follow-up | — | winter | mistletoe |
 | `festive-orange` | Festive Orange | christmas | Improve · repeated outline frame | 1 | winter | Plain |
 | `christmas` | Forest & wishes | christmas | Improve · shared library artwork | 1 | winter | winter |
 | `happy-25th-december` | Happy 25th December | christmas | Retain · premium | — | winter | christmas-calendar |
@@ -98,12 +98,12 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `friendship-coffee` | Our usual table | friendship | Improve · flat pack art | 2 | botanical | coffee |
 | `friendship` | You’re my sunshine | friendship | Improve · shared library artwork | 2 | botanical | Plain |
 | `well-tea` | A little comfort | get-well | Improve · flat pack art | 2 | botanical | coffee |
-| `citrus-blossom` | Citrus Blossom | get-well | Improve · repeated outline frame | 2 | botanical | Plain |
-| `get-well` | Rest & little joys | get-well | Improve · shared library artwork | 2 | botanical | Plain |
-| `good-luck` | A little good fortune | good-luck | Improve · shared library artwork | 2 | botanical | Plain |
-| `luck-new-chapter` | Your next great chapter | good-luck | Improve · flat pack art | 2 | botanical | Plain |
-| `laurel-letter` | Laurel Letter | graduation | Improve · repeated outline frame | 2 | celebrate | Plain |
-| `graduation` | On to wonderful things | graduation | Improve · shared library artwork | 2 | celebrate | Plain |
+| `citrus-blossom` | Citrus Blossom | get-well | Upgraded in follow-up | — | botanical | Plain |
+| `get-well` | Rest & little joys | get-well | Upgraded in follow-up | — | botanical | Plain |
+| `good-luck` | A little good fortune | good-luck | Upgraded in follow-up | — | botanical | Plain |
+| `luck-new-chapter` | Your next great chapter | good-luck | Upgraded in follow-up | — | botanical | Plain |
+| `laurel-letter` | Laurel Letter | graduation | Upgraded in follow-up | — | celebrate | Plain |
+| `graduation` | On to wonderful things | graduation | Upgraded in follow-up | — | celebrate | Plain |
 | `graduation-world` | The world is waiting | graduation | Upgraded in follow-up | — | celebrate | Plain |
 | `justbecause-book` | A small good thing | just-because | Upgraded in follow-up | — | botanical | Plain |
 | `just-because` | Little lovely things | just-because | Upgraded in follow-up | — | botanical | Plain |
@@ -142,12 +142,12 @@ The creator uses the selected design’s cover automatically. Photograph placeme
 | `sorry-letter` | A little note, a lot of heart | sorry | Improve · flat pack art | 2 | botanical | Plain |
 | `sorry` | From the heart | sorry | Improve · shared library artwork | 2 | botanical | Plain |
 | `forget-me-not` | Forget Me Not | sympathy | Upgraded in this PR | — | botanical | quiet-stem |
-| `sympathy-dove` | Held in love | sympathy | Improve · flat pack art | 1 | botanical | quiet-stem |
-| `sympathy-lilies` | Quietly beside you | sympathy | Improve · flat pack art | 1 | botanical | quiet-stem |
-| `thank-you` | Kindness in bloom | thank-you | Improve · shared library artwork | 2 | botanical | Plain |
-| `thanks-peonies` | Kindness, in full bloom | thank-you | Improve · flat pack art | 2 | botanical | Plain |
-| `olive-branch` | Olive Branch | thank-you | Improve · repeated outline frame | 2 | botanical | Plain |
-| `thanks-coffee` | Thanks a latte | thank-you | Improve · flat pack art | 2 | botanical | coffee |
+| `sympathy-dove` | Held in love | sympathy | Upgraded in follow-up | — | botanical | quiet-stem |
+| `sympathy-lilies` | Quietly beside you | sympathy | Upgraded in follow-up | — | botanical | quiet-stem |
+| `thank-you` | Kindness in bloom | thank-you | Upgraded in follow-up | — | botanical | Plain |
+| `thanks-peonies` | Kindness, in full bloom | thank-you | Upgraded in follow-up | — | botanical | Plain |
+| `olive-branch` | Olive Branch | thank-you | Upgraded in follow-up | — | botanical | Plain |
+| `thanks-coffee` | Thanks a latte | thank-you | Upgraded in follow-up | — | botanical | coffee |
 | `thanks-gold` | You’re golden | thank-you | Upgraded in follow-up | — | botanical | Plain |
 | `thinking-of-you` | A note of comfort | thinking-of-you | Upgraded in follow-up | — | botanical | Plain |
 | `thinking-coast` | Across the quiet miles | thinking-of-you | Upgraded in follow-up | — | botanical | Plain |
